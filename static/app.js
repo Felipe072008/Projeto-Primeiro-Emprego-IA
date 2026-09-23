@@ -89,9 +89,8 @@ function renderRecommendationCards(target, recommendations, emptyMessage) {
     target.innerHTML = `<div class="empty-card">${escapeHtml(emptyMessage)}</div>`;
     return;
   }
-  target.innerHTML = recommendations.map((item, index) => `
+  target.innerHTML = recommendations.map((item) => `
     <article class="recommendation-card">
-      <span class="recommendation-number">0${index + 1}</span>
       <h3>${escapeHtml(item.title)}</h3>
       <p>${escapeHtml(item.reason)}</p>
     </article>
@@ -257,7 +256,7 @@ async function loadJobs() {
             ${job.last_updated_at ? `<span>Atualizada: ${escapeHtml(formatTime(job.last_updated_at))}</span>` : ""}
           </div>
         </div>
-        <a class="button button--primary" href="${escapeHtml(job.original_url)}" target="_blank" rel="noopener noreferrer">Ver vaga <span>↗</span></a>
+        <a class="button button--primary" href="${escapeHtml(job.original_url)}" target="_blank" rel="noopener noreferrer">Ver vaga</a>
       </article>
     `).join("");
   } catch (error) {
@@ -278,14 +277,14 @@ function renderResumes(resumes) {
   }
   target.innerHTML = resumes.map((resume) => `
     <article class="resume-row ${escapeHtml(resume.kind)}" data-resume-id="${resume.id}" data-resume-kind="${escapeHtml(resume.kind)}">
-      <span class="resume-file-icon">${resume.kind === "uploaded" ? "PDF" : "IA"}</span>
+      <span class="resume-file-icon">${resume.kind === "uploaded" ? "PDF" : "CV"}</span>
       <div class="resume-row-main">
         <h3>${escapeHtml(resumeTitle(resume))}</h3>
         <p>${resume.kind === "uploaded" ? "Arquivo enviado" : "Currículo gerado"} · ${escapeHtml(formatTime(resume.updated_at))}</p>
       </div>
       <div class="resume-actions">
         <button class="small-button" data-resume-action="view">Visualizar</button>
-        <button class="small-button" data-resume-action="analyze">Melhorar com IA</button>
+        <button class="small-button" data-resume-action="analyze">Ver pontos de atenção</button>
         ${resume.kind === "generated" ? '<button class="small-button" data-resume-action="download">Baixar PDF</button>' : ""}
         <button class="small-button danger" data-resume-action="delete">Excluir</button>
       </div>
@@ -350,7 +349,7 @@ function renderResumePreview(data, resumeId) {
       </header>
       ${sections}
       <div class="preview-actions">
-        <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF <span>↓</span></a>
+        <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a>
       </div>
     </article>`;
   openModal("#preview-modal");

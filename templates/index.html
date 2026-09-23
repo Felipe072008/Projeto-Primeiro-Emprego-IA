@@ -24,17 +24,16 @@
           <h1>Seu primeiro emprego começa com um plano.</h1>
           <p>Organize sua trajetória, desenvolva habilidades e encontre oportunidades reais, no seu ritmo.</p>
         </div>
-        <div class="intro-points" aria-label="Benefícios da plataforma">
-          <div><span>01</span> Perfil construído por você</div>
-          <div><span>02</span> Currículo claro e profissional</div>
-          <div><span>03</span> Orientação para evoluir</div>
-        </div>
+        <ul class="intro-points" aria-label="Benefícios da plataforma">
+          <li>Perfil construído por você</li>
+          <li>Currículo claro e profissional</li>
+          <li>Orientação para evoluir</li>
+        </ul>
         <p class="auth-date">Hoje, <time id="auth-date">--/--/----</time> · Horário de São Paulo</p>
       </section>
 
       <section class="auth-panel">
         <div class="auth-card" id="login-card">
-          <p class="eyebrow">Boas-vindas</p>
           <h2>Entre na sua conta</h2>
           <p class="muted">Acompanhe seu desenvolvimento profissional em um só lugar.</p>
           <form id="login-form" class="form-stack">
@@ -44,14 +43,13 @@
             <label>Senha
               <input required type="password" name="password" autocomplete="current-password" placeholder="Sua senha" />
             </label>
-            <button class="button button--primary button--wide" type="submit">Entrar <span>→</span></button>
+            <button class="button button--primary button--wide" type="submit">Entrar</button>
           </form>
           <p class="switch-copy">Ainda não tem uma conta? <button class="text-button" data-show-auth="register">Criar perfil</button></p>
         </div>
 
         <div class="auth-card hidden" id="register-card">
           <button class="back-button" data-show-auth="login" type="button">← Voltar</button>
-          <p class="eyebrow">Comece por aqui</p>
           <h2>Crie seu perfil</h2>
           <p class="muted">Não preenchemos nada por você. Suas informações continuam sendo suas.</p>
           <form id="register-form" class="form-stack">
@@ -64,7 +62,7 @@
             <label>Crie uma senha
               <input required minlength="6" type="password" name="password" autocomplete="new-password" placeholder="Pelo menos 6 caracteres" />
             </label>
-            <button class="button button--primary button--wide" type="submit">Criar meu perfil <span>→</span></button>
+            <button class="button button--primary button--wide" type="submit">Criar meu perfil</button>
           </form>
         </div>
       </section>
@@ -107,7 +105,7 @@
                 <h1>Olá, <span id="welcome-name">!</span></h1>
                 <p class="lead">Seu caminho profissional está tomando forma.</p>
               </div>
-              <button class="button button--secondary" data-go="profile">Completar meu perfil <span>→</span></button>
+              <button class="button button--secondary" data-go="profile">Completar meu perfil</button>
             </div>
 
             <div class="progress-card">
@@ -118,23 +116,22 @@
 
             <div class="dashboard-grid">
               <article class="card advice-card">
-                <div class="card-heading"><div><p class="eyebrow">Orientação IA</p><h2>Seu próximo passo</h2></div><span class="icon-bubble">✦</span></div>
+                <div class="card-heading"><div><h2>Seu próximo passo</h2></div><span class="icon-bubble">✦</span></div>
                 <p id="advice-basis" class="muted">Vamos conhecer seu perfil para sugerir um caminho.</p>
                 <ul class="step-list" id="advice-list"></ul>
-                <button class="text-link" data-go="profile">Atualizar informações <span>→</span></button>
+                <button class="text-link" data-go="profile">Atualizar informações</button>
               </article>
 
               <article class="card action-card">
-                <p class="eyebrow">Ferramenta essencial</p>
                 <h2>Seu currículo,<br />do seu jeito.</h2>
                 <p>Crie uma versão organizada somente com as informações que você informou.</p>
-                <button class="button button--dark" data-go="resume">Criar currículo <span>→</span></button>
+                <button class="button button--dark" data-go="resume">Criar currículo</button>
                 <span class="graphic-lines" aria-hidden="true"></span>
               </article>
             </div>
 
             <section class="mini-section">
-              <div class="section-title"><div><p class="eyebrow">Para desenvolver</p><h2>Áreas para explorar</h2></div><button class="text-link" data-go="courses">Ver cursos <span>→</span></button></div>
+              <div class="section-title"><div><p class="eyebrow">Para desenvolver</p><h2>Áreas para explorar</h2></div><button class="text-link" data-go="courses">Ver cursos</button></div>
               <div class="recommendation-row" id="dashboard-recommendations"></div>
             </section>
           </section>
@@ -166,7 +163,7 @@
             </div>
             <div class="resume-options">
               <article class="resume-option upload-option">
-                <span class="option-number">01</span><div class="option-icon">↑</div><h2>Já tenho um currículo</h2><p>Envie um arquivo em PDF ou DOCX para guardar, visualizar e receber observações de organização.</p>
+                <div class="option-icon">↑</div><h2>Já tenho um currículo</h2><p>Envie um arquivo em PDF ou DOCX para guardar, visualizar e receber observações de organização.</p>
                 <form id="upload-form" class="upload-form">
                   <input id="resume-file" name="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
                   <label for="resume-file" class="file-label"><span>Selecionar arquivo</span><small>PDF ou DOCX · até 8 MB</small></label>
@@ -174,8 +171,8 @@
                 </form>
               </article>
               <article class="resume-option create-option">
-                <span class="option-number">02</span><div class="option-icon">✦</div><h2>Ainda não tenho currículo</h2><p>Use as informações reais do seu perfil para criar uma versão organizada e pronta para revisar.</p>
-                <button class="button button--dark" id="open-builder" type="button">Criar meu currículo <span>→</span></button>
+                <div class="option-icon">✦</div><h2>Ainda não tenho currículo</h2><p>Use as informações reais do seu perfil para criar uma versão organizada e pronta para revisar.</p>
+                <button class="button button--dark" id="open-builder" type="button">Criar meu currículo</button>
                 <small>Não inventamos experiências, cursos ou habilidades.</small>
               </article>
             </div>
@@ -243,7 +240,7 @@
               <label>Idiomas<textarea name="languages" placeholder="Ex.: Português nativo; Inglês básico"></textarea></label>
             </div>
           </section>
-          <div class="form-actions profile-modal-actions"><p class="form-note">Depois de salvar, você será direcionado para a Visão geral.</p><div><button class="button button--outline" data-close-profile type="button">Fechar</button><button class="button button--primary" type="submit">Salvar meu perfil <span>→</span></button></div></div>
+          <div class="form-actions profile-modal-actions"><p class="form-note">Depois de salvar, você será direcionado para a Visão geral.</p><div><button class="button button--outline" data-close-profile type="button">Fechar</button><button class="button button--primary" type="submit">Salvar meu perfil</button></div></div>
         </form>
       </div>
     </div>

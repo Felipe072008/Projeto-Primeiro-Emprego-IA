@@ -2,6 +2,7 @@ import io
 import json
 import os
 import re
+import secrets
 import sqlite3
 import uuid
 from datetime import datetime
@@ -23,8 +24,11 @@ ALLOWED_EXTENSIONS = {"pdf", "docx"}
 MAX_UPLOAD_SIZE = 8 * 1024 * 1024
 
 app = Flask(__name__)
+# Set SECRET_KEY as an environment variable in production (e.g. on PythonAnywhere's
+# Web tab). Without one, a new random key is generated each time the app starts —
+# safer than a fixed default, but it means active sessions are cleared on restart.
 app.config.update(
-    SECRET_KEY=os.environ.get("SECRET_KEY", "troque-esta-chave-antes-de-publicar"),
+    SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
     MAX_CONTENT_LENGTH=MAX_UPLOAD_SIZE,
 )
 UPLOAD_DIR.mkdir(exist_ok=True)
