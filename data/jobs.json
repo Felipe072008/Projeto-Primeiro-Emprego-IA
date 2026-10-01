@@ -1,0 +1,215 @@
+[
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "Abler",
+    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
+    "id": "signo-estagio",
+    "title": "Estágio em Desenvolvimento",
+    "company": "Signo Tech",
+    "original_url": "https://signoweb.abler.com.br/vagas/estagio-desenvolvedor-263708",
+    "areas": [
+      "tecnologia"
+    ],
+    "location": "Portão, Curitiba - PR · Presencial",
+    "contract": "Estágio",
+    "salary": "Bolsa de R$ 1.200,00",
+    "description": "Apoio à criação e manutenção de sistemas, testes, correção de problemas e documentação junto à equipe de desenvolvimento.",
+    "requirements": [
+      "Graduação em TI ou área correlata em andamento.",
+      "Conhecimentos de PHP, JavaScript ou TypeScript, SQL e Git.",
+      "Organização, colaboração e interesse em aprender."
+    ],
+    "schedule": "Segunda a sexta, 6 horas diárias",
+    "benefits": [
+      "Vale-transporte",
+      "Alimentação/refeição: R$ 15,00",
+      "Plano odontológico",
+      "Folga no aniversário"
+    ]
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "Abler",
+    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
+    "id": "gc-admin",
+    "title": "Auxiliar Administrativo",
+    "company": "GC Talentos",
+    "original_url": "https://gctalentos2348.abler.com.br/vagas/auxiliar-administrativo-320739",
+    "areas": [
+      "administracao"
+    ],
+    "location": "Xaxim, Curitiba - PR · Presencial",
+    "contract": "CLT",
+    "salary": "R$ 2.058,00",
+    "description": "Organização de documentos, atualização de sistemas e apoio ao financeiro, ao atendimento interno e à emissão de notas e relatórios.",
+    "requirements": [
+      "Ensino médio concluído; informática e Excel básicos.",
+      "Noções administrativas e financeiras, atenção e boa comunicação.",
+      "Curso na área, experiência com notas fiscais e Excel intermediário aparecem como diferenciais na descrição."
+    ],
+    "schedule": "Segunda a sexta, 9h–18h; sábado, 8h–13h",
+    "benefits": [
+      "Vale-transporte: R$ 12,00",
+      "Vale-refeição: R$ 15,00"
+    ]
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "Abler",
+    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
+    "id": "cidade-aprendiz",
+    "title": "Aprendiz Assistente Administrativo — Facilities",
+    "company": "Cidade Júnior",
+    "original_url": "https://vagascidadejunior.abler.com.br/vagas/aprendiz-assistente-administrativo-facilities-154919",
+    "areas": [
+      "administracao",
+      "logistica"
+    ],
+    "location": "Centro, Curitiba - PR · Presencial",
+    "contract": "Aprendiz",
+    "salary": "R$ 1.024,01",
+    "description": "Apoio à organização do escritório, contato com fornecedores, checklists e emissão de crachás.",
+    "requirements": [
+      "A fonte informa faixa etária de 18 a 22 anos e facilidade de acesso ao Centro.",
+      "A descrição aceita ensino médio cursando ou concluído; a tabela indica concluído. Confirme essa divergência com a instituição."
+    ],
+    "schedule": "Segunda a sexta: opções 9h–13h, 10h–14h ou 14h–18h",
+    "benefits": [
+      "Vale-transporte e vale-refeição",
+      "Planos de saúde e odontológico",
+      "Gympass"
+    ]
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "BNE",
+    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
+    "id": "bne-logistica",
+    "title": "Auxiliar de Logística",
+    "company": "Bplog Treinamento e Movimentação de Cargas",
+    "original_url": "https://www.bne.com.br/trabalhe-conosco/ifagundes/vaga-de-emprego-na-area-logistica-em-curitiba-pr/auxiliar-de-logistica/6180047",
+    "areas": [
+      "logistica"
+    ],
+    "location": "Curitiba - PR · Presencial",
+    "contract": "Efetivo",
+    "salary": "Consultar valor atualizado na fonte",
+    "description": "Atividades de armazenagem, embalagem e identificação de volumes, organização e apoio à movimentação de cargas.",
+    "requirements": [
+      "Confira escolaridade, experiência e exigências físicas diretamente no anúncio.",
+      "Disponibilidade para os turnos informados pela empresa."
+    ],
+    "schedule": "A fonte menciona tarde, noite e sábado",
+    "benefits": []
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "BNE",
+    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
+    "id": "bne-marketing",
+    "title": "Estágio em Marketing",
+    "company": "Lion Equipamentos Curitiba",
+    "original_url": "https://www.bne.com.br/vaga-de-emprego-na-area-administrativo-em-curitiba-pr/estagiario/4369911",
+    "areas": [
+      "marketing"
+    ],
+    "location": "Curitiba - PR · Presencial",
+    "contract": "Estágio",
+    "salary": "A combinar",
+    "description": "Apoio a campanhas, conteúdo para redes sociais, vídeos e comunicação interna.",
+    "requirements": [
+      "Cursando Marketing.",
+      "Consulte na fonte os demais requisitos e a jornada do estágio."
+    ],
+    "schedule": "",
+    "benefits": []
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "BNE",
+    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
+    "id": "bne-aprendiz",
+    "title": "Jovem Aprendiz — Atendimento e vendas online",
+    "company": "Drogarias Farmagnus Popular Cajuru",
+    "original_url": "https://www.bne.com.br/vaga-de-emprego-na-area-administrativo-em-curitiba-pr/jovem-aprendiz/5368299",
+    "areas": [
+      "comercial"
+    ],
+    "location": "Curitiba - PR · Presencial",
+    "contract": "Aprendiz",
+    "salary": "R$ 759,00 a R$ 1.000,00",
+    "description": "Atendimento digital, organização de pedidos e apoio ao pós-venda nos canais da farmácia.",
+    "requirements": [
+      "Comunicação por texto e áudio, organização e iniciativa.",
+      "A empresa informa ensinar o uso das plataformas de atendimento.",
+      "Confirme faixa etária, escolaridade, jornada e remuneração atual na fonte."
+    ],
+    "schedule": "",
+    "benefits": []
+  },
+  {
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-10-09",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "source": "Abler",
+    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
+    "id": "embarca-dados",
+    "title": "Estágio em Dados e Inteligência Comercial",
+    "company": "Embarca",
+    "original_url": "https://embarca.abler.com.br/vagas/programa-de-estagio-engenharia-dados-inteligencia-comercial-704417",
+    "areas": [
+      "tecnologia",
+      "comercial"
+    ],
+    "location": "Centro Cívico, Curitiba - PR · Presencial",
+    "contract": "Estágio",
+    "salary": "Bolsa a combinar",
+    "description": "Tratamento de dados, relatórios e painéis; apoio a métricas comerciais e a fluxos simples com Python e SQL.",
+    "requirements": [
+      "Estudante do penúltimo ou último ano de Engenharia de Dados, Ciência da Computação, Estatística ou área afim.",
+      "Python e SQL básicos; familiaridade com ferramentas de BI, preferencialmente AWS.",
+      "Comunicação, trabalho em equipe e raciocínio analítico."
+    ],
+    "schedule": "Segunda a sexta, 10h–17h",
+    "benefits": [
+      "Vale-transporte ou mobilidade",
+      "Vale-refeição ou alimentação",
+      "Plano odontológico",
+      "Acesso ao Wellhub",
+      "Folga no aniversário"
+    ]
+  }
+]

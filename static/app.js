@@ -76,11 +76,12 @@ function navigate(route) {
   $$(".page").forEach((page) => page.classList.toggle("active", page.dataset.page === route));
   $$(".nav-link").forEach((button) => button.classList.toggle("active", button.dataset.route === route));
   $(".sidebar").classList.remove("open");
+  syncMobileMenu();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (route === "dashboard") loadDashboard();
   if (route === "profile") populateProfileForm();
   if (route === "jobs") loadJobs();
-  if (route === "resume") loadResumes();
+  if (route === "resume") { loadResumes(); loadAIStatus(); }
   if (route === "courses") loadCourses();
 }
 
@@ -233,35 +234,46 @@ async function saveProfile(event) {
   }
 }
 
-async function loadJobs() {
-  const target = $("#jobs-list");
-  target.innerHTML = "";
+const catalogRows = {jobs: [], courses: []};
+const catalogVersions = {jobs: 0, courses: 0};
+function catalogDate(value) { return value ? value.split("-").reverse().join("/") : "Não informada"; }
+async function loadCatalog(kind) {
+  const version = ++catalogVersions[kind];
+  const target = $(`#${kind}-list`);
+  target.innerHTML = '<p role="status">Carregando oportunidades…</p>';
+  const filters = new URLSearchParams(new FormData($(`#${kind}-filters`)));
   try {
-    const data = await api("/api/jobs");
-    if (!data.jobs.length) {
-      target.innerHTML = `
-        <article class="empty-card">
-          Ainda não há oportunidades publicadas com link individual verificado. Quando uma vaga tiver fonte e URL original válidas, ela aparecerá aqui.
-        </article>`;
-      return;
-    }
-    target.innerHTML = data.jobs.map((job) => `
-      <article class="job-card">
-        <div class="job-card-main">
-          <p class="job-source">Fonte: ${escapeHtml(job.source)}</p>
-          <h2>${escapeHtml(job.title)}</h2>
-          <p>${escapeHtml(job.company)} · ${escapeHtml(job.location)}</p>
-          <div class="job-meta">
-            ${job.published_at ? `<span>Publicada: ${escapeHtml(formatTime(job.published_at))}</span>` : ""}
-            ${job.last_updated_at ? `<span>Atualizada: ${escapeHtml(formatTime(job.last_updated_at))}</span>` : ""}
-          </div>
-        </div>
-        <a class="button button--primary" href="${escapeHtml(job.original_url)}" target="_blank" rel="noopener noreferrer">Ver vaga</a>
-      </article>
-    `).join("");
-  } catch (error) {
-    target.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`;
-  }
+    const data = await api(`/api/${kind}?${filters}`);
+    if (version !== catalogVersions[kind]) return;
+    catalogRows[kind] = data[kind];
+    $(`#${kind}-context`).textContent = `${data.total} resultado(s). ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice}`;
+    target.innerHTML = data[kind].length ? data[kind].map((item, index) => `
+      <article class="job-card catalog-card">
+        <div class="job-card-main"><p class="job-source">${escapeHtml(item.company || item.institution)} · ${escapeHtml(item.source)}</p>
+        <span class="match-badge ${item.match}">${item.match === 'direct' ? 'Sua área' : item.match === 'related' ? 'Área correlata' : 'Para explorar'}</span>
+        <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.location || item.modality)}</p>
+        <p>${escapeHtml(item.description)}</p><p class="match-reason">${escapeHtml(item.match_reason)}</p>
+        <div class="job-meta"><span>${escapeHtml(kind === 'jobs' ? item.contract : item.duration)}</span><span>${escapeHtml(item.salary || item.price || 'Consultar condições')}</span><span>Consultado em ${catalogDate(item.checked_on)}</span></div></div>
+        <button class="button button--outline" data-catalog="${kind}" data-index="${index}">Ver detalhes</button>
+      </article>`).join('') : '<div class="empty-card">Nenhum resultado disponível para estes filtros. Experimente outra busca ou escolha “Todas as áreas”. Anúncios com revisão vencida ficam ocultos.</div>';
+  } catch (error) { if (version === catalogVersions[kind]) target.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`; }
+}
+function loadJobs() { return loadCatalog('jobs'); }
+function loadCourses() { return loadCatalog('courses'); }
+async function loadAIStatus() {
+  const target = $('#ai-availability');
+  try {
+    const status = await api('/api/ai/status');
+    target.textContent = status.available ? `Análise com IA local disponível (${status.model}).` : 'Revisão automática disponível. A análise contextual com IA local será ativada quando o modelo gratuito estiver instalado neste servidor.';
+  } catch { target.textContent = 'Revisão automática disponível. Não foi possível verificar o serviço de IA local.'; }
+}
+function showCatalogDetail(kind, index) {
+  const item = catalogRows[kind][index];
+  if (!item) return;
+  $('#preview-title').textContent = item.title;
+  const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule]] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ['Custo', item.price], ['Turmas', item.availability]];
+  $('#resume-preview').innerHTML = `<article class="listing-detail"><p class="match-reason">${escapeHtml(item.match_reason)}</p><p>${escapeHtml(item.description)}</p><dl>${details.map(([label,value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value || 'Não informado na fonte')}</dd></div>`).join('')}</dl><h3>${kind === 'jobs' ? 'Requisitos e observações' : 'Requisitos e conteúdo'}</h3><ul>${(item.requirements || []).map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>${item.benefits?.length ? `<h3>Benefícios informados</h3><ul>${item.benefits.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>` : ''}<p class="muted">Fonte: ${escapeHtml(item.source)}. Consulta em ${catalogDate(item.checked_on)}. A disponibilidade pode mudar. ${escapeHtml(item.access_note || '')}</p><a class="button button--primary" href="${escapeHtml(item.original_url)}" target="_blank" rel="noopener noreferrer">${kind === 'jobs' ? 'Ver vaga na fonte' : 'Ver curso na instituição'} ↗</a></article>`;
+  openModal('#preview-modal');
 }
 
 function resumeTitle(resume) {
@@ -284,7 +296,7 @@ function renderResumes(resumes) {
       </div>
       <div class="resume-actions">
         <button class="small-button" data-resume-action="view">Visualizar</button>
-        <button class="small-button" data-resume-action="analyze">Ver pontos de atenção</button>
+        <button class="small-button" data-resume-action="analyze">Analisar currículo</button>
         ${resume.kind === "generated" ? '<button class="small-button" data-resume-action="download">Baixar PDF</button>' : ""}
         <button class="small-button danger" data-resume-action="delete">Excluir</button>
       </div>
@@ -301,14 +313,36 @@ async function loadResumes() {
   }
 }
 
+const modalOrigins = new Map();
 function openModal(selector) {
-  $(selector).classList.remove("hidden");
-  document.body.style.overflow = "hidden";
+  const modal = $(selector);
+  if (!modal.classList.contains('hidden')) return;
+  modalOrigins.set(modal, document.activeElement);
+  modal.classList.remove('hidden');
+  $('#app-view').inert = true;
+  $('#auth-view').inert = true;
+  document.body.style.overflow = 'hidden';
+  const first = $('button, input, a[href], textarea, select', modal);
+  first?.focus();
 }
-
 function closeModal(selector) {
-  $(selector).classList.add("hidden");
-  if ($$(".modal:not(.hidden)").length === 0) document.body.style.overflow = "";
+  const modal = $(selector);
+  if (modal.classList.contains('hidden')) return;
+  modal.classList.add('hidden');
+  if (!$$('.modal:not(.hidden)').length) {
+    document.body.style.overflow = '';
+    $('#app-view').inert = false;
+    $('#auth-view').inert = false;
+  }
+  const origin = modalOrigins.get(modal);
+  if (origin?.isConnected && !origin.closest('.hidden')) origin.focus();
+  modalOrigins.delete(modal);
+}
+function syncMobileMenu() {
+  const open = $('.sidebar').classList.contains('open');
+  $('.sidebar').inert = window.matchMedia('(max-width: 900px)').matches && !open;
+  $('#mobile-menu').setAttribute('aria-expanded', String(open));
+  $('#mobile-menu').setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
 }
 
 function populateBuilder() {
@@ -317,6 +351,9 @@ function populateBuilder() {
   const { user } = state.me;
   const values = {
     full_name: user.name,
+    email: user.email,
+    headline: profile.desired_area || "",
+    course: profile.course || "",
     phone: profile.phone || "",
     location: [profile.city, profile.state].filter(Boolean).join(" / "),
     objective: profile.objective || "",
@@ -335,6 +372,7 @@ function populateBuilder() {
 }
 
 function renderResumePreview(data, resumeId) {
+  $("#preview-title").textContent = "Prévia do currículo";
   const sections = data.sections.map((section) => `
     <section class="resume-document-section">
       <h2>${escapeHtml(section.title)}</h2>
@@ -345,11 +383,11 @@ function renderResumePreview(data, resumeId) {
     <article class="resume-document">
       <header class="resume-document-header">
         <h1>${escapeHtml(data.name).toUpperCase()}</h1>
-        <p>${data.contacts.map(escapeHtml).join(" &nbsp;•&nbsp; ")}</p>
+        <p class="resume-headline">${escapeHtml(data.headline || "")}</p><p>${data.contacts.map(escapeHtml).join(" &nbsp;•&nbsp; ")}</p>
       </header>
       ${sections}
       <div class="preview-actions">
-        <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a>
+        <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a><a class="button button--outline" href="/api/resumes/${resumeId}/pdf?inline=1" target="_blank" rel="noopener">Abrir prévia em PDF ↗</a>
       </div>
     </article>`;
   openModal("#preview-modal");
@@ -385,43 +423,57 @@ async function handleResumeAction(event) {
       return;
     }
     if (action === "analyze") {
-      const analysis = await api(`/api/resumes/${id}/analyze`, { method: "POST" });
-      $("#resume-preview").innerHTML = `
-        <article class="resume-document">
-          <header class="resume-document-header"><h1>Análise do currículo</h1><p>${escapeHtml(analysis.message)}</p></header>
-          <section class="analysis-panel"><h3>Pontos observados</h3><ul>${analysis.feedback.map((item) => `<li>${escapeHtml(item.text)}</li>`).join("")}</ul></section>
-        </article>`;
-      openModal("#preview-modal");
+      if (button.disabled) return;
+      button.disabled = true;
+      $('#preview-title').textContent = 'Análise do currículo';
+      $('#resume-preview').innerHTML = '<p role="status">Lendo o PDF e analisando as informações… A IA local pode levar alguns minutos.</p>';
+      openModal('#preview-modal');
+      try {
+        const analysis = await api(`/api/resumes/${id}/analyze`, { method: 'POST' });
+        renderAnalysis(analysis);
+      } catch (error) { $('#resume-preview').innerHTML = `<p role="alert">${escapeHtml(error.message)}</p>`; }
+      finally { button.disabled = false; }
     }
   } catch (error) {
     toast(error.message, "error");
   }
 }
 
+function renderAnalysis(data) {
+  const ai = data.contextual;
+  const cards = (items, content) => items.map(item => `<article class="analysis-card">${content(item)}</article>`).join('');
+  $('#resume-preview').innerHTML = `<article class="analysis-report"><p class="analysis-notice">${escapeHtml(data.ai_notice)}</p><p>${escapeHtml(data.summary)}</p><p class="muted">${data.metrics.pages} página(s) · ${data.metrics.words} palavras</p>
+    ${ai ? `<h3>Pontos fortes com evidências</h3>${cards(ai.strengths, x => `<h4>${escapeHtml(x.title)}</h4><blockquote>${escapeHtml(x.evidence)}</blockquote><p>${escapeHtml(x.explanation)}</p>`)}<h3>Melhorias prioritárias</h3>${cards(ai.improvements, x => `<span class="match-badge">Prioridade ${escapeHtml(x.priority)}</span><h4>${escapeHtml(x.title)}</h4><p>${escapeHtml(x.evidence)}</p><p>${escapeHtml(x.suggestion)}</p>`)}${ai.rewrites.length ? `<h3>Sugestões de reescrita</h3><p>Confira se cada sugestão preserva seus fatos antes de usá-la.</p>${cards(ai.rewrites, x => `<p><b>Original:</b> ${escapeHtml(x.original)}</p><p><b>Sugestão:</b> ${escapeHtml(x.suggested)}</p><p class="muted">${escapeHtml(x.reason)}</p>`)}` : ''}<h3>Próximos passos</h3><ol>${ai.next_steps.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ol>` : ''}
+    <h3>Verificação do documento</h3>${cards(data.checks, x => `<h4>${escapeHtml(x.title)} <span class="check-status">${x.status === 'ok' ? 'Identificado' : x.status === 'attention' ? 'Revisar' : 'Orientação'}</span></h4><p>${escapeHtml(x.evidence)}</p><p>${escapeHtml(x.suggestion)}</p>`)}
+    <h3>Relação com a área desejada</h3><p>${escapeHtml(data.alignment.desired_area || 'Área ainda não informada no perfil.')}</p><p><b>Conhecimentos encontrados:</b> ${escapeHtml(data.alignment.skills_found.join(', ') || 'Nenhum dos termos monitorados.')}</p><p><b>Termos das vagas para revisar ou estudar:</b> ${escapeHtml(data.alignment.terms_to_review.join(', ') || 'Nenhum termo adicional identificado nas vagas disponíveis.')}</p><ul>${data.alignment.jobs.map(j => `<li><a href="${escapeHtml(j.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(j.title)} ↗</a></li>`).join('')}</ul><p class="muted">${escapeHtml(data.alignment.note)}</p><p class="muted">${escapeHtml(data.limitations)}</p></article>`;
+}
 async function uploadResume(event) {
   event.preventDefault();
-  const file = $("#resume-file").files[0];
-  if (!file) {
-    toast("Selecione um arquivo PDF ou DOCX.", "error");
-    return;
-  }
-  const formData = new FormData();
-  formData.append("file", file);
+  const form = event.currentTarget;
+  const button = $('button[type="submit"]', form);
+  if (button.disabled) return;
+  const file = $('#resume-file').files[0];
+  if (!file || !file.name.toLowerCase().endsWith('.pdf')) return toast('Selecione apenas um arquivo PDF.', 'error');
+  if (!file.size || file.size > 8 * 1024 * 1024) return toast('Envie um PDF não vazio de até 8 MB.', 'error');
+  const formData = new FormData(); formData.append('file', file);
+  button.disabled = true; button.textContent = 'Verificando PDF…';
   try {
-    const result = await api("/api/resumes/upload", { method: "POST", body: formData });
+    const result = await api('/api/resumes/upload', {method: 'POST', body: formData});
     toast(result.message);
-    event.currentTarget.reset();
-    $(".file-label span").textContent = "Selecionar arquivo";
-    loadResumes();
-    loadDashboard();
-  } catch (error) {
-    toast(error.message, "error");
-  }
+    if (result.warning) toast(result.warning, 'error');
+    form.reset(); $('.file-label span').textContent = 'Selecionar arquivo';
+    await loadResumes(); loadDashboard();
+  } catch (error) { toast(error.message, 'error'); }
+  finally { button.disabled = false; button.textContent = 'Enviar currículo'; }
 }
 
 async function generateResume(event) {
   event.preventDefault();
-  const values = Object.fromEntries(new FormData(event.currentTarget));
+  const form = event.currentTarget;
+  const button = $('button[type="submit"]', form);
+  if (button.disabled) return;
+  const values = Object.fromEntries(new FormData(form));
+  button.disabled = true;
   try {
     const result = await api("/api/resumes/generate", { method: "POST", body: values });
     closeModal("#builder-modal");
@@ -431,34 +483,7 @@ async function generateResume(event) {
     loadDashboard();
   } catch (error) {
     toast(error.message, "error");
-  }
-}
-
-async function loadCourses() {
-  const institutionsTarget = $("#institutions-list");
-  try {
-    const data = await api("/api/courses");
-    if (data.recommendations.length) {
-      $("#courses-intro").textContent = "As áreas abaixo foram sugeridas a partir das informações reais do seu perfil. Elas não garantem emprego.";
-    } else {
-      $("#courses-intro").textContent = "Preencha sua área desejada, objetivo ou habilidades no perfil para receber sugestões personalizadas.";
-    }
-    renderRecommendationCards(
-      $("#courses-recommendations"),
-      data.recommendations,
-      "Ainda não há uma recomendação personalizada. Conte no seu perfil qual área você deseja explorar."
-    );
-    institutionsTarget.innerHTML = data.institutions.map((institution) => `
-      <article class="institution-card">
-        <span class="institution-logo">✦</span>
-        <h3>${escapeHtml(institution.name)}</h3>
-        <p>${escapeHtml(institution.description)}</p>
-        <a href="${escapeHtml(institution.url)}" target="_blank" rel="noopener noreferrer">Conhecer cursos ↗</a>
-      </article>
-    `).join("");
-  } catch (error) {
-    institutionsTarget.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`;
-  }
+  } finally { button.disabled = false; }
 }
 
 async function enterApplication() {
@@ -509,6 +534,22 @@ async function logout() {
 }
 
 function bindEvents() {
+  ['jobs', 'courses'].forEach(kind => {
+    $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
+    $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });
+    $(`#${kind}-list`).addEventListener('click', event => { const button = event.target.closest('[data-catalog]'); if (button) showCatalogDetail(button.dataset.catalog, Number(button.dataset.index)); });
+  });
+  $$('#resume-builder-form textarea').forEach(field => field.maxLength = 4000);
+  window.addEventListener('resize', syncMobileMenu);
+  syncMobileMenu();
+  document.addEventListener('keydown', event => {
+    const modal = $('.modal:not(.hidden)');
+    if (!modal || event.key !== 'Tab') return;
+    const focusable = $$('button:not(:disabled), a[href], input:not(:disabled), textarea, select', modal).filter(x => x.getClientRects().length);
+    const first = focusable[0], last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  });
   $$('[data-show-auth]').forEach((button) => button.addEventListener("click", () => toggleAuth(button.dataset.showAuth)));
   $("#login-form").addEventListener("submit", handleLogin);
   $("#register-form").addEventListener("submit", handleRegister);
@@ -517,7 +558,7 @@ function bindEvents() {
   $("#resume-builder-form").addEventListener("submit", generateResume);
   $("#resume-list").addEventListener("click", handleResumeAction);
   $("#logout-button").addEventListener("click", logout);
-  $("#mobile-menu").addEventListener("click", () => $(".sidebar").classList.toggle("open"));
+  $("#mobile-menu").addEventListener("click", () => { $(".sidebar").classList.toggle("open"); syncMobileMenu(); });
   $$('[data-route]').forEach((button) => button.addEventListener("click", () => navigate(button.dataset.route)));
   $$('[data-go]').forEach((button) => button.addEventListener("click", () => navigate(button.dataset.go)));
   document.addEventListener("click", (event) => {
