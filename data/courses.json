@@ -1,0 +1,267 @@
+[
+  {
+    "id": "fb-python",
+    "title": "Linguagem de Programação Python — Básico",
+    "original_url": "https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico",
+    "areas": [
+      "tecnologia"
+    ],
+    "duration": "18 horas",
+    "description": "Introdução à lógica e ao Python, incluindo variáveis, decisões, repetições e funções.",
+    "requirements": [
+      "Idade mínima informada: 16 anos.",
+      "Prazo de conclusão: 60 dias após a matrícula."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Escola Virtual",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Catálogo online; confira matrícula na instituição.",
+    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+  },
+  {
+    "id": "fb-excel",
+    "title": "Microsoft Excel 2016 — Básico",
+    "original_url": "https://www.ev.org.br/cursos/microsoft-excel-2016-basico",
+    "areas": [
+      "administracao",
+      "financeiro",
+      "logistica",
+      "rh"
+    ],
+    "duration": "15 horas",
+    "description": "Prática inicial com planilhas, fórmulas, formatação e gráficos para organizar informações.",
+    "requirements": [
+      "Não exige conhecimento prévio; idade mínima: 14 anos.",
+      "Prazo de conclusão: 60 dias após a matrícula."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Escola Virtual",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Catálogo online; confira matrícula na instituição.",
+    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+  },
+  {
+    "id": "fb-atendimento",
+    "title": "Atendimento ao Público",
+    "original_url": "https://www.ev.org.br/cursos/atendimento-ao-publico",
+    "areas": [
+      "comercial",
+      "administracao"
+    ],
+    "duration": "10 horas",
+    "description": "Noções de escuta, comunicação com o público e condução de situações difíceis no atendimento presencial ou digital.",
+    "requirements": [
+      "Não exige conhecimento prévio; idade mínima: 16 anos.",
+      "Prazo de conclusão: 60 dias após a matrícula."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Escola Virtual",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Catálogo online; confira matrícula na instituição.",
+    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+  },
+  {
+    "id": "fb-web",
+    "title": "Crie um site simples usando HTML, CSS e JavaScript",
+    "original_url": "https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript",
+    "areas": [
+      "tecnologia",
+      "marketing"
+    ],
+    "duration": "2 horas",
+    "description": "Primeiros passos na construção de páginas web com estrutura, apresentação visual e interação.",
+    "requirements": [
+      "Nível iniciante. Confira idade mínima e prazo na instituição."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Escola Virtual",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Catálogo online; confira matrícula na instituição.",
+    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+  },
+  {
+    "id": "fb-comunicacao",
+    "title": "Comunicação Empresarial",
+    "original_url": "https://www.ev.org.br/cursos/comunicacao-empresarial",
+    "areas": [
+      "administracao",
+      "rh",
+      "comercial",
+      "marketing"
+    ],
+    "duration": "12 horas",
+    "description": "Desenvolvimento da comunicação oral e escrita em situações profissionais.",
+    "requirements": [
+      "Nível iniciante. Confira os requisitos de matrícula na instituição."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Escola Virtual",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Catálogo online; confira matrícula na instituição.",
+    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+  },
+  {
+    "id": "senai-sistemas",
+    "title": "Técnico em Desenvolvimento de Sistemas",
+    "original_url": "https://novo.senaipr.org.br/en/cursos-tecnicos/desenvolvimento-de-sistemas",
+    "areas": [
+      "tecnologia"
+    ],
+    "description": "Formação técnica voltada à criação de sistemas e soluções digitais para empresas e serviços.",
+    "institution": "SENAI Paraná",
+    "source": "SENAI Paraná",
+    "course_type": "tecnico",
+    "modality": "Consultar modalidade e unidade em Curitiba",
+    "duration": "Consultar carga horária da turma",
+    "free": false,
+    "price": "Consultar valores e bolsas na instituição",
+    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
+    "requirements": [
+      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+  },
+  {
+    "id": "senai-admin",
+    "title": "Técnico em Administração",
+    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/administracao",
+    "areas": [
+      "administracao",
+      "financeiro",
+      "rh"
+    ],
+    "description": "Formação para organizar processos e apoiar rotinas de gestão, finanças, pessoas e logística.",
+    "institution": "SENAI Paraná",
+    "source": "SENAI Paraná",
+    "course_type": "tecnico",
+    "modality": "Consultar modalidade e unidade em Curitiba",
+    "duration": "Consultar carga horária da turma",
+    "free": false,
+    "price": "Consultar valores e bolsas na instituição",
+    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
+    "requirements": [
+      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+  },
+  {
+    "id": "senai-logistica",
+    "title": "Técnico em Logística",
+    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/logistica",
+    "areas": [
+      "logistica"
+    ],
+    "description": "Formação em controle de estoques, transporte, armazenagem e organização de operações logísticas.",
+    "institution": "SENAI Paraná",
+    "source": "SENAI Paraná",
+    "course_type": "tecnico",
+    "modality": "Consultar modalidade e unidade em Curitiba",
+    "duration": "Consultar carga horária da turma",
+    "free": false,
+    "price": "Consultar valores e bolsas na instituição",
+    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
+    "requirements": [
+      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+  },
+  {
+    "id": "senai-automacao",
+    "title": "Técnico em Automação Industrial",
+    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/automacao-industrial",
+    "areas": [
+      "industria",
+      "tecnologia"
+    ],
+    "description": "Formação prática em sistemas automatizados, programação de controladores, sensores e atuadores na indústria.",
+    "institution": "SENAI Paraná",
+    "source": "SENAI Paraná",
+    "course_type": "tecnico",
+    "modality": "Presencial; confirme a unidade de Curitiba",
+    "duration": "Consultar carga horária da turma",
+    "free": false,
+    "price": "Consultar valores e bolsas na instituição",
+    "availability": "Curso consta no catálogo; confirme vagas e datas na unidade.",
+    "requirements": [
+      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+  },
+  {
+    "id": "evg-paciente",
+    "title": "Segurança do Paciente e Qualidade em Serviços de Saúde",
+    "original_url": "https://www.escolavirtual.gov.br/curso/236/governoes",
+    "areas": [
+      "saude"
+    ],
+    "description": "Curso sobre cultura de segurança, riscos e protocolos de qualidade em serviços de saúde.",
+    "institution": "Escola Virtual de Governo (Enap / Anvisa)",
+    "source": "Escola Virtual de Governo",
+    "course_type": "livre",
+    "modality": "Online",
+    "duration": "100 horas",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Curso aberto, com matrícula contínua conforme a página da instituição.",
+    "requirements": [
+      "Aberto a qualquer pessoa, com foco em profissionais de saúde e vigilância sanitária.",
+      "Disponibilidade de 90 dias após inscrição."
+    ],
+    "status": "published",
+    "checked_on": "2026-09-25",
+    "review_by": "2026-12-24",
+    "expires_on": null,
+    "access_note": "É necessário cadastro gratuito na Escola Virtual de Governo."
+  }
+]

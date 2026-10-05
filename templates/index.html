@@ -7,8 +7,9 @@
     <title>PrimeiroEmprego IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='redesign.css') }}" />
   </head>
   <body>
     <div class="noise"></div>
@@ -20,9 +21,16 @@
           <span class="brand-mark">p.</span><span>primeiro<span>emprego</span><b>IA</b></span>
         </a>
         <div class="intro-copy">
-          <p class="eyebrow eyebrow--light">Seu ponto de partida</p>
-          <h1>Seu primeiro emprego começa com um plano.</h1>
+          <p class="eyebrow eyebrow--light"><span class="eyebrow-dot"></span> Seu ponto de partida</p>
+          <h1>O próximo passo da sua carreira <em>começa aqui.</em></h1>
           <p>Organize sua trajetória, desenvolva habilidades e encontre oportunidades reais, no seu ritmo.</p>
+        </div>
+        <div class="auth-art" aria-hidden="true">
+          <div class="auth-art-ring"></div>
+          <div class="auth-art-core"><span>um caminho<br /><strong>feito por você</strong></span><b>↗</b></div>
+          <div class="auth-art-chip auth-art-chip--profile"><span>01</span><div>Seu perfil<small>O início da jornada</small></div></div>
+          <div class="auth-art-chip auth-art-chip--resume"><span>02</span><div>Currículo<small>Sua história em destaque</small></div></div>
+          <div class="auth-art-chip auth-art-chip--jobs"><span>03</span><div>Oportunidades<small>Vagas para explorar</small></div></div>
         </div>
         <ul class="intro-points" aria-label="Benefícios da plataforma">
           <li>Perfil construído por você</li>
@@ -34,6 +42,7 @@
 
       <section class="auth-panel">
         <div class="auth-card" id="login-card">
+          <p class="auth-card-kicker">Bem-vindo de volta <span>✦</span></p>
           <h2>Entre na sua conta</h2>
           <p class="muted">Acompanhe seu desenvolvimento profissional em um só lugar.</p>
           <form id="login-form" class="form-stack">
@@ -50,6 +59,7 @@
 
         <div class="auth-card hidden" id="register-card">
           <button class="back-button" data-show-auth="login" type="button">← Voltar</button>
+          <p class="auth-card-kicker">Comece sua jornada <span>✦</span></p>
           <h2>Crie seu perfil</h2>
           <p class="muted">Não preenchemos nada por você. Suas informações continuam sendo suas.</p>
           <form id="register-form" class="form-stack">
@@ -69,7 +79,7 @@
     </main>
 
     <div id="app-view" class="app-shell hidden">
-      <aside class="sidebar">
+      <aside class="sidebar" id="main-sidebar">
         <a class="brand" href="#dashboard" aria-label="PrimeiroEmprego IA">
           <span class="brand-mark">p.</span><span>primeiro<span>emprego</span><b>IA</b></span>
         </a>
@@ -92,20 +102,21 @@
 
       <section class="app-main">
         <header class="topbar">
-          <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu">☰</button>
+          <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-sidebar">☰</button>
           <div class="topbar-date"><span class="live-dot"></span> <span id="site-date">--/--/----</span></div>
           <div class="account-chip"><span id="account-initial">P</span><div><b id="account-name">Seu perfil</b><small>Meu espaço</small></div></div>
         </header>
 
         <div class="page-wrap">
           <section class="page active" id="page-dashboard" data-page="dashboard">
-            <div class="page-heading split-heading">
+            <div class="page-heading split-heading dashboard-hero">
               <div>
-                <p class="eyebrow">Visão geral</p>
+                <p class="eyebrow"><span class="eyebrow-dot"></span> Seu espaço de crescimento</p>
                 <h1>Olá, <span id="welcome-name">!</span></h1>
-                <p class="lead">Seu caminho profissional está tomando forma.</p>
+                <p class="lead">Cada passo conta. Continue construindo seu caminho profissional.</p>
               </div>
               <button class="button button--secondary" data-go="profile">Completar meu perfil</button>
+              <div class="dashboard-hero-art" aria-hidden="true"><span class="hero-art-circle hero-art-circle--one"></span><span class="hero-art-circle hero-art-circle--two"></span><span class="hero-art-arrow">↗</span></div>
             </div>
 
             <div class="progress-card">
@@ -151,9 +162,10 @@
           <section class="page" id="page-jobs" data-page="jobs">
             <div class="page-heading split-heading">
               <div><p class="eyebrow">Oportunidades</p><h1>Vagas com destino certo.</h1><p class="lead">Cada oportunidade exibida direciona para a página original onde foi publicada.</p></div>
-              <span class="verified-pill">◉ Links verificados</span>
+              <span class="verified-pill">Curitiba · PR</span>
             </div>
-            <div class="job-notice"><span>✓</span><p>Para sua segurança, não exibimos vagas sem uma URL específica e válida da oportunidade. Nenhuma vaga ou link é inventado.</p></div>
+            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button></form>
+            <p id="jobs-context" class="muted" aria-live="polite"></p>
             <div id="jobs-list" class="jobs-list"></div>
           </section>
 
@@ -161,12 +173,13 @@
             <div class="page-heading split-heading">
               <div><p class="eyebrow">Meu currículo</p><h1>Conte sua história com clareza.</h1><p class="lead">Envie um currículo pronto ou crie uma versão profissional com as suas próprias informações.</p></div>
             </div>
+            <p id="ai-availability" class="muted" role="status">Verificando disponibilidade da análise com IA local…</p>
             <div class="resume-options">
               <article class="resume-option upload-option">
-                <div class="option-icon">↑</div><h2>Já tenho um currículo</h2><p>Envie um arquivo em PDF ou DOCX para guardar, visualizar e receber observações de organização.</p>
+                <div class="option-icon">↑</div><h2>Já tenho um currículo</h2><p>Envie um arquivo em PDF para guardar, visualizar e receber observações de organização.</p>
                 <form id="upload-form" class="upload-form">
-                  <input id="resume-file" name="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                  <label for="resume-file" class="file-label"><span>Selecionar arquivo</span><small>PDF ou DOCX · até 8 MB</small></label>
+                  <input id="resume-file" name="file" type="file" accept=".pdf,application/pdf" required />
+                  <label for="resume-file" class="file-label"><span>Selecionar arquivo</span><small>PDF · até 8 MB</small></label>
                   <button class="button button--outline" type="submit">Enviar currículo</button>
                 </form>
               </article>
@@ -186,15 +199,10 @@
             <div class="course-hero">
               <p class="eyebrow eyebrow--light">Cursos e capacitação</p><h1>Desenvolva suas habilidades.</h1><p>Encontre instituições confiáveis e desenvolva competências que o mercado procura.</p><span class="course-hero-star">✦</span>
             </div>
-            <section class="course-block">
-              <div class="section-title"><div><p class="eyebrow">Para você</p><h2>Caminhos recomendados</h2></div></div>
-              <p id="courses-intro" class="muted">Preencha seu perfil para receber sugestões baseadas nas informações que você compartilhou.</p>
-              <div id="courses-recommendations" class="recommendation-row"></div>
-            </section>
-            <section class="course-block">
-              <div class="section-title"><div><p class="eyebrow">Instituições confiáveis</p><h2>Onde aprender</h2></div></div>
-              <div id="institutions-list" class="institution-grid"></div>
-            </section>
+            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Somente gratuitos</label><button class="button button--primary">Buscar cursos</button></form>
+            <p id="courses-context" class="muted" aria-live="polite"></p>
+            <div id="courses-list" class="jobs-list"></div>
+
           </section>
         </div>
       </section>
@@ -251,12 +259,12 @@
         <button class="modal-close" data-close-modal aria-label="Fechar">×</button>
         <div class="builder-header"><p class="eyebrow">Criar currículo</p><h2 id="builder-title">Revise as suas informações</h2><p class="muted">Preencha ou ajuste apenas o que quiser incluir. Campos vazios não aparecem no currículo.</p></div>
         <form id="resume-builder-form" class="builder-form">
-          <label>Nome completo<input name="full_name" required /></label>
+          <label>Nome completo<input name="full_name" required maxlength="120" /></label><label>Área ou cargo pretendido<input name="headline" maxlength="160" /></label><label>E-mail para o currículo<input name="email" type="email" /></label>
           <div class="form-grid">
             <label>Telefone<input name="phone" /></label>
-            <label>Cidade / Estado<input name="location" disabled /></label>
+            <label>Cidade / Estado<input name="location" maxlength="160" /></label>
             <label class="full">Objetivo profissional<textarea name="objective"></textarea></label>
-            <label class="full">Formação acadêmica<textarea name="education"></textarea></label>
+            <label class="full">Formação acadêmica<textarea name="education"></textarea></label><label class="full">Curso em andamento ou concluído<textarea name="course"></textarea></label>
             <label class="full">Experiência profissional<textarea name="professional_experience"></textarea></label>
             <label class="full">Experiências acadêmicas e projetos<textarea name="academic_experience"></textarea></label>
             <label>Cursos e certificações<textarea name="courses"></textarea></label>
@@ -273,7 +281,7 @@
       <div class="modal-backdrop" data-close-preview></div>
       <div class="modal-content preview-content">
         <button class="modal-close" data-close-preview aria-label="Fechar">×</button>
-        <div id="resume-preview"></div>
+        <h2 id="preview-title">Currículo</h2><div id="resume-preview" aria-live="polite"></div>
       </div>
     </div>
 

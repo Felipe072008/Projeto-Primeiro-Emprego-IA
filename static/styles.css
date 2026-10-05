@@ -369,3 +369,33 @@ input:disabled { color: #6b7781; background: #eff2ef; cursor: not-allowed; }
   .modal { padding: 10px; }
   .modal-content { padding: 25px 18px; }
 }
+/* Catalog details and document review */
+.catalog-filters { display:flex; flex-wrap:wrap; gap:16px; align-items:end; padding:22px 0; }
+.catalog-filters label { display:flex; flex-direction:column; gap:7px; font-size:.85rem; flex:1 1 180px; }
+.catalog-filters input,.catalog-filters select { width:100%; padding:12px; border:1px solid #bdc9c6; border-radius:9px; background:white; color:#203936; font:inherit; }
+.catalog-filters .check-label { flex-direction:row; align-items:center; padding:12px 0; }
+.check-label input { width:18px; height:18px; }
+.catalog-card { align-items:start; gap:22px; }
+.catalog-card h2 { margin-top:12px; }
+.catalog-card p { max-width:75ch; }
+.match-badge { display:inline-block; padding:5px 9px; border-radius:6px; background:#e8efed; color:#314c46; font-size:.75rem; }
+.match-badge.direct { background:#dcefe5; color:#21533d; }
+.match-badge.related { background:#f7ecce; color:#68531e; }
+.match-reason { font-size:.88rem; color:#315b50; }
+.listing-detail,.analysis-report { line-height:1.65; overflow-wrap:anywhere; }
+.listing-detail dl { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:20px; background:#f4f7f5; border-radius:12px; }
+.listing-detail dt { font-size:.8rem; color:#61736d; }
+.listing-detail dd { margin:3px 0 0; }
+.listing-detail h3,.analysis-report h3 { margin:25px 0 12px; }
+.listing-detail ul { padding-left:24px; margin-bottom:24px; }
+.analysis-card { border:1px solid #dbe5df; border-radius:12px; padding:18px; margin:12px 0; }
+.analysis-card h4 { margin:0 0 8px; }
+.analysis-card p { margin:7px 0; }
+.analysis-notice { border-left:4px solid #b79c49; background:#fbf6e8; padding:15px; }
+.check-status { font-size:.7rem; font-weight:500; color:#61736d; }
+.analysis-card blockquote { margin:10px 0; padding-left:15px; border-left:3px solid #b7cec3; }
+#preview-title { padding-right:40px; margin-bottom:22px; }
+.preview-actions { display:flex; flex-wrap:wrap; gap:12px; }
+button:disabled { opacity:.65; cursor:wait; }
+:focus-visible { outline:3px solid #b27d13; outline-offset:3px; }
+@media(max-width:760px) { .catalog-card { flex-direction:column; } .listing-detail dl { grid-template-columns:1fr; } .catalog-filters { gap:12px; } }
