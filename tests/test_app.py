@@ -51,7 +51,7 @@ class SiteTests(unittest.TestCase):
         with self.assertRaises(InvalidPDF): inspect_pdf(stream.getvalue())
 
     def test_resume_fields_escaping_and_ownership(self):
-        self.client.put('/api/profile',json={'city':'Curitiba','state':'PR','course':'Técnico em Informática','desired_area':'Tecnologia'})
+        self.client.put('/api/profile',json={'phone':'41999999999','age':'18','city':'Curitiba','state':'Paraná','course':'Técnico em Informática','desired_area':'Tecnologia','education':'Médio Completo','skills':'Python','languages':'Português'})
         created=self.client.post('/api/resumes/generate',json={'location':'','email':'','objective':'Aprender <b> & colaborar em projetos reais.'})
         self.assertEqual(created.status_code,201,created.json)
         id=created.json['id']
@@ -68,6 +68,14 @@ class SiteTests(unittest.TestCase):
         self.client.post('/api/auth/register',json={'name':'Outra Pessoa','email':'outra@example.com','password':'teste1234'})
         self.assertEqual(self.client.get(f'/api/resumes/{id}/pdf').status_code,404)
         self.assertEqual(self.client.post(f'/api/resumes/{id}/analyze').status_code,404)
+
+    def test_profile_required_fields_and_numeric_limits(self):
+        profile={'phone':'41999999999','age':'18','city':'Curitiba','state':'Paraná','desired_area':'Assistente administrativo','education':'Médio Completo','skills':'Organização','languages':'Português'}
+        for invalid in ({}, dict(profile, phone='41-99999-9999'), dict(profile, phone='1'*12), dict(profile, age='1000'), dict(profile, education='Não listada'), dict(profile, skills='')):
+            self.assertEqual(self.client.put('/api/profile', json=invalid).status_code, 400)
+        saved=self.client.put('/api/profile', json=profile)
+        self.assertEqual(saved.status_code, 200, saved.json)
+        self.assertEqual(saved.json['profile']['city'], 'Curitiba')
 
     def test_analysis_unavailable_is_honest(self):
         created=self.client.post('/api/resumes/upload',data={'file':(io.BytesIO(self.pdf()),'cv.pdf')})

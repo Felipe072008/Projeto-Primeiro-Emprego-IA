@@ -3,6 +3,8 @@ const state = {
   profile: null,
   dashboard: null,
 };
+const optionCache = { locations: null, occupations: null };
+const openOptionLists = new WeakMap();
 
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
@@ -75,8 +77,7 @@ function accountDetails() {
 function navigate(route) {
   $$(".page").forEach((page) => page.classList.toggle("active", page.dataset.page === route));
   $$(".nav-link").forEach((button) => button.classList.toggle("active", button.dataset.route === route));
-  $(".sidebar").classList.remove("open");
-  syncMobileMenu();
+  setMobileMenuOpen(false);
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (route === "dashboard") loadDashboard();
   if (route === "profile") populateProfileForm();
@@ -133,9 +134,162 @@ function populateProfileForm() {
   $("#profile-name").value = user.name || "";
   $("#profile-email").value = user.email || "";
   $$('[name]', form).forEach((field) => {
-    if (field.name in profile) field.value = profile[field.name] || "";
+    if (field.name in profile) {
+      const value = profile[field.name] || "";
+      field.value = field.name === "phone" ? String(value).replace(/\D/g, "").slice(0, 11)
+        : field.name === "age" ? String(value).replace(/\D/g, "").slice(0, 3) : value;
+    }
   });
+  closeAllOptionLists();
   renderProfileSummary();
+}
+
+function normalizeOptionText(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+function loadOptionData(kind) {
+  if (!optionCache[kind]) {
+    const path = kind === "locations" ? "/static/locations.json" : "/static/occupations.json";
+    optionCache[kind] = api(path).then((data) => {
+      if (kind === "locations") {
+        const stateNames = new Map(data.states.map((item) => [item.uf, item.name]));
+        data.stateOptions = data.states.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+        data.cityOptions = data.cities.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`), stateName: stateNames.get(item.uf) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+      } else {
+        data.options = data.occupations.map((item) => ({ value: item.title, label: item.title, key: normalizeOptionText(item.title), aliases: normalizeOptionText(item.aliases.join(" ")), family: item.code.slice(0, 4) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+      }
+      return data;
+    }).catch((error) => { optionCache[kind] = null; throw error; });
+  }
+  return optionCache[kind];
+}
+
+function rankOptions(items, query, kind) {
+  if (!query) return items;
+  const terms = query.split(/\s+/).filter(Boolean);
+  const ranked = [];
+  const relatedFamilies = new Set();
+  items.forEach((item) => {
+    const inTitle = item.key.includes(query);
+    const inAliases = item.aliases?.includes(query);
+    const termsMatch = terms.every((term) => item.key.includes(term) || item.aliases?.includes(term));
+    if (!inTitle && !inAliases && !termsMatch) return;
+    const score = item.key.startsWith(query) ? 0 : inTitle ? 1 : inAliases ? 2 : 3;
+    ranked.push({ item, score });
+    if (kind === "desired_area" && score <= 2) relatedFamilies.add(item.family);
+  });
+  if (kind === "desired_area" && query.length >= 3 && relatedFamilies.size) {
+    const alreadyFound = new Set(ranked.map(({ item }) => item.value));
+    items.forEach((item) => {
+      if (relatedFamilies.has(item.family) && !alreadyFound.has(item.value)) ranked.push({ item, score: 4 });
+    });
+  }
+  ranked.sort((a, b) => a.score - b.score || a.item.label.localeCompare(b.item.label, "pt-BR"));
+  return ranked.map(({ item }) => item);
+}
+
+function closeOptionList(wrapper) {
+  const input = $("input", wrapper);
+  const list = $(".autocomplete-list", wrapper);
+  list.hidden = true;
+  input.setAttribute("aria-expanded", "false");
+  input.removeAttribute("aria-activedescendant");
+  openOptionLists.delete(wrapper);
+}
+
+function closeAllOptionLists() {
+  $$(".autocomplete-field").forEach(closeOptionList);
+}
+
+function appendOptionBatch(wrapper) {
+  const list = $(".autocomplete-list", wrapper);
+  const current = openOptionLists.get(wrapper);
+  if (!current || current.rendered >= current.matches.length) return;
+  const next = Math.min(current.rendered + 80, current.matches.length);
+  const name = wrapper.dataset.autocomplete;
+  list.insertAdjacentHTML("beforeend", current.matches.slice(current.rendered, next).map((item, offset) => {
+    const index = current.rendered + offset;
+    return `<button id="${name}-option-${index}" class="autocomplete-option" type="button" role="option" aria-selected="false" data-option-index="${index}">${escapeHtml(item.label)}</button>`;
+  }).join(""));
+  current.rendered = next;
+}
+
+async function openOptionList(wrapper) {
+  const input = $("input", wrapper);
+  const list = $(".autocomplete-list", wrapper);
+  const kind = wrapper.dataset.autocomplete;
+  const requestValue = input.value;
+  list.hidden = false;
+  list.innerHTML = '<span class="autocomplete-message">Carregando opções…</span>';
+  input.setAttribute("aria-expanded", "true");
+  try {
+    const data = await loadOptionData(kind === "desired_area" ? "occupations" : "locations");
+    if (document.activeElement !== input || input.value !== requestValue || list.hidden) return;
+    const items = kind === "city" ? data.cityOptions : kind === "state" ? data.stateOptions : data.options;
+    const matches = rankOptions(items, normalizeOptionText(input.value), kind);
+    openOptionLists.set(wrapper, { matches, rendered: 0, active: -1 });
+    list.innerHTML = "";
+    list.scrollTop = 0;
+    if (matches.length) appendOptionBatch(wrapper);
+    else list.innerHTML = '<span class="autocomplete-message">Nenhuma opção encontrada.</span>';
+  } catch {
+    if (!list.hidden) list.innerHTML = '<span class="autocomplete-message">Não foi possível carregar as opções. Tente novamente.</span>';
+  }
+}
+
+function chooseOption(wrapper, index) {
+  const current = openOptionLists.get(wrapper);
+  const choice = current?.matches[index];
+  if (!choice) return;
+  const input = $("input", wrapper);
+  input.value = choice.value;
+  if (wrapper.dataset.autocomplete === "city" && choice.stateName) $("#profile-state").value = choice.stateName;
+  closeAllOptionLists();
+}
+
+function bindOptionLists() {
+  $$(".autocomplete-field").forEach((wrapper) => {
+    const input = $("input", wrapper);
+    const list = $(".autocomplete-list", wrapper);
+    input.addEventListener("focus", () => openOptionList(wrapper));
+    input.addEventListener("click", () => { if (list.hidden) openOptionList(wrapper); });
+    input.addEventListener("input", () => openOptionList(wrapper));
+    input.addEventListener("keydown", (event) => {
+      const current = openOptionLists.get(wrapper);
+      if (event.key === "Escape" && !list.hidden) { event.stopPropagation(); closeOptionList(wrapper); return; }
+      if (!current || list.hidden || !current.matches.length) return;
+      if (event.key === "Enter") {
+        event.preventDefault();
+        chooseOption(wrapper, current.active >= 0 ? current.active : 0);
+        return;
+      }
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      event.preventDefault();
+      const old = list.querySelector('[aria-selected="true"]');
+      old?.setAttribute("aria-selected", "false");
+      current.active = event.key === "ArrowDown" ? Math.min(current.active + 1, current.matches.length - 1) : Math.max(current.active - 1, 0);
+      while (current.active >= current.rendered) appendOptionBatch(wrapper);
+      const option = list.querySelector(`[data-option-index="${current.active}"]`);
+      option?.setAttribute("aria-selected", "true");
+      option?.scrollIntoView({ block: "nearest" });
+      input.setAttribute("aria-activedescendant", option.id);
+    });
+    list.addEventListener("mousedown", (event) => event.preventDefault());
+    list.addEventListener("click", (event) => {
+      const option = event.target.closest("[data-option-index]");
+      if (option) chooseOption(wrapper, Number(option.dataset.optionIndex));
+    });
+    list.addEventListener("scroll", () => {
+      if (list.scrollTop + list.clientHeight >= list.scrollHeight - 60) appendOptionBatch(wrapper);
+    });
+    wrapper.addEventListener("focusout", (event) => {
+      if (!wrapper.contains(event.relatedTarget)) closeOptionList(wrapper);
+    });
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!event.target.closest(".autocomplete-field")) closeAllOptionLists();
+  });
 }
 
 function profileText(value, fallback = "Não informado") {
@@ -270,6 +424,8 @@ async function loadAIStatus() {
 function showCatalogDetail(kind, index) {
   const item = catalogRows[kind][index];
   if (!item) return;
+  $('#preview-modal').classList.remove('return-to-builder');
+  $('[data-close-preview].modal-close').setAttribute('aria-label', 'Fechar');
   $('#preview-title').textContent = item.title;
   const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule]] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ['Custo', item.price], ['Turmas', item.availability]];
   $('#resume-preview').innerHTML = `<article class="listing-detail"><p class="match-reason">${escapeHtml(item.match_reason)}</p><p>${escapeHtml(item.description)}</p><dl>${details.map(([label,value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value || 'Não informado na fonte')}</dd></div>`).join('')}</dl><h3>${kind === 'jobs' ? 'Requisitos e observações' : 'Requisitos e conteúdo'}</h3><ul>${(item.requirements || []).map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>${item.benefits?.length ? `<h3>Benefícios informados</h3><ul>${item.benefits.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>` : ''}<p class="muted">Fonte: ${escapeHtml(item.source)}. Consulta em ${catalogDate(item.checked_on)}. A disponibilidade pode mudar. ${escapeHtml(item.access_note || '')}</p><a class="button button--primary" href="${escapeHtml(item.original_url)}" target="_blank" rel="noopener noreferrer">${kind === 'jobs' ? 'Ver vaga na fonte' : 'Ver curso na instituição'} ↗</a></article>`;
@@ -329,6 +485,7 @@ function closeModal(selector) {
   const modal = $(selector);
   if (modal.classList.contains('hidden')) return;
   modal.classList.add('hidden');
+  if (selector === '#preview-modal') $('#builder-modal').inert = false;
   if (!$$('.modal:not(.hidden)').length) {
     document.body.style.overflow = '';
     $('#app-view').inert = false;
@@ -337,10 +494,22 @@ function closeModal(selector) {
   const origin = modalOrigins.get(modal);
   if (origin?.isConnected && !origin.closest('.hidden')) origin.focus();
   modalOrigins.delete(modal);
+  if (selector === '#preview-modal') modal.classList.remove('return-to-builder');
+}
+function setMobileMenuOpen(open) {
+  const mobile = window.matchMedia('(max-width: 900px)').matches;
+  $('.sidebar').classList.toggle('open', mobile && open);
+  $('#app-view').classList.toggle('menu-open', mobile && open);
+  syncMobileMenu();
 }
 function syncMobileMenu() {
-  const open = $('.sidebar').classList.contains('open');
-  $('.sidebar').inert = window.matchMedia('(max-width: 900px)').matches && !open;
+  const mobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!mobile) {
+    $('.sidebar').classList.remove('open');
+    $('#app-view').classList.remove('menu-open');
+  }
+  const open = mobile && $('.sidebar').classList.contains('open');
+  $('.sidebar').inert = mobile && !open;
   $('#mobile-menu').setAttribute('aria-expanded', String(open));
   $('#mobile-menu').setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
 }
@@ -371,8 +540,10 @@ function populateBuilder() {
   });
 }
 
-function renderResumePreview(data, resumeId) {
-  $("#preview-title").textContent = "Prévia do currículo";
+function renderResumePreview(data, resumeId, returnToBuilder = false) {
+  $("#preview-title").textContent = returnToBuilder ? "Currículo pronto para revisar" : "Prévia do currículo";
+  $('#preview-modal').classList.toggle('return-to-builder', returnToBuilder);
+  $('[data-close-preview].modal-close').setAttribute('aria-label', returnToBuilder ? 'Voltar à edição do currículo' : 'Fechar');
   const sections = data.sections.map((section) => `
     <section class="resume-document-section">
       <h2>${escapeHtml(section.title)}</h2>
@@ -391,6 +562,7 @@ function renderResumePreview(data, resumeId) {
       </div>
     </article>`;
   openModal("#preview-modal");
+  if (returnToBuilder) $('#builder-modal').inert = true;
 }
 
 async function handleResumeAction(event) {
@@ -476,9 +648,8 @@ async function generateResume(event) {
   button.disabled = true;
   try {
     const result = await api("/api/resumes/generate", { method: "POST", body: values });
-    closeModal("#builder-modal");
     toast(result.message);
-    renderResumePreview(result.resume, result.id);
+    renderResumePreview(result.resume, result.id, true);
     loadResumes();
     loadDashboard();
   } catch (error) {
@@ -534,6 +705,12 @@ async function logout() {
 }
 
 function bindEvents() {
+  bindOptionLists();
+  $$('[name="phone"], [name="age"]', $('#profile-form')).forEach((field) => {
+    field.addEventListener('input', () => {
+      field.value = field.value.replace(/\D/g, '').slice(0, field.name === 'phone' ? 11 : 3);
+    });
+  });
   ['jobs', 'courses'].forEach(kind => {
     $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
     $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });
@@ -543,7 +720,7 @@ function bindEvents() {
   window.addEventListener('resize', syncMobileMenu);
   syncMobileMenu();
   document.addEventListener('keydown', event => {
-    const modal = $('.modal:not(.hidden)');
+    const modal = $$('.modal:not(.hidden)').at(-1);
     if (!modal || event.key !== 'Tab') return;
     const focusable = $$('button:not(:disabled), a[href], input:not(:disabled), textarea, select', modal).filter(x => x.getClientRects().length);
     const first = focusable[0], last = focusable.at(-1);
@@ -558,7 +735,9 @@ function bindEvents() {
   $("#resume-builder-form").addEventListener("submit", generateResume);
   $("#resume-list").addEventListener("click", handleResumeAction);
   $("#logout-button").addEventListener("click", logout);
-  $("#mobile-menu").addEventListener("click", () => { $(".sidebar").classList.toggle("open"); syncMobileMenu(); });
+  $("#mobile-menu").addEventListener("click", () => setMobileMenuOpen(!$(".sidebar").classList.contains("open")));
+  $("#sidebar-backdrop").addEventListener("click", () => setMobileMenuOpen(false));
+  $("#app-brand").addEventListener("click", (event) => { event.preventDefault(); navigate("dashboard"); });
   $$('[data-route]').forEach((button) => button.addEventListener("click", () => navigate(button.dataset.route)));
   $$('[data-go]').forEach((button) => button.addEventListener("click", () => navigate(button.dataset.go)));
   document.addEventListener("click", (event) => {
@@ -573,9 +752,10 @@ function bindEvents() {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      closeModal("#profile-modal");
-      closeModal("#builder-modal");
-      closeModal("#preview-modal");
+      if ($$('.modal:not(.hidden)').length) {
+        const modal = $$('.modal:not(.hidden)').at(-1);
+        closeModal(`#${modal.id}`);
+      } else if ($('.sidebar').classList.contains('open')) setMobileMenuOpen(false);
     }
   });
 }
