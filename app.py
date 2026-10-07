@@ -126,6 +126,16 @@ PROFILE_FIELDS = (
     "professional_experience", "academic_experience", "skills", "courses",
     "languages", "objective",
 )
+REQUIRED_PROFILE_FIELDS = {
+    "phone": "Telefone", "age": "Idade", "city": "Cidade", "state": "Estado",
+    "desired_area": "Área profissional desejada", "education": "Escolaridade",
+    "skills": "Habilidades", "languages": "Idiomas",
+}
+EDUCATION_OPTIONS = {
+    "Fundamental Incompleto", "Fundamental Completo", "Médio Incompleto",
+    "Médio Completo", "Cursando Ensino Médio", "Superior Incompleto",
+    "Cursando Superior",
+}
 
 
 def profile_completion(profile: dict) -> int:
@@ -317,7 +327,19 @@ def profile():
         return jsonify({"user": get_user(user_id), "profile": get_profile(user_id)})
 
     data = request.get_json(silent=True) or {}
-    values = [str(data.get(field, "")).strip() for field in PROFILE_FIELDS]
+    if not isinstance(data, dict):
+        return jsonify({"error": "Dados do perfil inválidos."}), 400
+    profile_data = {field: str(data.get(field) or "").strip() for field in PROFILE_FIELDS}
+    missing = [label for field, label in REQUIRED_PROFILE_FIELDS.items() if not profile_data[field]]
+    if missing:
+        return jsonify({"error": "Preencha os campos obrigatórios: " + ", ".join(missing) + "."}), 400
+    for field, limit, label in (("phone", 11, "Telefone"), ("age", 3, "Idade")):
+        value = profile_data[field]
+        if len(value) > limit or not value.isascii() or not value.isdigit():
+            return jsonify({"error": f"{label} deve conter apenas números, com no máximo {limit} dígitos."}), 400
+    if profile_data["education"] not in EDUCATION_OPTIONS:
+        return jsonify({"error": "Selecione uma das opções de escolaridade disponíveis."}), 400
+    values = [profile_data[field] for field in PROFILE_FIELDS]
     with db_connection() as connection:
         connection.execute(
             "UPDATE profiles SET " + ", ".join(f"{field} = ?" for field in PROFILE_FIELDS) + ", updated_at = ? WHERE user_id = ?",
