@@ -3,32 +3,37 @@
     "id": "fb-python",
     "title": "Linguagem de Programação Python — Básico",
     "original_url": "https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico",
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
     "areas": [
       "tecnologia"
     ],
     "duration": "18 horas",
-    "description": "Introdução à lógica e ao Python, incluindo variáveis, decisões, repetições e funções.",
+    "description": "Introdução à lógica, variáveis, estruturas de decisão e funções, com exercícios de programação em Python.",
     "requirements": [
-      "Idade mínima informada: 16 anos.",
+      "Nível iniciante; idade mínima de 16 anos.",
       "Prazo de conclusão: 60 dias após a matrícula."
     ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
-    "institution": "Fundação Bradesco — Escola Virtual",
-    "source": "Escola Virtual",
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Catálogo online; confira matrícula na instituição.",
-    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
     "id": "fb-excel",
     "title": "Microsoft Excel 2016 — Básico",
     "original_url": "https://www.ev.org.br/cursos/microsoft-excel-2016-basico",
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
     "areas": [
       "administracao",
       "financeiro",
@@ -36,232 +41,292 @@
       "rh"
     ],
     "duration": "15 horas",
-    "description": "Prática inicial com planilhas, fórmulas, formatação e gráficos para organizar informações.",
+    "description": "Fundamentos de planilhas, fórmulas, tabelas e gráficos para organizar informações no trabalho.",
     "requirements": [
-      "Não exige conhecimento prévio; idade mínima: 14 anos.",
+      "Idade mínima de 14 anos; sem conhecimento prévio exigido.",
       "Prazo de conclusão: 60 dias após a matrícula."
     ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
-    "institution": "Fundação Bradesco — Escola Virtual",
-    "source": "Escola Virtual",
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Catálogo online; confira matrícula na instituição.",
-    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
     "id": "fb-atendimento",
     "title": "Atendimento ao Público",
     "original_url": "https://www.ev.org.br/cursos/atendimento-ao-publico",
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
     "areas": [
       "comercial",
-      "administracao"
+      "administracao",
+      "saude"
     ],
     "duration": "10 horas",
-    "description": "Noções de escuta, comunicação com o público e condução de situações difíceis no atendimento presencial ou digital.",
+    "description": "Escuta e comunicação para atendimento presencial, por telefone ou pela internet. Útil também à recepção de clínicas.",
     "requirements": [
-      "Não exige conhecimento prévio; idade mínima: 16 anos.",
-      "Prazo de conclusão: 60 dias após a matrícula."
+      "Idade mínima de 16 anos; sem pré-requisitos.",
+      "Prazo de conclusão: 60 dias.",
+      "Capacitação em atendimento; não habilita para atividades clínicas."
     ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
-    "institution": "Fundação Bradesco — Escola Virtual",
-    "source": "Escola Virtual",
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Catálogo online; confira matrícula na instituição.",
-    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
-    "id": "fb-web",
-    "title": "Crie um site simples usando HTML, CSS e JavaScript",
-    "original_url": "https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript",
-    "areas": [
-      "tecnologia",
-      "marketing"
-    ],
-    "duration": "2 horas",
-    "description": "Primeiros passos na construção de páginas web com estrutura, apresentação visual e interação.",
-    "requirements": [
-      "Nível iniciante. Confira idade mínima e prazo na instituição."
-    ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
+    "id": "fb-contabilidade",
+    "title": "Contabilidade Empresarial",
+    "original_url": "https://www.ev.org.br/cursos/Contabilidade-Empresarial",
     "institution": "Fundação Bradesco — Escola Virtual",
-    "source": "Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
+    "areas": [
+      "financeiro"
+    ],
+    "duration": "10 horas",
+    "description": "Conceitos contábeis, balanço patrimonial e demonstrações de resultados para compreender os registros de uma empresa.",
+    "requirements": [
+      "Idade mínima de 16 anos; prazo de 60 dias.",
+      "A instituição classifica o curso como avançado, embora apresente noções básicas; comece por Excel se precisar de uma introdução mais leve."
+    ],
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Catálogo online; confira matrícula na instituição.",
-    "access_note": "É necessário cadastro gratuito na instituição para estudar."
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
-    "id": "fb-comunicacao",
-    "title": "Comunicação Empresarial",
-    "original_url": "https://www.ev.org.br/cursos/comunicacao-empresarial",
-    "areas": [
-      "administracao",
-      "rh",
-      "comercial",
-      "marketing"
-    ],
-    "duration": "12 horas",
-    "description": "Desenvolvimento da comunicação oral e escrita em situações profissionais.",
-    "requirements": [
-      "Nível iniciante. Confira os requisitos de matrícula na instituição."
-    ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
+    "id": "fb-educacao",
+    "title": "Educação Inclusiva",
+    "original_url": "https://www.ev.org.br/cursos/educacao-inclusiva",
     "institution": "Fundação Bradesco — Escola Virtual",
-    "source": "Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
+    "areas": [
+      "educacao"
+    ],
+    "duration": "20 horas",
+    "description": "Fundamentos de inclusão e educação especial, com recursos e estratégias para apoiar a aprendizagem de diferentes estudantes.",
+    "requirements": [
+      "Idade mínima de 18 anos; sem pré-requisitos.",
+      "Prazo de conclusão: 60 dias.",
+      "Curso livre de aperfeiçoamento; não substitui licenciatura."
+    ],
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Catálogo online; confira matrícula na instituição.",
-    "access_note": "É necessário cadastro gratuito na instituição para estudar."
-  },
-  {
-    "id": "senai-sistemas",
-    "title": "Técnico em Desenvolvimento de Sistemas",
-    "original_url": "https://novo.senaipr.org.br/en/cursos-tecnicos/desenvolvimento-de-sistemas",
-    "areas": [
-      "tecnologia"
-    ],
-    "description": "Formação técnica voltada à criação de sistemas e soluções digitais para empresas e serviços.",
-    "institution": "SENAI Paraná",
-    "source": "SENAI Paraná",
-    "course_type": "tecnico",
-    "modality": "Consultar modalidade e unidade em Curitiba",
-    "duration": "Consultar carga horária da turma",
-    "free": false,
-    "price": "Consultar valores e bolsas na instituição",
-    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
-    "requirements": [
-      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
-    ],
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
     "expires_on": null,
-    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
-    "id": "senai-admin",
-    "title": "Técnico em Administração",
-    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/administracao",
+    "id": "fb-ia-educadores",
+    "title": "Inteligência Artificial para Educadores",
+    "original_url": "https://www.ev.org.br/cursos/iaeduc",
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
     "areas": [
-      "administracao",
-      "financeiro",
+      "educacao"
+    ],
+    "duration": "4 horas",
+    "description": "Introdução às aplicações de IA no planejamento de aulas e na criação de atividades educacionais.",
+    "requirements": [
+      "Idade mínima de 16 anos; prazo de 60 dias.",
+      "Recomenda-se cursar previamente FluêncIA — Inteligência Artificial."
+    ],
+    "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+    "certificate_source": "https://www.ev.org.br/cursos/iaeduc",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+  },
+  {
+    "id": "evg-logistica",
+    "title": "Estratégias de Logística na Administração Pública",
+    "original_url": "https://www.escolavirtual.gov.br/curso/435/governoes",
+    "institution": "EV.G — Escola Virtual de Governo / Enap",
+    "source": "EV.G — Escola Virtual de Governo / Enap",
+    "areas": [
+      "logistica",
+      "administracao"
+    ],
+    "duration": "20 horas",
+    "description": "Noções de suprimentos, almoxarifado, estoque, distribuição e patrimônio, com exemplos da administração pública.",
+    "requirements": [
+      "Aberto a qualquer pessoa interessada.",
+      "Prazo de conclusão: 30 dias."
+    ],
+    "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+    "certificate_source": "https://www.escolavirtual.gov.br/curso/435/governoes",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrições contínuas; início imediato após cadastro.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+  },
+  {
+    "id": "evg-pessoas",
+    "title": "Gestão de Pessoas",
+    "original_url": "https://www.escolavirtual.gov.br/curso/1338/",
+    "institution": "EV.G — Escola Virtual de Governo / Enap",
+    "source": "EV.G — Escola Virtual de Governo / Enap",
+    "areas": [
       "rh"
     ],
-    "description": "Formação para organizar processos e apoiar rotinas de gestão, finanças, pessoas e logística.",
-    "institution": "SENAI Paraná",
-    "source": "SENAI Paraná",
-    "course_type": "tecnico",
-    "modality": "Consultar modalidade e unidade em Curitiba",
-    "duration": "Consultar carga horária da turma",
-    "free": false,
-    "price": "Consultar valores e bolsas na instituição",
-    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
+    "duration": "20 horas",
+    "description": "Panorama dos processos de RH: entrada, desenvolvimento, acompanhamento, remuneração e permanência das pessoas nas organizações.",
     "requirements": [
-      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
+      "Aberto a qualquer pessoa interessada; conteúdo do TRT da 2ª Região.",
+      "Prazo de conclusão: 30 dias."
     ],
+    "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+    "certificate_source": "https://www.escolavirtual.gov.br/curso/1338/",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrições contínuas; início imediato após cadastro.",
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
     "expires_on": null,
-    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
-  },
-  {
-    "id": "senai-logistica",
-    "title": "Técnico em Logística",
-    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/logistica",
-    "areas": [
-      "logistica"
-    ],
-    "description": "Formação em controle de estoques, transporte, armazenagem e organização de operações logísticas.",
-    "institution": "SENAI Paraná",
-    "source": "SENAI Paraná",
-    "course_type": "tecnico",
-    "modality": "Consultar modalidade e unidade em Curitiba",
-    "duration": "Consultar carga horária da turma",
-    "free": false,
-    "price": "Consultar valores e bolsas na instituição",
-    "availability": "Curso consta no catálogo. Turma em Curitiba e inscrições abertas precisam de confirmação; não há vaga de matrícula garantida.",
-    "requirements": [
-      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
-    ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
-    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
-  },
-  {
-    "id": "senai-automacao",
-    "title": "Técnico em Automação Industrial",
-    "original_url": "https://novo.senaipr.org.br/pt/cursos-tecnicos/automacao-industrial",
-    "areas": [
-      "industria",
-      "tecnologia"
-    ],
-    "description": "Formação prática em sistemas automatizados, programação de controladores, sensores e atuadores na indústria.",
-    "institution": "SENAI Paraná",
-    "source": "SENAI Paraná",
-    "course_type": "tecnico",
-    "modality": "Presencial; confirme a unidade de Curitiba",
-    "duration": "Consultar carga horária da turma",
-    "free": false,
-    "price": "Consultar valores e bolsas na instituição",
-    "availability": "Curso consta no catálogo; confirme vagas e datas na unidade.",
-    "requirements": [
-      "Consultar escolaridade, idade e documentação exigidas no edital da turma."
-    ],
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
-    "expires_on": null,
-    "access_note": "A página apresenta o curso; matrícula e condições são tratadas diretamente com o SENAI."
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   },
   {
     "id": "evg-paciente",
     "title": "Segurança do Paciente e Qualidade em Serviços de Saúde",
     "original_url": "https://www.escolavirtual.gov.br/curso/236/governoes",
+    "institution": "EV.G — Escola Virtual de Governo / Enap",
+    "source": "EV.G — Escola Virtual de Governo / Enap",
     "areas": [
       "saude"
     ],
-    "description": "Curso sobre cultura de segurança, riscos e protocolos de qualidade em serviços de saúde.",
-    "institution": "Escola Virtual de Governo (Enap / Anvisa)",
-    "source": "Escola Virtual de Governo",
+    "duration": "100 horas",
+    "description": "Conteúdo da Anvisa sobre cultura de segurança, identificação de pacientes, prevenção de incidentes e qualidade na assistência.",
+    "requirements": [
+      "Aberto a qualquer interessado, com conteúdo voltado a serviços de saúde.",
+      "Prazo de conclusão: 90 dias.",
+      "Curso livre; não substitui formação profissional nem autoriza procedimentos clínicos."
+    ],
+    "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+    "certificate_source": "https://www.escolavirtual.gov.br/curso/236/governoes",
+    "certificate_cost": "Gratuito",
     "course_type": "livre",
     "modality": "Online",
-    "duration": "100 horas",
     "free": true,
-    "price": "Gratuito",
-    "availability": "Curso aberto, com matrícula contínua conforme a página da instituição.",
-    "requirements": [
-      "Aberto a qualquer pessoa, com foco em profissionais de saúde e vigilância sanitária.",
-      "Disponibilidade de 90 dias após inscrição."
-    ],
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrições contínuas; início imediato após cadastro.",
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-12-24",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
     "expires_on": null,
-    "access_note": "É necessário cadastro gratuito na Escola Virtual de Governo."
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+  },
+  {
+    "id": "sebrae-marketing",
+    "title": "Marketing digital para sua empresa: primeiros passos",
+    "original_url": "https://loja.sebrae.com.br/marketing-digital-para-sua-empresa-primeiros-passos-1-372000031607",
+    "institution": "Sebrae",
+    "source": "Sebrae",
+    "areas": [
+      "marketing",
+      "comercial"
+    ],
+    "duration": "9 horas",
+    "description": "Fundamentos de marketing digital, públicos, canais, planejamento de conteúdo e comunicação para vendas.",
+    "requirements": [
+      "Destinado a pessoas físicas, candidatos a empreendedores e MEI.",
+      "Confira o prazo de conclusão na matrícula; a oferta atual tem 9 horas."
+    ],
+    "certificate": "Certificado digital de participação, emitido na área do aluno após concluir o curso.",
+    "certificate_source": "https://sebrae.com.br/sites/PortalSebrae/cursosonline/marketing-digital-para-sua-empresa-primeiros-passos%2C5497125576a4e710VgnVCM100000d701210aRCRD",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Curso e certificado gratuitos",
+    "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+  },
+  {
+    "id": "senai-energia",
+    "title": "Desvendando a Geração, Transmissão e Distribuição de Energia",
+    "original_url": "https://www.sp.senai.br/curso/desvendando-a-geracao-transmissao-e-distribuicao-de-energia/109935",
+    "institution": "SENAI-SP — Educação Online",
+    "source": "SENAI-SP — Educação Online",
+    "areas": [
+      "industria"
+    ],
+    "duration": "20 horas",
+    "description": "Iniciação aos processos do setor elétrico, fontes de energia, redes, sustentabilidade e segurança.",
+    "requirements": [
+      "Escolha a oferta SENAI ONLINE na página do curso.",
+      "Prazo informado pelo SENAI Online: 21 dias após a inscrição.",
+      "Confira os requisitos de idade e escolaridade na matrícula. Curso introdutório; não equivale a habilitação técnica."
+    ],
+    "certificate": "Certificado gratuito no ambiente de aprendizagem após concluir as atividades com aproveitamento mínimo de 50%, conforme o FAQ do SENAI Online.",
+    "certificate_source": "https://www.sp.senai.br/unidade/online/perguntas-frequentes",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Curso e certificado gratuitos",
+    "availability": "Oferta online com inscrição na página; selecione SENAI ONLINE.",
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2027-01-06",
+    "expires_on": null,
+    "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
   }
 ]
