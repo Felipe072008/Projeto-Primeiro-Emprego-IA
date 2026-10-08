@@ -134,7 +134,7 @@ REQUIRED_PROFILE_FIELDS = {
 EDUCATION_OPTIONS = {
     "Fundamental Incompleto", "Fundamental Completo", "Médio Incompleto",
     "Médio Completo", "Cursando Ensino Médio", "Superior Incompleto",
-    "Cursando Superior",
+    "Cursando Superior", "Superior Completo",
 }
 
 

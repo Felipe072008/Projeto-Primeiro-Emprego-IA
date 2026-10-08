@@ -76,6 +76,22 @@ class SiteTests(unittest.TestCase):
         saved=self.client.put('/api/profile', json=profile)
         self.assertEqual(saved.status_code, 200, saved.json)
         self.assertEqual(saved.json['profile']['city'], 'Curitiba')
+        graduated = self.client.put('/api/profile', json=dict(profile, education='Superior Completo'))
+        self.assertEqual(graduated.status_code, 200, graduated.json)
+        self.assertEqual(self.client.get('/api/me').json['profile']['education'], 'Superior Completo')
+
+    def test_profile_selection_drives_catalog_endpoints(self):
+        profile={'phone':'41999999999','age':'18','city':'Curitiba','state':'Paraná','desired_area':'Jovem Aprendiz — Administração','education':'Médio Completo','skills':'Organização','languages':'Português'}
+        self.assertEqual(self.client.put('/api/profile',json=profile).status_code,200)
+        with patch('catalog.date') as clock:
+            clock.today.return_value=date(2026,10,8)
+            clock.fromisoformat.side_effect=date.fromisoformat
+            jobs=self.client.get('/api/jobs').json['jobs']
+            self.assertTrue(jobs)
+            self.assertTrue(all(job['contract_type']=='aprendiz' for job in jobs))
+            courses=self.client.get('/api/courses?free_only=1').json['courses']
+            self.assertTrue(courses)
+            self.assertTrue(all(course['certificate'] for course in courses))
 
     def test_analysis_unavailable_is_honest(self):
         created=self.client.post('/api/resumes/upload',data={'file':(io.BytesIO(self.pdf()),'cv.pdf')})
@@ -88,7 +104,7 @@ class SiteTests(unittest.TestCase):
 
 class CatalogTests(unittest.TestCase):
     def test_live_catalog_matching(self):
-        today=date(2026,9,25)
+        today=date(2026,10,8)
         result=catalog.recommendations('jobs',{'desired_area':'Tecnologia'},today=today)
         self.assertTrue(any(j['match']=='direct' for j in result['jobs']))
         self.assertTrue(any(j['match']=='related' for j in result['jobs']))
@@ -98,16 +114,56 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(catalog.load_catalog('jobs',date(2027,1,1)),[])
         free=catalog.recommendations('courses',{},free_only=True,today=today)['courses']
         self.assertTrue(free and all(c['free'] for c in free))
-        technical=catalog.recommendations('courses',{},course_type='tecnico',today=today)['courses']
-        self.assertTrue(technical and all(c['course_type']=='tecnico' for c in technical))
+        courses=catalog.recommendations('courses',{},course_type='livre',today=today)['courses']
+        self.assertTrue(courses and all(c['course_type']=='livre' for c in courses))
+        self.assertEqual(catalog.recommendations('courses',{},course_type='tecnico',today=today)['courses'],[])
+
+    def test_every_profile_choice_has_direct_certified_course(self):
+        options=json.loads(catalog.CAREER_OPTIONS.read_text(encoding='utf-8'))['occupations']
+        self.assertEqual(len(options),24)
+        self.assertEqual(len({option['title'] for option in options}),24)
+        self.assertEqual(set().union(*(set(option['areas']) for option in options)),set(catalog.AREAS))
+        for option in options:
+            with self.subTest(option=option['title']):
+                self.assertEqual(catalog.detect_areas(option['title']),set(option['areas']))
+                courses=catalog.recommendations('courses',{'desired_area':option['title']},today=date(2026,10,8))['courses']
+                self.assertTrue(any(course['match']=='direct' and course['certificate'] and course['certificate_source'].startswith('https://') for course in courses))
+
+    def test_job_contract_and_area_are_both_respected(self):
+        for interest, contract in [('Jovem Aprendiz — todas as áreas de entrada','aprendiz'),('Estágio — Administração','estagio'),('CLT — Auxiliar de logística ou estoque','clt')]:
+            with self.subTest(interest=interest):
+                rows=catalog.recommendations('jobs',{'desired_area':interest},today=date(2026,10,8))['jobs']
+                self.assertTrue(rows)
+                self.assertTrue(all(row['contract_type']==contract for row in rows))
+                self.assertTrue(all(row['match'] in {'direct','related'} for row in rows))
+        all_jobs=catalog.recommendations('jobs',{'desired_area':'Estágio — Administração'},show_all=True,today=date(2026,10,8))['jobs']
+        self.assertEqual({row['contract_type'] for row in all_jobs},{'estagio','aprendiz','clt'})
+        self.assertEqual(catalog.detect_areas('CLT — Recepcionista de clínica'),{'saude'})
+        self.assertEqual(catalog.detect_areas('Assistente administrativo'),{'administracao'})
+
+    def test_curated_jobs_cover_areas_and_hide_after_deadline(self):
+        rows=catalog.load_catalog('jobs',date(2026,10,8))
+        self.assertEqual(set().union(*(set(row['areas']) for row in rows)),set(catalog.AREAS))
+        self.assertGreater(sum(row['contract_type'] in {'estagio','aprendiz'} for row in rows),len(rows)/2)
+        self.assertTrue(all(row['entry_level'] for row in rows))
+        self.assertEqual(len({row['original_url'] for row in rows}),len(rows))
+        self.assertIn('cee-178426',{row['id'] for row in catalog.load_catalog('jobs',date(2026,10,9))})
+        self.assertNotIn('cee-178426',{row['id'] for row in catalog.load_catalog('jobs',date(2026,10,10))})
 
     def test_rejects_nonindividual_wrong_city_and_stale(self):
         records=json.loads(Path('data/jobs.json').read_text(encoding='utf-8'))
-        fixtures=[dict(records[0],original_url='https://example.com/'),dict(records[0],city='São Paulo'),dict(records[0],review_by='2026-09-01'),dict(records[0],status='closed')]
+        fixtures=[dict(records[0],original_url='https://example.com/'),dict(records[0],city='São Paulo'),dict(records[0],review_by='2026-09-01'),dict(records[0],status='closed'),dict(records[0],entry_level=False),dict(records[0],contract_type='senior'),dict(records[0],expires_on='2026-10-07')]
         with tempfile.TemporaryDirectory() as tmp:
             Path(tmp,'jobs.json').write_text(json.dumps(fixtures),encoding='utf-8')
             with patch.object(catalog,'DATA_DIR',Path(tmp)):
-                self.assertEqual(catalog.load_catalog('jobs',date(2026,9,25)),[])
+                self.assertEqual(catalog.load_catalog('jobs',date(2026,10,8)),[])
+
+    def test_course_without_certificate_is_not_listed(self):
+        row=json.loads(Path('data/courses.json').read_text(encoding='utf-8'))[0]
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp,'courses.json').write_text(json.dumps([dict(row,certificate='')]),encoding='utf-8')
+            with patch.object(catalog,'DATA_DIR',Path(tmp)):
+                self.assertEqual(catalog.load_catalog('courses',date(2026,10,8)),[])
 
 
 class AITests(unittest.TestCase):

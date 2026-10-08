@@ -157,7 +157,7 @@ function loadOptionData(kind) {
         data.stateOptions = data.states.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
         data.cityOptions = data.cities.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`), stateName: stateNames.get(item.uf) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
       } else {
-        data.options = data.occupations.map((item) => ({ value: item.title, label: item.title, key: normalizeOptionText(item.title), aliases: normalizeOptionText(item.aliases.join(" ")), family: item.code.slice(0, 4) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+        data.options = data.occupations.map((item) => ({ value: item.title, label: item.title, key: normalizeOptionText(item.title), aliases: normalizeOptionText(item.aliases.join(" ")), family: item.areas.length === 1 ? item.areas[0] : item.code }));
       }
       return data;
     }).catch((error) => { optionCache[kind] = null; throw error; });
@@ -407,7 +407,7 @@ async function loadCatalog(kind) {
         <span class="match-badge ${item.match}">${item.match === 'direct' ? 'Sua área' : item.match === 'related' ? 'Área correlata' : 'Para explorar'}</span>
         <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.location || item.modality)}</p>
         <p>${escapeHtml(item.description)}</p><p class="match-reason">${escapeHtml(item.match_reason)}</p>
-        <div class="job-meta"><span>${escapeHtml(kind === 'jobs' ? item.contract : item.duration)}</span><span>${escapeHtml(item.salary || item.price || 'Consultar condições')}</span><span>Consultado em ${catalogDate(item.checked_on)}</span></div></div>
+        <div class="job-meta"><span>${escapeHtml(kind === 'jobs' ? item.contract : item.duration)}</span><span>${escapeHtml(item.salary || item.price || 'Consultar condições')}</span>${kind === 'courses' ? '<span>Com certificado</span>' : ''}<span>Consultado em ${catalogDate(item.checked_on)}</span></div></div>
         <button class="button button--outline" data-catalog="${kind}" data-index="${index}">Ver detalhes</button>
       </article>`).join('') : '<div class="empty-card">Nenhum resultado disponível para estes filtros. Experimente outra busca ou escolha “Todas as áreas”. Anúncios com revisão vencida ficam ocultos.</div>';
   } catch (error) { if (version === catalogVersions[kind]) target.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`; }
@@ -427,7 +427,7 @@ function showCatalogDetail(kind, index) {
   $('#preview-modal').classList.remove('return-to-builder');
   $('[data-close-preview].modal-close').setAttribute('aria-label', 'Fechar');
   $('#preview-title').textContent = item.title;
-  const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule]] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ['Custo', item.price], ['Turmas', item.availability]];
+  const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule], ['Inscrições até', item.expires_on ? catalogDate(item.expires_on) : 'Prazo não informado na fonte']] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ['Custo', item.price], ['Certificado', item.certificate], ['Custo do certificado', item.certificate_cost], ['Turmas', item.availability]];
   $('#resume-preview').innerHTML = `<article class="listing-detail"><p class="match-reason">${escapeHtml(item.match_reason)}</p><p>${escapeHtml(item.description)}</p><dl>${details.map(([label,value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value || 'Não informado na fonte')}</dd></div>`).join('')}</dl><h3>${kind === 'jobs' ? 'Requisitos e observações' : 'Requisitos e conteúdo'}</h3><ul>${(item.requirements || []).map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>${item.benefits?.length ? `<h3>Benefícios informados</h3><ul>${item.benefits.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>` : ''}<p class="muted">Fonte: ${escapeHtml(item.source)}. Consulta em ${catalogDate(item.checked_on)}. A disponibilidade pode mudar. ${escapeHtml(item.access_note || '')}</p><a class="button button--primary" href="${escapeHtml(item.original_url)}" target="_blank" rel="noopener noreferrer">${kind === 'jobs' ? 'Ver vaga na fonte' : 'Ver curso na instituição'} ↗</a></article>`;
   openModal('#preview-modal');
 }

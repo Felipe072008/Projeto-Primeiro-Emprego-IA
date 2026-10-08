@@ -1,215 +1,519 @@
 [
   {
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
-    "expires_on": null,
-    "city": "Curitiba",
-    "state": "PR",
-    "source": "Abler",
-    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
-    "id": "signo-estagio",
-    "title": "Estágio em Desenvolvimento",
-    "company": "Signo Tech",
-    "original_url": "https://signoweb.abler.com.br/vagas/estagio-desenvolvedor-263708",
-    "areas": [
-      "tecnologia"
-    ],
-    "location": "Portão, Curitiba - PR · Presencial",
-    "contract": "Estágio",
-    "salary": "Bolsa de R$ 1.200,00",
-    "description": "Apoio à criação e manutenção de sistemas, testes, correção de problemas e documentação junto à equipe de desenvolvimento.",
-    "requirements": [
-      "Graduação em TI ou área correlata em andamento.",
-      "Conhecimentos de PHP, JavaScript ou TypeScript, SQL e Git.",
-      "Organização, colaboração e interesse em aprender."
-    ],
-    "schedule": "Segunda a sexta, 6 horas diárias",
-    "benefits": [
-      "Vale-transporte",
-      "Alimentação/refeição: R$ 15,00",
-      "Plano odontológico",
-      "Folga no aniversário"
-    ]
-  },
-  {
-    "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
-    "expires_on": null,
-    "city": "Curitiba",
-    "state": "PR",
-    "source": "Abler",
-    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
-    "id": "gc-admin",
-    "title": "Auxiliar Administrativo",
-    "company": "GC Talentos",
-    "original_url": "https://gctalentos2348.abler.com.br/vagas/auxiliar-administrativo-320739",
+    "id": "magnum-aprendiz",
+    "title": "Jovem Aprendiz — apoio administrativo",
+    "company": "Magnum Tires",
+    "original_url": "https://magnumtires.gupy.io/job/eyJqb2JJZCI6MTI2MTE1NjksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
     "areas": [
       "administracao"
     ],
-    "location": "Xaxim, Curitiba - PR · Presencial",
-    "contract": "CLT",
-    "salary": "R$ 2.058,00",
-    "description": "Organização de documentos, atualização de sistemas e apoio ao financeiro, ao atendimento interno e à emissão de notas e relatórios.",
+    "contract_type": "aprendiz",
+    "contract": "Jovem Aprendiz",
+    "entry_level": true,
+    "description": "Aprendizado em organização de arquivos, atualização de planilhas e sistemas e apoio à comunicação interna.",
     "requirements": [
-      "Ensino médio concluído; informática e Excel básicos.",
-      "Noções administrativas e financeiras, atenção e boa comunicação.",
-      "Curso na área, experiência com notas fiscais e Excel intermediário aparecem como diferenciais na descrição."
+      "A fonte pede idade de 18 a 22 anos e ensino médio completo.",
+      "Não ter participado anteriormente como aprendiz, conforme o anúncio.",
+      "Conhecimentos em Google Workspace; informática é um diferencial."
     ],
-    "schedule": "Segunda a sexta, 9h–18h; sábado, 8h–13h",
+    "salary": "Não informado na fonte",
+    "schedule": "4 horas por dia",
     "benefits": [
-      "Vale-transporte: R$ 12,00",
-      "Vale-refeição: R$ 15,00"
-    ]
-  },
-  {
+      "Vale-transporte",
+      "Educação corporativa",
+      "Cesta de Natal"
+    ],
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
     "expires_on": null,
     "city": "Curitiba",
     "state": "PR",
-    "source": "Abler",
-    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
-    "id": "cidade-aprendiz",
-    "title": "Aprendiz Assistente Administrativo — Facilities",
-    "company": "Cidade Júnior",
-    "original_url": "https://vagascidadejunior.abler.com.br/vagas/aprendiz-assistente-administrativo-facilities-154919",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "pashal-aprendiz",
+    "title": "Jovem Aprendiz — rotinas administrativas",
+    "company": "Pashal",
+    "original_url": "https://pashal.gupy.io/jobs/12165252?jobBoardSource=gupy_public_page",
+    "areas": [
+      "administracao",
+      "rh",
+      "logistica",
+      "comercial"
+    ],
+    "contract_type": "aprendiz",
+    "contract": "Jovem Aprendiz",
+    "entry_level": true,
+    "description": "Apoio aos setores de RH, departamento pessoal, logística e comercial, com atendimento, documentos e planilhas.",
+    "requirements": [
+      "Ensino médio completo.",
+      "Confira a faixa etária e a jornada diretamente com a empresa; não informadas no texto consultado."
+    ],
+    "salary": "Não informado na fonte",
+    "schedule": "Não informado na fonte",
+    "benefits": [
+      "Vale-transporte",
+      "Seguro de vida"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "autoglass-aprendiz",
+    "title": "Jovem Aprendiz — atendimento e administração",
+    "company": "Grupo Autoglass",
+    "original_url": "https://autoglassjovemaprendiz.gupy.io/jobs/12693816?jobBoardSource=gupy_public_page",
+    "areas": [
+      "comercial",
+      "administracao"
+    ],
+    "contract_type": "aprendiz",
+    "contract": "Jovem Aprendiz",
+    "entry_level": true,
+    "description": "Formação teórica e prática com apoio ao atendimento, aos vendedores, à organização de documentos e aos relatórios.",
+    "requirements": [
+      "Frequentar do 1º ao 3º ano do ensino médio.",
+      "A descrição informa idade entre 14 e 24 anos e não ter atuado como aprendiz no mesmo CBO.",
+      "O título e a descrição são de aprendizagem, embora a plataforma rotule a vaga como efetiva; confirme o contrato na candidatura."
+    ],
+    "salary": "Não informado na fonte",
+    "schedule": "Não informado na fonte",
+    "benefits": [
+      "Vale-transporte",
+      "Vale-refeição ou alimentação",
+      "Plano de saúde",
+      "Educação corporativa"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "cee-178406",
+    "title": "Estágio técnico — Administração e Recursos Humanos",
+    "company": "SEJU — Secretaria de Justiça e Cidadania",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178406",
+    "areas": [
+      "administracao",
+      "rh"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio supervisionado ao RH: arquivos, documentos, atualização de planilhas e registros do setor.",
+    "requirements": [
+      "Cursar Técnico em Administração, do 1º ao 3º ano."
+    ],
+    "salary": "R$ 7,77 por hora",
+    "schedule": "13h às 17h",
+    "benefits": [],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-28",
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+  },
+  {
+    "id": "cee-178626",
+    "title": "Estágio — Administração e Logística patrimonial",
+    "company": "FUNSAÚDE — Secretaria da Saúde do Paraná",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178626",
     "areas": [
       "administracao",
       "logistica"
     ],
-    "location": "Centro, Curitiba - PR · Presencial",
-    "contract": "Aprendiz",
-    "salary": "R$ 1.024,01",
-    "description": "Apoio à organização do escritório, contato com fornecedores, checklists e emissão de crachás.",
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio às aquisições, controles de materiais, inventários e movimentações patrimoniais, com acompanhamento dos processos administrativos.",
     "requirements": [
-      "A fonte informa faixa etária de 18 a 22 anos e facilidade de acesso ao Centro.",
-      "A descrição aceita ensino médio cursando ou concluído; a tabela indica concluído. Confirme essa divergência com a instituição."
+      "Cursar Administração, do 2º ao 8º período."
     ],
-    "schedule": "Segunda a sexta: opções 9h–13h, 10h–14h ou 14h–18h",
-    "benefits": [
-      "Vale-transporte e vale-refeição",
-      "Planos de saúde e odontológico",
-      "Gympass"
-    ]
-  },
-  {
+    "salary": "R$ 10,00 por hora",
+    "schedule": "12h às 18h",
+    "benefits": [],
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
-    "expires_on": null,
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-23",
     "city": "Curitiba",
     "state": "PR",
-    "source": "BNE",
-    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
-    "id": "bne-logistica",
-    "title": "Auxiliar de Logística",
-    "company": "Bplog Treinamento e Movimentação de Cargas",
-    "original_url": "https://www.bne.com.br/trabalhe-conosco/ifagundes/vaga-de-emprego-na-area-logistica-em-curitiba-pr/auxiliar-de-logistica/6180047",
-    "areas": [
-      "logistica"
-    ],
     "location": "Curitiba - PR · Presencial",
-    "contract": "Efetivo",
-    "salary": "Consultar valor atualizado na fonte",
-    "description": "Atividades de armazenagem, embalagem e identificação de volumes, organização e apoio à movimentação de cargas.",
-    "requirements": [
-      "Confira escolaridade, experiência e exigências físicas diretamente no anúncio.",
-      "Disponibilidade para os turnos informados pela empresa."
-    ],
-    "schedule": "A fonte menciona tarde, noite e sábado",
-    "benefits": []
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
   },
   {
+    "id": "cee-177903",
+    "title": "Estágio — Ciências Contábeis",
+    "company": "TECPAR — Instituto de Tecnologia do Paraná",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177903",
+    "areas": [
+      "financeiro"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio ao controle de títulos e vencimentos, registros de cobrança, baixas no sistema e organização de documentos.",
+    "requirements": [
+      "Cursar Ciências Contábeis; a fonte informa do 2º ao 11º período."
+    ],
+    "salary": "R$ 10,00 por hora",
+    "schedule": "8h às 14h",
+    "benefits": [],
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
-    "expires_on": null,
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-23",
     "city": "Curitiba",
     "state": "PR",
-    "source": "BNE",
-    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
-    "id": "bne-marketing",
-    "title": "Estágio em Marketing",
-    "company": "Lion Equipamentos Curitiba",
-    "original_url": "https://www.bne.com.br/vaga-de-emprego-na-area-administrativo-em-curitiba-pr/estagiario/4369911",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+  },
+  {
+    "id": "cee-178755",
+    "title": "Estágio — Suporte e Redes de Computadores",
+    "company": "COHAPAR",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178755",
+    "areas": [
+      "tecnologia"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Aprendizado supervisionado em instalação de equipamentos e programas, atendimento inicial aos usuários e controle dos ativos de TI.",
+    "requirements": [
+      "Oferta cadastrada para Tecnologia em Redes de Computadores, do 1º ao 6º período.",
+      "A descrição também menciona graduações correlatas em informática; confirme a elegibilidade.",
+      "Noções de Office ou LibreOffice."
+    ],
+    "salary": "R$ 10,00 por hora",
+    "schedule": "8h às 12h",
+    "benefits": [],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-12",
+    "expires_on": "2026-10-12",
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+  },
+  {
+    "id": "cee-178426",
+    "title": "Estágio — Publicidade e Comunicação",
+    "company": "CELEPAR",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178426",
     "areas": [
       "marketing"
     ],
-    "location": "Curitiba - PR · Presencial",
+    "contract_type": "estagio",
     "contract": "Estágio",
-    "salary": "A combinar",
-    "description": "Apoio a campanhas, conteúdo para redes sociais, vídeos e comunicação interna.",
+    "entry_level": true,
+    "description": "Apoio à organização de eventos, ao atendimento e ao planejamento de campanhas.",
     "requirements": [
-      "Cursando Marketing.",
-      "Consulte na fonte os demais requisitos e a jornada do estágio."
+      "Cursar Comunicação Social — Publicidade e Propaganda, do 3º ao 8º período."
     ],
-    "schedule": "",
-    "benefits": []
-  },
-  {
+    "salary": "R$ 10,00 por hora",
+    "schedule": "13h às 19h",
+    "benefits": [],
     "status": "published",
-    "checked_on": "2026-09-25",
+    "checked_on": "2026-10-08",
     "review_by": "2026-10-09",
-    "expires_on": null,
+    "expires_on": "2026-10-09",
     "city": "Curitiba",
     "state": "PR",
-    "source": "BNE",
-    "access_note": "Resumo consultado na página pública indexada. A candidatura pode exigir cadastro no BNE.",
-    "id": "bne-aprendiz",
-    "title": "Jovem Aprendiz — Atendimento e vendas online",
-    "company": "Drogarias Farmagnus Popular Cajuru",
-    "original_url": "https://www.bne.com.br/vaga-de-emprego-na-area-administrativo-em-curitiba-pr/jovem-aprendiz/5368299",
-    "areas": [
-      "comercial"
-    ],
     "location": "Curitiba - PR · Presencial",
-    "contract": "Aprendiz",
-    "salary": "R$ 759,00 a R$ 1.000,00",
-    "description": "Atendimento digital, organização de pedidos e apoio ao pós-venda nos canais da farmácia.",
-    "requirements": [
-      "Comunicação por texto e áudio, organização e iniciativa.",
-      "A empresa informa ensinar o uso das plataformas de atendimento.",
-      "Confirme faixa etária, escolaridade, jornada e remuneração atual na fonte."
-    ],
-    "schedule": "",
-    "benefits": []
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
   },
   {
+    "id": "cee-177882",
+    "title": "Estágio — Pedagogia",
+    "company": "SEDEF — Secretaria de Desenvolvimento Social e Família",
+    "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177882",
+    "areas": [
+      "educacao"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio à elaboração de documentos voltados à garantia de direitos de crianças e adolescentes.",
+    "requirements": [
+      "Cursar licenciatura em Pedagogia, do 2º ao 5º período."
+    ],
+    "salary": "R$ 10,00 por hora",
+    "schedule": "9h às 15h",
+    "benefits": [],
     "status": "published",
-    "checked_on": "2026-09-25",
-    "review_by": "2026-10-09",
-    "expires_on": null,
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-30",
     "city": "Curitiba",
     "state": "PR",
-    "source": "Abler",
-    "access_note": "Leitura pública; a candidatura exige acesso à plataforma da fonte.",
-    "id": "embarca-dados",
-    "title": "Estágio em Dados e Inteligência Comercial",
-    "company": "Embarca",
-    "original_url": "https://embarca.abler.com.br/vagas/programa-de-estagio-engenharia-dados-inteligencia-comercial-704417",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Central de Estágios do Paraná",
+    "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+  },
+  {
+    "id": "sicredi-servicos",
+    "title": "Estágio — Serviços Compartilhados",
+    "company": "Sicredi Integração PR/SC",
+    "original_url": "https://sicredi.gupy.io/jobs/12382343?jobBoardSource=gupy_public_page",
     "areas": [
-      "tecnologia",
-      "comercial"
+      "administracao",
+      "financeiro"
     ],
-    "location": "Centro Cívico, Curitiba - PR · Presencial",
+    "contract_type": "estagio",
     "contract": "Estágio",
-    "salary": "Bolsa a combinar",
-    "description": "Tratamento de dados, relatórios e painéis; apoio a métricas comerciais e a fluxos simples com Python e SQL.",
+    "entry_level": true,
+    "description": "Apoio às operações da cooperativa, com conferência de documentos para abertura de contas, atualização cadastral e organização de registros.",
     "requirements": [
-      "Estudante do penúltimo ou último ano de Engenharia de Dados, Ciência da Computação, Estatística ou área afim.",
-      "Python e SQL básicos; familiaridade com ferramentas de BI, preferencialmente AWS.",
-      "Comunicação, trabalho em equipe e raciocínio analítico."
+      "Cursar Administração, Ciências Contábeis, Economia ou área relacionada ao mercado financeiro.",
+      "Residir em Curitiba.",
+      "Office é um conhecimento desejável."
     ],
-    "schedule": "Segunda a sexta, 10h–17h",
+    "salary": "Não informado na fonte",
+    "schedule": "Não informado na fonte",
     "benefits": [
-      "Vale-transporte ou mobilidade",
-      "Vale-refeição ou alimentação",
+      "Vale-transporte",
+      "Vale-alimentação",
+      "Plano de saúde",
+      "Seguro de vida"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-30",
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "fertipar-administrativo",
+    "title": "Estágio Administrativo — Compras",
+    "company": "Grupo Fertipar",
+    "original_url": "https://grupofertipar.gupy.io/jobs/12588807?jobBoardSource=gupy_public_page",
+    "areas": [
+      "administracao",
+      "logistica"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio a cotações, acompanhamento de pedidos, contratos, inventário, planilhas e indicadores administrativos.",
+    "requirements": [
+      "Cursar Administração, Gestão de Processos ou área correlata.",
+      "Excel básico ou intermediário, organização e comunicação.",
+      "Vivência administrativa ou em compras é diferencial, não requisito obrigatório."
+    ],
+    "salary": "Não informado na fonte",
+    "schedule": "Segunda a sexta, 9h às 16h, com 1 hora de intervalo",
+    "benefits": [
+      "Seguro de vida",
+      "Vale-alimentação",
+      "Vale-transporte",
+      "Refeição no local"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "mrv-engenharia",
+    "title": "Estágio — Engenharia Civil, Produção e Arquitetura",
+    "company": "MRV&CO",
+    "original_url": "https://programadeestagiomrveco.gupy.io/job/eyJqb2JJZCI6MTE5ODM4MTYsInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+    "areas": [
+      "industria"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Acompanhamento de obras e apoio supervisionado a levantamentos, projetos, relatórios, documentação e qualidade.",
+    "requirements": [
+      "Cursar Engenharia Civil, Arquitetura, Engenharia de Produção Civil ou de Produção.",
+      "Conhecimentos de Office e disponibilidade para 4 ou 6 horas diárias."
+    ],
+    "salary": "Bolsa: R$ 1.150,00 (4h) ou R$ 1.700,00 (6h)",
+    "schedule": "4 ou 6 horas por dia",
+    "benefits": [
+      "Lanche",
+      "Folga no aniversário",
+      "Capacitação"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "pilar-farmacia",
+    "title": "Estágio — Farmácia Hospitalar (ensino médio)",
+    "company": "Pilar Hospital — Hospital Care",
+    "original_url": "https://pilarhospital.gupy.io/jobs/9172371?jobBoardSource=gupy_portal",
+    "areas": [
+      "saude"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio à equipe da farmácia hospitalar na organização de materiais, separação de kits, controle de validade e reposição de estoque.",
+    "requirements": [
+      "Cursar ensino médio regular ou técnico.",
+      "Interesse em saúde, atenção aos detalhes e disposição para aprender.",
+      "Técnico em Farmácia e vivência anterior são diferenciais, não obrigatórios."
+    ],
+    "salary": "Bolsa de R$ 750,00",
+    "schedule": "Segunda a sexta, 13h às 19h",
+    "benefits": [
+      "Vale-transporte"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": "2026-10-30",
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "positivo-pedagogia",
+    "title": "Estágio — Artes/Pedagogia (Anos Finais)",
+    "company": "Grupo Positivo",
+    "original_url": "https://positivo.gupy.io/jobs/11576904?jobBoardSource=gupy_public_page",
+    "areas": [
+      "educacao"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio aos professores e aos alunos na rotina escolar, nas atividades pedagógicas e na organização dos materiais de aprendizagem.",
+    "requirements": [
+      "Cursar Pedagogia ou Artes.",
+      "Conhecimento de inglês.",
+      "Experiência em colégios e certificação de inglês são diferenciais.",
+      "Unidade na Cidade Industrial de Curitiba."
+    ],
+    "salary": "Não informado na fonte",
+    "schedule": "10h05 às 16h05",
+    "benefits": [
+      "Vale-transporte",
+      "Seguro de vida"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "destro-logistica",
+    "title": "Auxiliar de Logística — sem experiência",
+    "company": "Destro Macro",
+    "original_url": "https://vagas.destromacro.com.br/vagas/auxiliar-de-logistica",
+    "areas": [
+      "logistica"
+    ],
+    "contract_type": "clt",
+    "contract": "CLT",
+    "entry_level": true,
+    "description": "Recebimento, separação e movimentação de mercadorias, organização do estoque e apoio a inventários e carregamentos.",
+    "requirements": [
+      "Ensino fundamental completo.",
+      "Não exige experiência.",
+      "Há opções de turno diurno e noturno. Local: Tatuquara, Curitiba."
+    ],
+    "salary": "R$ 2.600,00 a R$ 2.700,00: média informada, incluindo salário e produtividade",
+    "schedule": "Turno diurno ou noturno; confirmar jornada",
+    "benefits": [
+      "Vale-transporte",
+      "Refeitório",
       "Plano odontológico",
-      "Acesso ao Wellhub",
-      "Folga no aniversário"
-    ]
+      "Cesta básica por assiduidade"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Destro — Trabalhe conosco",
+    "access_note": "Descrição pública. A página da empresa orienta envio de currículo em PDF por e-mail ou WhatsApp."
+  },
+  {
+    "id": "apg-administrativo",
+    "title": "Auxiliar Administrativo — apoio escolar",
+    "company": "APG GOV",
+    "original_url": "https://apg-gov.gupy.io/jobs/10670487?jobBoardSource=gupy_public_page",
+    "areas": [
+      "administracao",
+      "comercial",
+      "educacao"
+    ],
+    "contract_type": "clt",
+    "contract": "CLT",
+    "entry_level": true,
+    "description": "Apoio às matrículas, conferência de documentos acadêmicos, organização de arquivos e recepção de alunos e visitantes.",
+    "requirements": [
+      "Ensino médio completo e conhecimentos de Office.",
+      "Trabalho em equipe; a lista de requisitos não exige experiência prévia.",
+      "Confira na fonte os documentos e as regras de contratação."
+    ],
+    "salary": "R$ 1.771,49",
+    "schedule": "40 horas semanais, de segunda a sexta",
+    "benefits": [
+      "Benefício de R$ 29,00 por dia, com desconto de 20% em folha, conforme a fonte"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-08",
+    "review_by": "2026-10-22",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Curitiba - PR · Presencial",
+    "source": "Gupy",
+    "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
   }
 ]
