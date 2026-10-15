@@ -209,48 +209,12 @@
       </section>
     </div>
 
-    <div id="profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
+    <div id="profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" aria-describedby="profile-modal-hint">
       <div class="modal-backdrop" data-close-profile></div>
-      <div class="modal-content profile-modal-content">
-        <button class="modal-close" data-close-profile aria-label="Fechar">×</button>
-        <div class="builder-header">
-          <p class="eyebrow">Meu perfil</p>
-          <h2 id="profile-modal-title">Atualize suas informações</h2>
-          <p class="muted">Preencha somente o que for verdadeiro para você. Nenhum dado é criado automaticamente.</p>
-        </div>
-        <form id="profile-form" class="profile-form profile-editor-form">
-          <section class="profile-editor-section">
-            <div class="profile-editor-title"><span>01</span><div><h3>Informações pessoais</h3><p>Seus dados de contato e localização.</p></div></div>
-            <div class="profile-editor-grid">
-              <label>Nome completo<input id="profile-name" disabled /></label>
-              <label>E-mail<input id="profile-email" disabled /></label>
-              <label>Telefone<input name="phone" type="text" inputmode="numeric" pattern="[0-9]{1,11}" maxlength="11" placeholder="Apenas números, até 11 dígitos" required /></label>
-              <label>Idade<input name="age" type="text" inputmode="numeric" pattern="[0-9]{1,3}" maxlength="3" placeholder="Ex.: 18" required /></label>
-              <div class="autocomplete-field" data-autocomplete="city"><label for="profile-city">Cidade</label><input id="profile-city" name="city" placeholder="Sua cidade" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="profile-city-options" required /><div id="profile-city-options" class="autocomplete-list" role="listbox" hidden></div></div>
-              <div class="autocomplete-field" data-autocomplete="state"><label for="profile-state">Estado</label><input id="profile-state" name="state" placeholder="Selecione um estado" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="profile-state-options" required /><div id="profile-state-options" class="autocomplete-list" role="listbox" hidden></div></div>
-            </div>
-          </section>
-          <section class="profile-editor-section">
-            <div class="profile-editor-title"><span>02</span><div><h3>Objetivos e formação</h3><p>Informações que ajudam a personalizar suas orientações.</p></div></div>
-            <div class="profile-editor-grid">
-              <div class="autocomplete-field" data-autocomplete="desired_area"><label for="profile-desired-area">Área profissional desejada</label><input id="profile-desired-area" name="desired_area" placeholder="Busque estágio, aprendiz ou cargo inicial" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="profile-desired-area-options" required /><div id="profile-desired-area-options" class="autocomplete-list" role="listbox" hidden></div></div>
-              <label>Escolaridade<select name="education" required><option value="">Selecione sua escolaridade</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Cursando Ensino Médio</option><option>Superior Incompleto</option><option>Cursando Superior</option><option>Superior Completo</option></select></label>
-              <label>Curso<textarea name="course" placeholder="Se estiver estudando ou já tiver concluído"></textarea></label>
-              <label class="span-2">Objetivo profissional<textarea name="objective" placeholder="Em quais oportunidades você gostaria de atuar?"></textarea></label>
-            </div>
-          </section>
-          <section class="profile-editor-section">
-            <div class="profile-editor-title"><span>03</span><div><h3>Experiências e habilidades</h3><p>Valorize apenas vivências, projetos e conhecimentos reais.</p></div></div>
-            <div class="profile-editor-grid">
-              <label class="span-3">Experiência profissional<textarea name="professional_experience" placeholder="Descreva apenas experiências que você realmente teve. Se ainda não teve, deixe em branco."></textarea></label>
-              <label class="span-3">Experiências acadêmicas ou projetos<textarea name="academic_experience" placeholder="Trabalhos de escola/faculdade, voluntariado, projetos ou outras atividades reais."></textarea></label>
-              <label>Habilidades<textarea name="skills" placeholder="Ex.: organização, Excel, comunicação" required></textarea></label>
-              <label>Cursos e certificações<textarea name="courses" placeholder="Cursos que você realmente concluiu ou está realizando"></textarea></label>
-              <label>Idiomas<textarea name="languages" placeholder="Ex.: Português nativo; Inglês básico" required></textarea></label>
-            </div>
-          </section>
-          <div class="form-actions profile-modal-actions"><p class="form-note">Depois de salvar, você será direcionado para a Visão geral.</p><div><button class="button button--outline" data-close-profile type="button">Fechar</button><button class="button button--primary" type="submit">Salvar meu perfil</button></div></div>
-        </form>
+      <div class="modal-content profile-editor-content">
+        <button class="modal-close" type="button" data-close-profile aria-label="Fechar edição do perfil">×</button>
+        <div class="builder-header"><p class="eyebrow">Meu perfil</p><h2 id="profile-modal-title">Atualize suas informações</h2><p id="profile-modal-hint" class="muted"></p></div>
+        <form id="profile-form" class="profile-form profile-editor-form"></form>
       </div>
     </div>
 
@@ -286,6 +250,7 @@
       </div>
     </div>
 
+    <script src="{{ url_for('static', filename='profile.js') }}"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>

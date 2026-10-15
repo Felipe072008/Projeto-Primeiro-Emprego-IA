@@ -129,7 +129,7 @@ input:focus, textarea:focus, select:focus { border-color: #54a8b5; box-shadow: 0
 .progress-number { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 800; }
 .progress-line { height: 6px; }
 .dashboard-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 18px; }
-.card, .profile-overview-card, .profile-info-card, .job-card, .recommendation-card, .resume-row, .institution-card { border-color: #e0e8e8; background: #fff; box-shadow: 0 8px 28px rgba(13,49,58,.035); }
+.card, .profile-overview-card, .profile-info-card, .job-card, .recommendation-card, .resume-row { border-color: #e0e8e8; background: #fff; box-shadow: 0 8px 28px rgba(13,49,58,.035); }
 .card { padding: 28px; }
 .card h2 { font-size: 22px; }
 .action-card { border: 0; background: radial-gradient(circle at 90% 100%, #245c66, transparent 55%), #0d2a3a; }
@@ -145,6 +145,38 @@ input:focus, textarea:focus, select:focus { border-color: #54a8b5; box-shadow: 0
 .profile-avatar { width: 58px; height: 58px; border-radius: 17px; background: #c5eed9; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 800; }
 .profile-overview-main h2, .profile-section-heading h2 { font-family: "Plus Jakarta Sans", sans-serif; }
 .profile-summary { gap: 19px; }
+.profile-basic-status { max-width: 680px; margin-top: 8px; font-size: 12px; color: #647c83; }
+.profile-record-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.profile-record { display: flex; flex-direction: column; justify-content: space-between; gap: 15px; min-width: 0; }
+.profile-record h3 { margin: 0 0 6px; font-size: 16px; color: #163849; }
+.profile-record p, .legacy-record p { overflow-wrap: anywhere; }
+.profile-record-actions, .section-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.profile-record-actions { justify-content: flex-end; }
+.legacy-record { margin-top: 15px; }
+.profile-tags { margin-top: 12px; }
+.profile-tags button { border: 0; background: transparent; color: inherit; padding: 2px 7px; min-width: 28px; font-size: 20px; }
+.profile-editor-content { width: min(100%, 850px); }
+.profile-editor-content .profile-editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.editor-field { display: grid; align-content: start; gap: 5px; min-width: 0; }
+.editor-field label { color: #234653; font-size: 13px; font-weight: 600; }
+.field-error, .editor-form-error { color: #a8293c; font-size: 12px; overflow-wrap: anywhere; }
+.field-error:empty, .editor-form-error:empty { display: none; }
+.editor-form-error { border-radius: 10px; padding: 10px 13px; background: #fff0f1; }
+.profile-form [aria-invalid="true"] { border-color: #a8293c; }
+.profile-choice-group { grid-column: 1 / -1; border: 1px solid #e0e8e8; border-radius: 12px; padding: 13px; display: flex; flex-wrap: wrap; gap: 14px; }
+.profile-choice-group legend { color: #234653; font-size: 13px; font-weight: 600; }
+.profile-form .profile-choice-group label, .profile-form .profile-check { display: flex; align-items: center; gap: 7px; }
+.profile-form input[type="checkbox"] { width: 17px; height: 17px; flex: 0 0 17px; padding: 0; accent-color: #216e79; }
+.profile-modal-actions { margin-top: 20px; }
+.profile-summary-section .profile-info-grid { margin-bottom: 12px; }
+@media (max-width: 620px) {
+  .profile-record-grid, .profile-editor-content .profile-editor-grid { grid-template-columns: 1fr; }
+  .profile-section-heading { flex-wrap: wrap; gap: 12px; }
+  .profile-editor-content { width: 100%; height: 100%; max-height: 100%; border-radius: 0; padding: 54px 18px 20px; }
+  #profile-modal { padding: 0; }
+  .profile-record-actions .small-button, .profile-tags button { min-height: 36px; }
+  .profile-modal-actions { position: sticky; bottom: -20px; padding: 15px 0; background: white; z-index: 2; }
+}
 .profile-summary-section { margin: 0; border: 1px solid #e0e8e8; border-radius: 19px; padding: 27px; background: #fff; }
 .profile-section-heading h2 { font-size: 22px; }
 .profile-info-card { border-radius: 13px; background: #fbfdfc; }
@@ -192,8 +224,8 @@ input:focus, textarea:focus, select:focus { border-color: #54a8b5; box-shadow: 0
 #preview-modal.return-to-builder .modal-close { right: auto; left: 15px; }
 #preview-modal.return-to-builder #preview-title { padding-right: 0; padding-left: 40px; }
 .builder-header h2 { font-family: "Plus Jakarta Sans", sans-serif; }
-.profile-editor-title > span, .form-section-title > span { background: #dff2e7; }
-.analysis-panel, .listing-detail dl { background: #edf5f3; }
+.profile-editor-title > span { background: #dff2e7; }
+.listing-detail dl { background: #edf5f3; }
 .toast { border: 1px solid #bfe4d1; border-radius: 12px; }
 
 @media (max-width: 1100px) {
