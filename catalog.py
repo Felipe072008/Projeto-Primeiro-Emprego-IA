@@ -91,20 +91,29 @@ def recommendations(kind, profile, *, show_all=False, query="", course_type="", 
     direct = detect_areas(interest)
     selection = career_selection(interest)
     contract_type = selection["contract_type"] if selection else None
-    related = set().union(*(RELATED.get(area, set()) for area in direct)) - direct if direct else set()
+    goals = profile.get('sections', {}).get('goals', {})
+    secondary_choices = goals.get('secondary_areas', [])
+    secondary = set().union(*(detect_areas(value) for value in secondary_choices)) - direct
+    all_areas = direct | secondary
+    inferred = {option['contract_type'] for value in [interest, *secondary_choices] if (option := career_selection(value))}
+    contracts = set(goals.get('contracts', [])) or inferred
+    related = set().union(*(RELATED.get(area, set()) for area in all_areas)) - all_areas if all_areas else set()
     rows = []
     for item in load_catalog(kind, today):
-        if kind == "jobs" and not show_all and contract_type and item["contract_type"] != contract_type:
+        if kind == "jobs" and not show_all and contracts and item["contract_type"] not in contracts:
             continue
         areas = set(item["areas"])
         if direct & areas:
             match, priority = "direct", 0
             reason = "Na sua área de interesse: " + ", ".join(AREAS[a][0] for a in sorted(direct & areas)) + "."
+        elif secondary & areas:
+            match, priority = 'direct', 1
+            reason = 'Em uma das suas áreas adicionais: ' + ', '.join(AREAS[a][0] for a in sorted(secondary & areas)) + '.'
         elif related & areas:
-            match, priority = "related", 1
+            match, priority = "related", 2
             reason = "Área correlata a " + ", ".join(AREAS[a][0] for a in sorted(direct)) + ". Confira os requisitos."
         else:
-            match, priority = "explore", 2
+            match, priority = "explore", 3
             reason = "Explore esta oportunidade e confira os requisitos."
         if interest and not show_all and match == "explore":
             continue
@@ -118,10 +127,11 @@ def recommendations(kind, profile, *, show_all=False, query="", course_type="", 
     return {
         kind: [item for _, item in rows],
         "interest": interest,
-        "recognized_areas": [AREAS[a][0] for a in sorted(direct)],
+        "recognized_areas": [AREAS[a][0] for a in sorted(all_areas)],
         "contract_type": contract_type if kind == "jobs" else None,
+        "contract_types": sorted(contracts) if kind == 'jobs' else [],
         "personalized": bool(interest) and not show_all,
         "total": len(rows),
         "location": "Curitiba - PR" if kind == "jobs" else "Curitiba e opções online",
-        "notice": ("Vagas filtradas também pelo tipo de oportunidade escolhido. " if kind == "jobs" and contract_type and not show_all else "") + "Catálogo revisado manualmente. A disponibilidade e as condições podem mudar na fonte; confira os requisitos antes de se inscrever.",
+        "notice": ("Vagas filtradas também pelos tipos de oportunidade escolhidos. " if kind == "jobs" and contracts and not show_all else "") + "Catálogo revisado manualmente. A disponibilidade e as condições podem mudar na fonte; confira os requisitos antes de se inscrever.",
     }

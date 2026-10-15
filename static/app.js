@@ -1,8 +1,4 @@
-const state = {
-  me: null,
-  profile: null,
-  dashboard: null,
-};
+const state = { me: null };
 const optionCache = { locations: null, occupations: null };
 const openOptionLists = new WeakMap();
 
@@ -46,7 +42,9 @@ async function api(path, options = {}) {
   const contentType = response.headers.get("content-type") || "";
   const data = contentType.includes("application/json") ? await response.json() : null;
   if (!response.ok) {
-    throw new Error(data?.error || "Não foi possível concluir esta ação agora.");
+    const error = new Error(data?.error || "Não foi possível concluir esta ação agora.");
+    error.fields = data?.errors;
+    throw error;
   }
   return data;
 }
@@ -81,9 +79,8 @@ function navigate(route) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (route === "dashboard") loadDashboard();
   if (route === "profile") populateProfileForm();
-  if (route === "jobs") loadJobs();
+  if (route === "jobs" || route === "courses") loadCatalog(route);
   if (route === "resume") { loadResumes(); loadAIStatus(); }
-  if (route === "courses") loadCourses();
 }
 
 function renderRecommendationCards(target, recommendations, emptyMessage) {
@@ -100,12 +97,13 @@ function renderRecommendationCards(target, recommendations, emptyMessage) {
 }
 
 function renderDashboard(data) {
-  state.dashboard = data;
   const completion = data.profile_completion || 0;
   $("#profile-progress-text").textContent = `${completion}% concluído`;
   $("#profile-progress-number").innerHTML = `${completion}<small>%</small>`;
   $("#profile-progress-line").style.width = `${completion}%`;
-  $("#profile-progress-message").textContent = completion
+  $("#profile-progress-message").textContent = completion === 100
+    ? "Seu perfil básico está completo. Acrescente experiências e projetos no seu ritmo."
+    : completion
     ? "Continue preenchendo: as sugestões usam somente as suas respostas."
     : "Quanto mais você preencher, mais personalizada será sua orientação.";
   $("#advice-basis").textContent = `Esta orientação considera ${data.advice.basis.join(", ")}.`;
@@ -124,24 +122,6 @@ async function loadDashboard() {
   } catch (error) {
     if (!$("#app-view").classList.contains("hidden")) toast(error.message, "error");
   }
-}
-
-function populateProfileForm() {
-  const form = $("#profile-form");
-  if (!state.me) return;
-  const { user, profile } = state.me;
-  state.profile = profile;
-  $("#profile-name").value = user.name || "";
-  $("#profile-email").value = user.email || "";
-  $$('[name]', form).forEach((field) => {
-    if (field.name in profile) {
-      const value = profile[field.name] || "";
-      field.value = field.name === "phone" ? String(value).replace(/\D/g, "").slice(0, 11)
-        : field.name === "age" ? String(value).replace(/\D/g, "").slice(0, 3) : value;
-    }
-  });
-  closeAllOptionLists();
-  renderProfileSummary();
 }
 
 function normalizeOptionText(value) {
@@ -207,7 +187,7 @@ function appendOptionBatch(wrapper) {
   const current = openOptionLists.get(wrapper);
   if (!current || current.rendered >= current.matches.length) return;
   const next = Math.min(current.rendered + 80, current.matches.length);
-  const name = wrapper.dataset.autocomplete;
+  const name = $("input", wrapper).id;
   list.insertAdjacentHTML("beforeend", current.matches.slice(current.rendered, next).map((item, offset) => {
     const index = current.rendered + offset;
     return `<button id="${name}-option-${index}" class="autocomplete-option" type="button" role="option" aria-selected="false" data-option-index="${index}">${escapeHtml(item.label)}</button>`;
@@ -244,12 +224,15 @@ function chooseOption(wrapper, index) {
   if (!choice) return;
   const input = $("input", wrapper);
   input.value = choice.value;
-  if (wrapper.dataset.autocomplete === "city" && choice.stateName) $("#profile-state").value = choice.stateName;
+  if (wrapper.dataset.autocomplete === "city" && choice.stateName) {
+    const stateInput = $('[name="state"]', wrapper.closest("form"));
+    if (stateInput) stateInput.value = choice.stateName;
+  }
   closeAllOptionLists();
 }
 
-function bindOptionLists() {
-  $$(".autocomplete-field").forEach((wrapper) => {
+function bindOptionLists(parent = document) {
+  $$(".autocomplete-field", parent).forEach((wrapper) => {
     const input = $("input", wrapper);
     const list = $(".autocomplete-list", wrapper);
     input.addEventListener("focus", () => openOptionList(wrapper));
@@ -287,105 +270,11 @@ function bindOptionLists() {
       if (!wrapper.contains(event.relatedTarget)) closeOptionList(wrapper);
     });
   });
-  document.addEventListener("pointerdown", (event) => {
-    if (!event.target.closest(".autocomplete-field")) closeAllOptionLists();
-  });
 }
 
 function profileText(value, fallback = "Não informado") {
   const cleanValue = String(value || "").trim();
   return cleanValue ? escapeHtml(cleanValue) : `<span class="not-informed">${fallback}</span>`;
-}
-
-function profileTags(value, fallback = "Nenhuma habilidade informada") {
-  const items = String(value || "")
-    .split(/[;,\n]/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-  if (!items.length) return `<span class="not-informed">${fallback}</span>`;
-  return `<div class="profile-tags">${items.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>`;
-}
-
-function renderProfileSummary() {
-  const target = $("#profile-summary");
-  if (!target || !state.me) return;
-  const { user, profile } = state.me;
-  const location = [profile.city, profile.state].filter(Boolean).join(" · ");
-  const completion = state.me.completion ?? 0;
-  target.innerHTML = `
-    <section class="profile-overview-card">
-      <div class="profile-avatar">${escapeHtml(user.name.trim().charAt(0).toUpperCase() || "P")}</div>
-      <div class="profile-overview-main">
-        <p class="eyebrow">Seu espaço profissional</p>
-        <h2>${escapeHtml(user.name)}</h2>
-        <p>${escapeHtml(user.email)}${profile.phone ? ` · ${escapeHtml(profile.phone)}` : ""}${location ? ` · ${escapeHtml(location)}` : ""}</p>
-      </div>
-      <div class="profile-completion"><span>${completion}%</span><small>perfil concluído</small></div>
-      <button class="square-action" data-open-profile type="button" aria-label="Editar perfil">✎</button>
-    </section>
-
-    <section class="profile-summary-section">
-      <div class="profile-section-heading">
-        <div><p class="eyebrow">Direção profissional</p><h2>Pretensões</h2></div>
-        <button class="section-action" data-open-profile type="button"><span>✎</span> Editar</button>
-      </div>
-      <div class="profile-info-grid profile-pretension-grid">
-        <article class="profile-info-card"><span>Área desejada</span><strong>${profileText(profile.desired_area, "Conte qual área você deseja explorar")}</strong></article>
-        <article class="profile-info-card"><span>Objetivo profissional</span><p>${profileText(profile.objective, "Defina o tipo de oportunidade que você procura")}</p></article>
-        <article class="profile-info-card"><span>Disponibilidade e momento</span><p>${profileText(profile.age ? `${profile.age} anos` : "", "Idade não informada")}</p></article>
-      </div>
-    </section>
-
-    <section class="profile-summary-section">
-      <div class="profile-section-heading">
-        <div><p class="eyebrow">Sua trajetória</p><h2>Experiência profissional</h2></div>
-        <div class="section-actions"><button class="square-action square-action--small" data-open-profile type="button" aria-label="Editar experiência">✎</button><button class="square-action square-action--small" data-open-profile type="button" aria-label="Adicionar experiência">+</button></div>
-      </div>
-      ${profile.professional_experience ? `
-        <article class="experience-record">
-          <div class="experience-record-title"><span class="record-icon">▣</span><div><p>Experiência informada</p><h3>Vivência profissional</h3></div></div>
-          <p class="experience-copy">${escapeHtml(profile.professional_experience)}</p>
-        </article>` : `
-        <div class="profile-empty-state"><span>+</span><div><b>Você ainda não adicionou uma experiência profissional.</b><p>Sem problema: projetos acadêmicos, cursos e habilidades também ajudam a contar sua história.</p></div><button class="text-link" data-open-profile type="button">Adicionar informação <span>→</span></button></div>`}
-    </section>
-
-    <section class="profile-summary-section">
-      <div class="profile-section-heading">
-        <div><p class="eyebrow">Base e desenvolvimento</p><h2>Formação, projetos e habilidades</h2></div>
-        <button class="section-action" data-open-profile type="button"><span>✎</span> Editar</button>
-      </div>
-      <div class="profile-info-grid profile-development-grid">
-        <article class="profile-info-card"><span>Escolaridade</span><p>${profileText(profile.education, "Nenhuma formação informada")}</p></article>
-        <article class="profile-info-card"><span>Curso</span><p>${profileText(profile.course, "Nenhum curso em andamento informado")}</p></article>
-        <article class="profile-info-card"><span>Idiomas</span><p>${profileText(profile.languages, "Nenhum idioma informado")}</p></article>
-        <article class="profile-info-card profile-info-card--wide"><span>Projetos e experiências acadêmicas</span><p>${profileText(profile.academic_experience, "Adicione projetos, voluntariado ou trabalhos acadêmicos reais")}</p></article>
-        <article class="profile-info-card profile-info-card--wide"><span>Habilidades</span>${profileTags(profile.skills)}</article>
-        <article class="profile-info-card profile-info-card--wide"><span>Cursos e certificações</span><p>${profileText(profile.courses, "Nenhum curso ou certificação informado")}</p></article>
-      </div>
-    </section>`;
-}
-
-function openProfileEditor() {
-  populateProfileForm();
-  openModal("#profile-modal");
-}
-
-async function saveProfile(event) {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const data = Object.fromEntries(new FormData(form));
-  try {
-    const result = await api("/api/profile", { method: "PUT", body: data });
-    state.me.profile = result.profile;
-    state.me.completion = result.completion;
-    state.profile = result.profile;
-    closeModal("#profile-modal");
-    toast(result.message);
-    await loadDashboard();
-    navigate("dashboard");
-  } catch (error) {
-    toast(error.message, "error");
-  }
 }
 
 const catalogRows = {jobs: [], courses: []};
@@ -412,8 +301,6 @@ async function loadCatalog(kind) {
       </article>`).join('') : '<div class="empty-card">Nenhum resultado disponível para estes filtros. Experimente outra busca ou escolha “Todas as áreas”. Anúncios com revisão vencida ficam ocultos.</div>';
   } catch (error) { if (version === catalogVersions[kind]) target.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`; }
 }
-function loadJobs() { return loadCatalog('jobs'); }
-function loadCourses() { return loadCatalog('courses'); }
 async function loadAIStatus() {
   const target = $('#ai-availability');
   try {
@@ -519,24 +406,16 @@ function populateBuilder() {
   const profile = state.me.profile || {};
   const { user } = state.me;
   const values = {
+    ...profile,
+    ...profile.resume_fields,
     full_name: user.name,
     email: user.email,
     headline: profile.desired_area || "",
-    course: profile.course || "",
-    phone: profile.phone || "",
     location: [profile.city, profile.state].filter(Boolean).join(" / "),
-    objective: profile.objective || "",
-    education: profile.education || "",
-    professional_experience: profile.professional_experience || "",
-    academic_experience: profile.academic_experience || "",
-    courses: profile.courses || "",
-    skills: profile.skills || "",
-    languages: profile.languages || "",
-    additional_information: "",
+    additional_information: profile.resume_fields?.additional_information || "",
   };
-  Object.entries(values).forEach(([name, value]) => {
-    const field = $(`[name="${name}"]`, form);
-    if (field) field.value = value;
+  $$('[name]', form).forEach((field) => {
+    field.value = values[field.name] || "";
   });
 }
 
@@ -657,36 +536,24 @@ async function generateResume(event) {
   } finally { button.disabled = false; }
 }
 
-async function enterApplication() {
-  const me = await api("/api/me");
+async function enterApplication(me) {
+  me ||= await api("/api/me");
   state.me = me;
-  state.profile = me.profile;
   switchView(true);
   accountDetails();
   populateProfileForm();
   await loadDashboard();
 }
 
-async function handleLogin(event) {
+async function handleAuth(event) {
   event.preventDefault();
+  const mode = event.currentTarget.id === "register-form" ? "register" : "login";
   const data = Object.fromEntries(new FormData(event.currentTarget));
   try {
-    const result = await api("/api/auth/login", { method: "POST", body: data });
+    const result = await api(`/api/auth/${mode}`, { method: "POST", body: data });
     toast(result.message);
     await enterApplication();
-  } catch (error) {
-    toast(error.message, "error");
-  }
-}
-
-async function handleRegister(event) {
-  event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.currentTarget));
-  try {
-    const result = await api("/api/auth/register", { method: "POST", body: data });
-    toast(result.message);
-    await enterApplication();
-    navigate("profile");
+    if (mode === "register") navigate("profile");
   } catch (error) {
     toast(error.message, "error");
   }
@@ -705,18 +572,16 @@ async function logout() {
 }
 
 function bindEvents() {
-  bindOptionLists();
-  $$('[name="phone"], [name="age"]', $('#profile-form')).forEach((field) => {
-    field.addEventListener('input', () => {
-      field.value = field.value.replace(/\D/g, '').slice(0, field.name === 'phone' ? 11 : 3);
-    });
+  bindProfileEvents();
+  document.addEventListener("pointerdown", (event) => {
+    if (!event.target.closest(".autocomplete-field")) closeAllOptionLists();
   });
   ['jobs', 'courses'].forEach(kind => {
     $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
     $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });
     $(`#${kind}-list`).addEventListener('click', event => { const button = event.target.closest('[data-catalog]'); if (button) showCatalogDetail(button.dataset.catalog, Number(button.dataset.index)); });
   });
-  $$('#resume-builder-form textarea').forEach(field => field.maxLength = 4000);
+  $$('#resume-builder-form textarea').forEach(field => field.maxLength = 12000);
   window.addEventListener('resize', syncMobileMenu);
   syncMobileMenu();
   document.addEventListener('keydown', event => {
@@ -728,8 +593,8 @@ function bindEvents() {
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
   });
   $$('[data-show-auth]').forEach((button) => button.addEventListener("click", () => toggleAuth(button.dataset.showAuth)));
-  $("#login-form").addEventListener("submit", handleLogin);
-  $("#register-form").addEventListener("submit", handleRegister);
+  $("#login-form").addEventListener("submit", handleAuth);
+  $("#register-form").addEventListener("submit", handleAuth);
   $("#profile-form").addEventListener("submit", saveProfile);
   $("#upload-form").addEventListener("submit", uploadResume);
   $("#resume-builder-form").addEventListener("submit", generateResume);
@@ -745,7 +610,7 @@ function bindEvents() {
   });
   $("#open-builder").addEventListener("click", () => { populateBuilder(); openModal("#builder-modal"); });
   $$('[data-close-modal]').forEach((item) => item.addEventListener("click", () => closeModal("#builder-modal")));
-  $$('[data-close-profile]').forEach((item) => item.addEventListener("click", () => closeModal("#profile-modal")));
+  $$('[data-close-profile]').forEach((item) => item.addEventListener("click", () => requestCloseProfile()));
   $$('[data-close-preview]').forEach((item) => item.addEventListener("click", () => closeModal("#preview-modal")));
   $("#resume-file").addEventListener("change", (event) => {
     $(".file-label span").textContent = event.target.files[0]?.name || "Selecionar arquivo";
@@ -754,7 +619,8 @@ function bindEvents() {
     if (event.key === "Escape") {
       if ($$('.modal:not(.hidden)').length) {
         const modal = $$('.modal:not(.hidden)').at(-1);
-        closeModal(`#${modal.id}`);
+        if (modal.id === "profile-modal") requestCloseProfile();
+        else closeModal(`#${modal.id}`);
       } else if ($('.sidebar').classList.contains('open')) setMobileMenuOpen(false);
     }
   });
@@ -766,12 +632,7 @@ async function boot() {
     const [meta, me] = await Promise.all([api("/api/meta"), api("/api/me")]);
     updateDate(meta);
     if (me.authenticated) {
-      state.me = me;
-      state.profile = me.profile;
-      switchView(true);
-      accountDetails();
-      populateProfileForm();
-      await loadDashboard();
+      await enterApplication(me);
     }
   } catch (error) {
     toast("Não foi possível iniciar a aplicação. Atualize a página e tente novamente.", "error");

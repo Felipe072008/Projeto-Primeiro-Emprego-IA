@@ -30,6 +30,14 @@ class SiteTests(unittest.TestCase):
     def pdf(self):
         return build_resume_pdf({'name':'Pessoa de Teste', 'headline':'Tecnologia', 'contacts':['teste@example.com'], 'sections':[{'title':'Formação', 'content':'Ensino médio concluído em 2025. Desenvolvi um projeto escolar com Python e Git.'}]}).getvalue()
 
+    def test_auth_rejects_nonobject_json(self):
+        for endpoint in ('register', 'login'):
+            for payload in ([1], 'invalid', 42, True):
+                with self.subTest(endpoint=endpoint, payload=payload):
+                    response = self.client.post(f'/api/auth/{endpoint}', json=payload)
+                    self.assertEqual(response.status_code, 400)
+                    self.assertIn('error', response.json)
+
     def test_pdf_only_and_content(self):
         for name, content in [('curriculo.docx', b'PK fake'), ('falso.pdf', b'not pdf'), ('corrompido.pdf', b'%PDF-1.7 invalid')]:
             response = self.client.post('/api/resumes/upload', data={'file':(io.BytesIO(content), name)})
@@ -83,15 +91,13 @@ class SiteTests(unittest.TestCase):
     def test_profile_selection_drives_catalog_endpoints(self):
         profile={'phone':'41999999999','age':'18','city':'Curitiba','state':'Paraná','desired_area':'Jovem Aprendiz — Administração','education':'Médio Completo','skills':'Organização','languages':'Português'}
         self.assertEqual(self.client.put('/api/profile',json=profile).status_code,200)
-        with patch('catalog.date') as clock:
-            clock.today.return_value=date(2026,10,8)
-            clock.fromisoformat.side_effect=date.fromisoformat
+        with patch('app.now_sp', return_value=site.datetime(2026,10,8,tzinfo=site.BRAZIL_TZ)):
             jobs=self.client.get('/api/jobs').json['jobs']
             self.assertTrue(jobs)
             self.assertTrue(all(job['contract_type']=='aprendiz' for job in jobs))
-            courses=self.client.get('/api/courses?free_only=1').json['courses']
+            courses=self.client.get('/api/courses?free=1').json['courses']
             self.assertTrue(courses)
-            self.assertTrue(all(course['certificate'] for course in courses))
+            self.assertTrue(all(course['certificate'] and course['free'] for course in courses))
 
     def test_analysis_unavailable_is_honest(self):
         created=self.client.post('/api/resumes/upload',data={'file':(io.BytesIO(self.pdf()),'cv.pdf')})

@@ -17,14 +17,13 @@ from werkzeug.utils import secure_filename
 from catalog import recommendations
 from resume_documents import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
 from resume_analysis import analyze, ai_status
+from profile_data import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section
 
 
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = Path(os.environ.get("FIRST_JOB_DATABASE", str(BASE_DIR / "primeiro_emprego.db")))
 UPLOAD_DIR = Path(os.environ.get("FIRST_JOB_UPLOAD_DIR", str(BASE_DIR / "uploads")))
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
-ALLOWED_EXTENSIONS = {"pdf"}
-MAX_UPLOAD_SIZE = 8 * 1024 * 1024
 
 app = Flask(__name__)
 # Set SECRET_KEY as an environment variable in production (e.g. on PythonAnywhere's
@@ -32,7 +31,7 @@ app = Flask(__name__)
 # safer than a fixed default, but it means active sessions are cleared on restart.
 app.config.update(
     SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
-    MAX_CONTENT_LENGTH=MAX_UPLOAD_SIZE + 64 * 1024,
+    MAX_CONTENT_LENGTH=MAX_PDF_BYTES + 64 * 1024,
 )
 UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -105,6 +104,15 @@ def init_db():
                 FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS profile_sections (
+                user_id INTEGER NOT NULL,
+                section TEXT NOT NULL,
+                data_json TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                PRIMARY KEY (user_id, section),
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
             CREATE TABLE IF NOT EXISTS jobs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
@@ -131,17 +139,9 @@ REQUIRED_PROFILE_FIELDS = {
     "desired_area": "Área profissional desejada", "education": "Escolaridade",
     "skills": "Habilidades", "languages": "Idiomas",
 }
-EDUCATION_OPTIONS = {
-    "Fundamental Incompleto", "Fundamental Completo", "Médio Incompleto",
-    "Médio Completo", "Cursando Ensino Médio", "Superior Incompleto",
-    "Cursando Superior", "Superior Completo",
-}
-
-
 def profile_completion(profile: dict) -> int:
-    # The user name and email are registered in the account, so they count too.
-    filled = sum(bool(str(profile.get(field, "")).strip()) for field in PROFILE_FIELDS)
-    return round((filled / len(PROFILE_FIELDS)) * 100)
+    filled = sum(bool(str(profile.get(field, "")).strip()) for field in REQUIRED)
+    return round((filled / len(REQUIRED)) * 100)
 
 
 def get_user(user_id: int):
@@ -155,9 +155,9 @@ def get_user(user_id: int):
 def get_profile(user_id: int) -> dict:
     with db_connection() as connection:
         row = connection.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,)).fetchone()
-    if not row:
-        return {field: "" for field in PROFILE_FIELDS}
-    return dict(row)
+        sections = connection.execute("SELECT section, data_json FROM profile_sections WHERE user_id = ?", (user_id,)).fetchall()
+    return hydrate_profile(dict(row) if row else {field: '' for field in PROFILE_FIELDS},
+                           {section['section']: json.loads(section['data_json']) for section in sections})
 
 
 def current_user_id():
@@ -174,13 +174,10 @@ def login_required(view):
     return wrapped
 
 
-def allowed_file(filename: str) -> bool:
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> dict:
     """Creates a resume only with values supplied by the person using the platform."""
     supplied = supplied or {}
+    profile = {**profile, **profile.get('resume_fields', {})}
 
     def choose(key: str):
         value = supplied.get(key, profile.get(key, ""))
@@ -231,7 +228,7 @@ def profile_advice(profile: dict) -> dict:
         next_steps.append("Escreva um objetivo profissional curto e focado na área que você procura.")
     if not profile.get("skills"):
         next_steps.append("Liste habilidades reais, inclusive conhecimentos adquiridos na escola, cursos ou projetos.")
-    if not profile.get("academic_experience") and not profile.get("professional_experience"):
+    if not profile.get("academic_experience") and not profile.get("professional_experience") and not profile.get('sections', {}).get('experiences', {}).get('no_experience'):
         next_steps.append("Se não possui experiência profissional, descreva projetos acadêmicos, trabalhos voluntários ou atividades que você realmente realizou.")
     if not next_steps:
         next_steps.append("Seu perfil já tem informações suficientes para gerar e revisar seu currículo.")
@@ -240,6 +237,7 @@ def profile_advice(profile: dict) -> dict:
         "completion": completion,
         "basis": info or ["ainda não há informações profissionais preenchidas"],
         "next_steps": next_steps,
+        "missing_fields": profile.get('missing_fields', []),
     }
 
 
@@ -256,6 +254,8 @@ def meta():
 @app.post("/api/auth/register")
 def register():
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify({"error": "Dados de acesso inválidos."}), 400
     name = str(data.get("name", "")).strip()
     email = str(data.get("email", "")).strip().lower()
     password = str(data.get("password", ""))
@@ -284,6 +284,8 @@ def register():
 @app.post("/api/auth/login")
 def login():
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify({"error": "Dados de acesso inválidos."}), 400
     email = str(data.get("email", "")).strip().lower()
     password = str(data.get("password", ""))
     with db_connection() as connection:
@@ -349,6 +351,27 @@ def profile():
     return jsonify({"message": "Perfil salvo.", "profile": saved, "completion": profile_completion(saved)})
 
 
+@app.patch('/api/profile/<section>')
+@login_required
+def save_profile_section(section):
+    if section not in SECTIONS:
+        return jsonify({'error': 'Seção não encontrada.'}), 404
+    user_id = current_user_id()
+    previous = get_profile(user_id)['sections'][section]
+    try:
+        saved_data = validate_section(section, request.get_json(silent=True), previous)
+    except ProfileError as error:
+        return jsonify({'error': str(error), 'errors': error.errors}), 400
+    with db_connection() as connection:
+        connection.execute('''INSERT INTO profile_sections (user_id, section, data_json, updated_at)
+            VALUES (?, ?, ?, ?) ON CONFLICT(user_id, section) DO UPDATE
+            SET data_json=excluded.data_json, updated_at=excluded.updated_at''',
+            (user_id, section, json.dumps(saved_data, ensure_ascii=False), timestamp()))
+        connection.execute('UPDATE profiles SET updated_at=? WHERE user_id=?', (timestamp(), user_id))
+    saved = get_profile(user_id)
+    return jsonify({'message': 'Informações salvas.', 'profile': saved, 'completion': profile_completion(saved)})
+
+
 @app.get("/api/dashboard")
 @login_required
 def dashboard():
@@ -402,7 +425,7 @@ def upload_resume():
     uploaded = request.files.get("file")
     if not uploaded or not uploaded.filename:
         return jsonify({"error": "Selecione um arquivo PDF."}), 400
-    if not allowed_file(uploaded.filename):
+    if not uploaded.filename.lower().endswith(".pdf"):
         return jsonify({"error": "Apenas currículos em PDF são aceitos."}), 400
     content = uploaded.read(MAX_PDF_BYTES + 1)
     try:
@@ -430,9 +453,9 @@ def upload_resume():
 @login_required
 def generate_resume():
     supplied = request.get_json(silent=True) or {}
-    if not isinstance(supplied, dict) or any(not isinstance(value, str) or len(value) > 4000 for value in supplied.values()):
-        return jsonify({"error": "Use textos de até 4.000 caracteres por campo."}), 400
-    if len(str(supplied.get("full_name", ""))) > 120 or len(str(supplied.get("headline", ""))) > 160:
+    if not isinstance(supplied, dict) or any(not isinstance(value, str) or len(value) > 12000 for value in supplied.values()):
+        return jsonify({"error": "Use textos de até 12.000 caracteres por campo."}), 400
+    if len(supplied.get("full_name", "")) > 120 or len(supplied.get("headline", "")) > 160:
         return jsonify({"error": "Use um nome de até 120 caracteres e uma área de até 160 caracteres."}), 400
     user = get_user(current_user_id())
     data = resume_payload(user, get_profile(current_user_id()), supplied)
