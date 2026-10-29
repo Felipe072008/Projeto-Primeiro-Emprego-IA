@@ -1,0 +1,32 @@
+[
+  {
+    "clientWidth": 343,
+    "modalWidth": 360,
+    "scrollWidth": 343,
+    "width": 360
+  },
+  {
+    "clientWidth": 388,
+    "modalWidth": 390,
+    "scrollWidth": 388,
+    "width": 390
+  },
+  {
+    "clientWidth": 726,
+    "modalWidth": 728,
+    "scrollWidth": 726,
+    "width": 768
+  },
+  {
+    "clientWidth": 848,
+    "modalWidth": 850,
+    "scrollWidth": 848,
+    "width": 1024
+  },
+  {
+    "clientWidth": 848,
+    "modalWidth": 850,
+    "scrollWidth": 848,
+    "width": 1440
+  }
+]

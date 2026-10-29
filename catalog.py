@@ -87,7 +87,8 @@ def load_catalog(kind, today=None):
 
 
 def recommendations(kind, profile, *, show_all=False, query="", course_type="", free_only=False, today=None):
-    interest = str(profile.get("desired_area", "")).strip()
+    goals = profile.get('sections', {}).get('goals', {})
+    interest = str(goals.get('sector') or profile.get("desired_area", "")).strip()
     direct = detect_areas(interest)
     selection = career_selection(interest)
     contract_type = selection["contract_type"] if selection else None
@@ -99,7 +100,9 @@ def recommendations(kind, profile, *, show_all=False, query="", course_type="", 
     contracts = set(goals.get('contracts', [])) or inferred
     related = set().union(*(RELATED.get(area, set()) for area in all_areas)) - all_areas if all_areas else set()
     rows = []
-    for item in load_catalog(kind, today):
+    available = load_catalog(kind, today)
+    study_context = normalized(' '.join(str(profile.get(k, '')) for k in ('skills', 'objective')) + ' ' + goals.get('target_role', ''))
+    for item in available:
         if kind == "jobs" and not show_all and contracts and item["contract_type"] not in contracts:
             continue
         areas = set(item["areas"])
@@ -115,6 +118,22 @@ def recommendations(kind, profile, *, show_all=False, query="", course_type="", 
         else:
             match, priority = "explore", 3
             reason = "Explore esta oportunidade e confira os requisitos."
+        if kind == 'courses' and match == 'related':
+            match, priority = 'explore', 3
+            reason = 'Outra área de estudo; confira se atende ao seu objetivo.'
+        terms = []
+        if kind == 'courses':
+            content = normalized(item['title'] + ' ' + item['description'])
+            terms = [term for term in ('python','excel','hardware','redes','atendimento','contabilidade','logistica','marketing','recrutamento') if re.search(r'\b'+term+r'\b', study_context) and re.search(r'\b'+term+r'\b', content)]
+            if terms:
+                match, priority = 'direct', 0
+                reason = 'Conteúdo sobre ' + ', '.join(terms) + ', presente nas suas habilidades, cargo-alvo ou objetivo.'
+        if kind == 'courses' and 'suporte' in normalized(interest + ' ' + goals.get('target_role', '')):
+            useful = any(term in normalized(item['title'] + ' ' + item['description']) for term in ('hardware', 'redes de computadores', 'suporte', 'sistemas operacionais'))
+            if not useful and not terms:
+                match, priority, reason = 'explore', 3, 'Explore este conteúdo se fizer parte do seu plano de estudo.'
+            elif useful:
+                reason = 'Fundamentos de computadores e sistemas úteis para iniciar em suporte de TI.'
         if interest and not show_all and match == "explore":
             continue
         if query and normalized(query) not in normalized(" ".join(str(item.get(k, "")) for k in ("title", "company", "institution", "description"))):
@@ -132,6 +151,8 @@ def recommendations(kind, profile, *, show_all=False, query="", course_type="", 
         "contract_types": sorted(contracts) if kind == 'jobs' else [],
         "personalized": bool(interest) and not show_all,
         "total": len(rows),
+        "catalog_total": len(available),
+        "catalog_status": 'available' if available else 'unavailable',
         "location": "Curitiba - PR" if kind == "jobs" else "Curitiba e opções online",
         "notice": ("Vagas filtradas também pelos tipos de oportunidade escolhidos. " if kind == "jobs" and contracts and not show_all else "") + "Catálogo revisado manualmente. A disponibilidade e as condições podem mudar na fonte; confira os requisitos antes de se inscrever.",
     }

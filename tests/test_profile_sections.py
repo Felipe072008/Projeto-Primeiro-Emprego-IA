@@ -49,7 +49,7 @@ class ProfileSectionsTests(unittest.TestCase):
         before = self.client.get('/api/me').json['profile']
         self.assertEqual(before['sections']['experiences']['items'], [])
         self.assertEqual(before['sections']['experiences']['legacy'], legacy['professional_experience'])
-        self.save('contact', phone='41888888888', age='19', city='Curitiba', state='Paraná')
+        self.save('contact', phone='41988888888', age='19', city='Curitiba', state='Paraná')
         self.save('skills', items=[{'name':'Git'}])
         after = self.client.get('/api/me').json['profile']
         for field in ('professional_experience','languages','course'):
@@ -86,6 +86,10 @@ class ProfileSectionsTests(unittest.TestCase):
     def test_invalid_sections_never_overwrite_saved_data(self):
         self.save('contact',phone='41999999999',age='18',city='Curitiba',state='Paraná')
         fixtures=[('contact',{'phone':'1'*12,'age':'0','city':'Curitiba','state':'PR'}),('goals',{'desired_area':'Área inventada'}),('skills',{'items':[{'name':'Organização'},{'name':'organizacao'}]}),('languages',{'items':[{'language':'Inglês','level':'Expert'}]}),('courses',{'items':[{'name':'Curso','institution':'Escola','status':'Concluído','certificate_url':'javascript:alert(1)'}]}),('experiences',{'items':[{'role':'Cargo','company':'Empresa','start':'2025-10-10','end':'2024-10-10'}]}),('experiences',{'items':[{'role':'Cargo','company':'Empresa','start':'2099-01-01'}]}),('education',{'level':'Não listado'}),('availability',{'periods':['Madrugada']}),('contact',{'user_id':999})]
+        fixtures += [
+            ('courses', {'items':[{'name':'Curso','institution':'Escola','status':'Concluído','certificate_url':'https://['}]}),
+            ('courses', {'items':[{'name':'Curso','institution':'Escola','status':'Concluído','year':'²²²²'}]}),
+        ]
         for section,changes in fixtures:
             with self.subTest(section=section,changes=changes):
                 previous=self.client.get('/api/me').json['profile']

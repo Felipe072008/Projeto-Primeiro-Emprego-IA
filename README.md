@@ -59,4 +59,7 @@ node tests\check_frontend.cjs
 
 ## Antes de publicar
 
-HTTPS, navegação do histórico, conta, política de privacidade e demais itens que você adiou continuam pendentes. Configure `SECRET_KEY`, servidor de produção e proteção adequada dos dados antes de expor o site publicamente.
+Configure `SECRET_KEY`, HTTPS, servidor de produção e proteção adequada dos dados antes de expor o site publicamente. A navegação por histórico foi implementada; configuração de conta, recuperação de acesso e política de privacidade ainda precisam de revisão conforme o relatório abaixo.
+# Auditoria de 28/10/2026
+
+Esta cópia contém correções de validação, acessibilidade, catálogos, navegação e versões de currículo. Consulte [o relatório de implementação](docs/auditoria-2026-10-28/RELATORIO.md) para evidências, migração compatível, execução, implantação e reversão. Nada foi publicado automaticamente.

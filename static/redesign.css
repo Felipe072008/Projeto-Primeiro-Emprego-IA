@@ -292,3 +292,19 @@ input:focus, textarea:focus, select:focus { border-color: #54a8b5; box-shadow: 0
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Audit: readable controls, keyboard landmarks and compact mobile content. */
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 200; padding: 12px; color: #142435; background: white; transform: translateY(-160%); }
+.skip-link:focus { transform: none; }
+.profile-criteria { padding: 16px; margin-bottom: 16px; background: white; border-radius: 14px; }
+.small-button, .section-action, .nav-link, .modal-close { min-height: 44px; }
+.small-button { font-size: 13px; }
+select { font: inherit; }
+.editor-field select { width: 100%; min-height: 48px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: white; }
+.muted, .form-note, .not-informed { color: #526575; }
+.field-error, .editor-form-error { color: #992e24; }
+:focus-visible { outline: 3px solid #126b81; outline-offset: 3px; }
+.sidebar :focus-visible { outline-color: #b9efd9; }
+.profile-summary-section { scroll-margin-top: 16px; }
+@media (max-width: 620px) { .course-hero { padding: 22px; margin-bottom: 18px; } .course-hero h1 { font-size: 28px; } .course-hero-star { display: none; } .catalog-filters { gap: 12px; } .form-note { font-size: 14px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

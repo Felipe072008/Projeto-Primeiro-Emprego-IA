@@ -515,5 +515,37 @@
     "location": "Curitiba - PR · Presencial",
     "source": "Gupy",
     "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+  },
+  {
+    "id": "bp-infra-estagio",
+    "title": "Estagiário de T.I — Infraestrutura",
+    "company": "Bellinati Perez",
+    "source": "Gupy",
+    "original_url": "https://bellinatiperez.gupy.io/jobs/12467350",
+    "areas": [
+      "tecnologia"
+    ],
+    "contract_type": "estagio",
+    "contract": "Estágio",
+    "entry_level": true,
+    "description": "Apoio a chamados simples, atendimento a usuários e documentação de atividades de infraestrutura.",
+    "requirements": [
+      "Cursando técnico ou graduação em TI ou área correlata.",
+      "Conhecimentos básicos de computadores, Windows e Office."
+    ],
+    "salary": "Não informado na fonte",
+    "schedule": "Segunda a sexta, das 8h às 14h",
+    "benefits": [
+      "Vale-transporte",
+      "Folga de aniversário"
+    ],
+    "status": "published",
+    "checked_on": "2026-10-28",
+    "review_by": "2026-11-04",
+    "expires_on": null,
+    "city": "Curitiba",
+    "state": "PR",
+    "location": "Centro de Curitiba/PR · Presencial",
+    "access_note": "Anúncio público com candidatura disponível na consulta; cadastro na Gupy para se candidatar."
   }
 ]

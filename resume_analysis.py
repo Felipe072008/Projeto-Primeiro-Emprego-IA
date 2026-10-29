@@ -72,10 +72,10 @@ def local_checks(text, profile, metadata, jobs):
             "skills_found": present_skills,
             "terms_to_review": missing_skills,
             "jobs": [{"title": j["title"], "url": j["original_url"]} for j in related_jobs],
-            "note": "Os termos vêm dos requisitos das vagas indicadas. A ausência no texto não significa falta da habilidade. Acrescente somente o que você realmente sabe e use os demais como objetivos de estudo.",
+            "note": "Os termos vêm dos requisitos das vagas indicadas. Acrescente somente conhecimentos reais." if related_jobs else "Não foi possível comparar com vagas atuais compatíveis. Esta revisão considera apenas o documento.",
         },
         "contextual": None,
-        "limitations": "A extração não avalia integralmente a aparência visual. Não há nota de empregabilidade nem garantia de aprovação em processos seletivos.",
+        "limitations": "As regras verificam estrutura e expressões específicas; não fazem revisão ortográfica completa nem avaliam integralmente o visual. Não há nota de empregabilidade ou garantia de aprovação.",
     }
 
 

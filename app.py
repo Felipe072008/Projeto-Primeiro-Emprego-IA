@@ -4,6 +4,8 @@ import re
 import secrets
 import sqlite3
 import uuid
+import time
+import hashlib
 from datetime import datetime
 from functools import wraps
 from contextlib import contextmanager
@@ -17,7 +19,7 @@ from werkzeug.utils import secure_filename
 from catalog import recommendations
 from resume_documents import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
 from resume_analysis import analyze, ai_status
-from profile_data import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section
+from profile_data import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section, contact_errors, missing_fields
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -32,6 +34,9 @@ app = Flask(__name__)
 app.config.update(
     SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
     MAX_CONTENT_LENGTH=MAX_PDF_BYTES + 64 * 1024,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_COOKIE_SECURE=os.environ.get('COOKIE_SECURE') == '1',
 )
 UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -113,6 +118,12 @@ def init_db():
                 FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS request_limits (
+                key TEXT PRIMARY KEY,
+                window INTEGER NOT NULL,
+                count INTEGER NOT NULL
+            );
+
             CREATE TABLE IF NOT EXISTS jobs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
@@ -140,7 +151,7 @@ REQUIRED_PROFILE_FIELDS = {
     "skills": "Habilidades", "languages": "Idiomas",
 }
 def profile_completion(profile: dict) -> int:
-    filled = sum(bool(str(profile.get(field, "")).strip()) for field in REQUIRED)
+    filled = len(REQUIRED) - len(missing_fields(profile))
     return round((filled / len(REQUIRED)) * 100)
 
 
@@ -206,7 +217,7 @@ def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> d
     ]
     return {
         "name": choose("full_name") or user["name"],
-        "headline": str(supplied.get("headline", profile.get("desired_area", "")) or "").strip(),
+        "headline": str(supplied.get("headline", profile.get('sections', {}).get('goals', {}).get('target_role') or profile.get("desired_area", "")) or "").strip(),
         "contacts": contact_parts,
         "sections": [{"title": title, "content": content} for title, content in sections if content],
         "created_on": date_label(),
@@ -244,6 +255,28 @@ def profile_advice(profile: dict) -> dict:
 @app.get("/")
 def home():
     return render_template("index.html")
+
+
+@app.before_request
+def protect_mutations():
+    # Browser mutations require a same-origin custom header, including multipart uploads.
+    if request.method in {'POST', 'PUT', 'PATCH', 'DELETE'}:
+        if request.headers.get('Origin') and request.headers['Origin'].rstrip('/') != request.host_url.rstrip('/'):
+            return jsonify(error='Origem da solicitação não autorizada.'), 403
+        if request.headers.get('X-Requested-With') != 'FirstJob':
+            return jsonify(error='Atualize a página antes de continuar.'), 403
+        limited = request.path in {'/api/auth/login', '/api/auth/register'} or request.path.endswith('/analyze')
+        if limited:
+            scope = 'analysis' if request.path.endswith('/analyze') else 'auth'
+            identity = str(current_user_id()) if scope == 'analysis' and current_user_id() else request.remote_addr or 'unknown'
+            key = hashlib.sha256((app.secret_key + scope + identity).encode()).hexdigest()
+            window = int(time.time()) // 900
+            with db_connection() as connection:
+                connection.execute('DELETE FROM request_limits WHERE window < ?', (window,))
+                row = connection.execute('''INSERT INTO request_limits (key,window,count) VALUES (?,?,1)
+                    ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count''', (key,window)).fetchone()
+            if row['count'] > (10 if scope == 'analysis' else 30):
+                return jsonify(error='Muitas tentativas. Aguarde até 15 minutos e tente novamente.'), 429, {'Retry-After': str(900-int(time.time())%900)}
 
 
 @app.get("/api/meta")
@@ -341,6 +374,9 @@ def profile():
             return jsonify({"error": f"{label} deve conter apenas números, com no máximo {limit} dígitos."}), 400
     if profile_data["education"] not in EDUCATION_OPTIONS:
         return jsonify({"error": "Selecione uma das opções de escolaridade disponíveis."}), 400
+    errors = contact_errors(profile_data)
+    if errors:
+        return jsonify(error='Confira os campos indicados.', errors=errors), 400
     values = [profile_data[field] for field in PROFILE_FIELDS]
     with db_connection() as connection:
         connection.execute(
@@ -459,14 +495,16 @@ def generate_resume():
         return jsonify({"error": "Use um nome de até 120 caracteres e uma área de até 160 caracteres."}), 400
     user = get_user(current_user_id())
     data = resume_payload(user, get_profile(current_user_id()), supplied)
+    data['source'] = 'Perfil revisado pelo usuário'
+    data['inputs'] = supplied
     if len(text_from_resume(data)) > 20000:
         return jsonify({"error": "O currículo está muito longo. Reduza o conteúdo para até 20 mil caracteres."}), 400
     if not data["sections"]:
         return jsonify({"error": "Preencha ao menos uma informação profissional antes de criar seu currículo."}), 400
     with db_connection() as connection:
         cursor = connection.execute(
-            "INSERT INTO resumes (user_id, kind, original_name, saved_name, content_json, created_at, updated_at) VALUES (?, 'generated', NULL, NULL, ?, ?, ?)",
-            (current_user_id(), json.dumps(data, ensure_ascii=False), timestamp(), timestamp()),
+            "INSERT INTO resumes (user_id, kind, original_name, saved_name, content_json, created_at, updated_at) VALUES (?, 'generated', ?, NULL, ?, ?, ?)",
+            (current_user_id(), supplied.get('title', '').strip()[:120] or data['headline'] or 'Meu currículo', json.dumps(data, ensure_ascii=False), timestamp(), timestamp()),
         )
     return jsonify({"message": "Currículo criado com suas informações.", "id": cursor.lastrowid, "resume": data}), 201
 
@@ -477,6 +515,46 @@ def owned_resume(resume_id: int):
             "SELECT * FROM resumes WHERE id = ? AND user_id = ?", (resume_id, current_user_id())
         ).fetchone()
     return dict(row) if row else None
+
+
+@app.patch('/api/resumes/<int:resume_id>')
+@login_required
+def rename_resume(resume_id):
+    if not owned_resume(resume_id):
+        return jsonify(error='Currículo não encontrado.'), 404
+    data = request.get_json(silent=True)
+    title = data.get('title') if isinstance(data, dict) else None
+    if not isinstance(title, str) or not title.strip() or len(title) > 120:
+        return jsonify(error='Informe um título de até 120 caracteres.'), 400
+    with db_connection() as connection:
+        connection.execute('UPDATE resumes SET original_name=? WHERE id=? AND user_id=?', (title.strip(), resume_id, current_user_id()))
+    return jsonify(message='Título atualizado; conteúdo e data da versão preservados.')
+
+
+@app.post('/api/resumes/<int:resume_id>/version')
+@login_required
+def version_resume(resume_id):
+    old = owned_resume(resume_id)
+    if not old or old['kind'] != 'generated':
+        return jsonify(error='Currículo gerado não encontrado.'), 404
+    supplied = request.get_json(silent=True)
+    if not isinstance(supplied, dict):
+        return jsonify(error='Dados inválidos.'), 400
+    content = supplied.get('content', json.loads(old['content_json']))
+    if not isinstance(content, dict) or not isinstance(content.get('name'), str) or not isinstance(content.get('headline', ''), str) or not isinstance(content.get('contacts'), list) or not isinstance(content.get('sections'), list):
+        return jsonify(error='Conteúdo inválido.'), 400
+    if len(content['contacts']) > 10 or any(not isinstance(v, str) or len(v) > 300 for v in content['contacts']) or len(content['sections']) > 20:
+        return jsonify(error='Contatos ou seções inválidos.'), 400
+    if any(not isinstance(v, dict) or not isinstance(v.get('title'), str) or not isinstance(v.get('content'), str) for v in content['sections']):
+        return jsonify(error='Seções inválidas.'), 400
+    content = {k: content.get(k, '') for k in ('name', 'headline', 'contacts', 'sections')}
+    content['sections'] = [{'title': v['title'], 'content': v['content']} for v in content['sections'] if v['content'].strip()]
+    if not content['name'].strip() or len(content['name']) > 120 or len(content['headline']) > 160 or len(text_from_resume(content)) > 20000:
+        return jsonify(error='O currículo ultrapassa os limites de texto.'), 400
+    content.update(source=f'Nova versão do currículo #{resume_id}', created_on=date_label())
+    with db_connection() as connection:
+        cursor = connection.execute("INSERT INTO resumes (user_id,kind,original_name,content_json,created_at,updated_at) VALUES (?,'generated',?,?,?,?)", (current_user_id(), (old['original_name'] or 'Meu currículo')[:100] + ' — cópia', json.dumps(content, ensure_ascii=False), timestamp(), timestamp()))
+    return jsonify(id=cursor.lastrowid, resume=content, message='Nova versão salva. A anterior foi preservada.'), 201
 
 
 @app.get("/api/resumes/<int:resume_id>")
@@ -499,7 +577,8 @@ def resume_file(resume_id):
     path = UPLOAD_DIR / resume["saved_name"]
     if not path.exists():
         return jsonify({"error": "O arquivo não está mais disponível."}), 404
-    return send_file(path, download_name=resume["original_name"], as_attachment=False)
+    name = secure_filename(resume['original_name']) or 'curriculo'
+    return send_file(path, download_name=name if name.lower().endswith('.pdf') else name+'.pdf', as_attachment=False)
 
 
 @app.delete("/api/resumes/<int:resume_id>")
@@ -526,7 +605,10 @@ def analyze_resume(resume_id):
     if resume["kind"] == "generated":
         data = json.loads(resume["content_json"])
         pdf = build_resume_pdf(data)
-        metadata = inspect_pdf(pdf.getvalue())
+        try:
+            metadata = inspect_pdf(pdf.getvalue())
+        except InvalidPDF as exc:
+            return jsonify({"error": str(exc)}), 422
         text = text_from_resume(data)
     else:
         path = UPLOAD_DIR / resume["saved_name"]
