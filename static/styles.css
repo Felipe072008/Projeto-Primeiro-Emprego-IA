@@ -1,3 +1,4 @@
+/* teste commit e branch */
 :root {
   --ink: #1e2935;
   --ink-soft: #51606f;
@@ -268,13 +269,17 @@ input:disabled { color: #6b7781; background: #eff2ef; cursor: not-allowed; }
 .profile-modal-actions { margin-top: 3px; border-top: 1px solid var(--line); padding-top: 20px; }
 .profile-modal-actions > div { display: flex; gap: 9px; }
 .preview-content { width: min(100%, 750px); padding: clamp(28px, 5vw, 64px); }
-.resume-document { max-width: 620px; margin: 0 auto; color: #25323d; }
-.resume-document-header { margin-bottom: 25px; border-bottom: 3px solid var(--blue); padding-bottom: 13px; }
-.resume-document-header h1 { margin: 0 0 7px; color: var(--blue-deep); font-family: "DM Sans", sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -.04em; }
-.resume-document-header p { margin: 0; color: #63727c; font-size: 12px; }
-.resume-document-section { margin-top: 20px; }
-.resume-document-section h2 { margin: 0 0 6px; color: var(--blue-deep); font-family: "DM Sans", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.resume-document-section p { margin: 0; white-space: pre-line; font-size: 13px; line-height: 1.6; }
+.resume-document { max-width: 620px; margin: 0 auto; color: #111; background: #fff; font-family: Arial, Helvetica, sans-serif; overflow-wrap: anywhere; }
+.resume-document-header { margin-bottom: 16px; border-bottom: 1px solid #111; padding-bottom: 16px; }
+.resume-document-header h1 { margin: 0 0 10px; color: #111; font-family: inherit; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: 0; }
+.resume-document-header p, .resume-document-contacts p { margin: 0 0 4px; color: #111; font-size: 13px; line-height: 1.5; }
+.resume-document-section { margin-top: 22px; }
+.resume-document-section h2 { display: flex; align-items: center; gap: 14px; margin: 0 0 12px; color: #111; font-family: inherit; font-size: 16px; line-height: 1.4; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+.resume-document-section h2::after { content: ''; flex: 1; min-width: 20px; border-top: 1px solid #111; }
+.resume-record { margin-bottom: 12px; }
+.resume-document-section p { margin: 0 0 5px; white-space: pre-wrap; font-size: 14px; line-height: 1.5; }
+.resume-bullet { position: relative; padding-left: 18px; }
+.resume-bullet::before { content: '•'; position: absolute; left: 2px; }
 .preview-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
 
 /* Feedback */
