@@ -7,10 +7,14 @@ const profileSections = {
   skills: {title: 'Habilidades', hint: 'Adicione um conhecimento por vez.'},
   languages: {title: 'Idiomas', hint: 'Informe o nível que representa seu conhecimento.', singular: 'idioma'},
   projects: {title: 'Projetos e voluntariado', hint: 'Valorize sua participação na escola, na comunidade ou em projetos pessoais.', singular: 'projeto'},
-  availability: {title: 'Disponibilidade', hint: 'Conte quais períodos e dias combinam com sua rotina.'},
+  availability: {title: 'Disponibilidade', hint: 'Conte quais períodos combinam com sua rotina.'},
 };
 const educationLevels = ['Fundamental Incompleto','Fundamental Completo','Médio Incompleto','Médio Completo','Cursando Ensino Médio','Superior Incompleto','Cursando Superior','Superior Completo'];
 let profileEditor = null;
+
+function formatProfilePhone(phone = '') {
+  return phone.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+}
 
 function validateContact(data) {
   const ddds = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
@@ -50,9 +54,9 @@ function renderProfileSummary() {
   const blocks = Object.entries(profileSections).map(([section,config])=>{
     const data = sectionData(section);
     let content = '';
-    if (section === 'contact') content = `<div class="profile-info-grid">${[['Telefone',data.phone],['Idade',data.age ? data.age+' anos' : ''],['Cidade / Estado',[data.city,data.state].filter(Boolean).join(' / ')]].map(([label,value])=>`<article class="profile-info-card"><span>${label}</span><p>${profileText(value)}</p></article>`).join('')}</div>`;
+    if (section === 'contact') content = `<div class="profile-info-grid">${[['Telefone',formatProfilePhone(data.phone)],['Idade',data.age ? data.age+' anos' : ''],['Cidade / Estado',[data.city,data.state].filter(Boolean).join(' / ')]].map(([label,value])=>`<article class="profile-info-card"><span>${label}</span><p>${profileText(value)}</p></article>`).join('')}</div>`;
     else if (section === 'goals') content = `<div class="profile-info-grid"><article class="profile-info-card"><span>Área principal</span><strong>${profileText(data.sector || data.desired_area)}</strong></article><article class="profile-info-card"><span>Cargo-alvo</span><p>${profileText(data.target_role)}</p><span>Objetivo</span><p>${profileText(data.objective)}</p></article><article class="profile-info-card"><span>Pretensão salarial</span><p>${profileText(data.salary)}</p></article></div><div class="profile-tags">${data.secondary_areas.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}${data.contracts.map(v=>`<span>${({aprendiz:'Jovem Aprendiz',estagio:'Estágio',clt:'CLT'})[v]}</span>`).join('')}${data.work_modes.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}</div>`;
-    else if (section === 'availability') content = `<div class="profile-info-grid">${[['Períodos',data.periods.join(', ')],['Dias',data.days.join(', ')],['Outra cidade',data.other_city],['Viagens',data.travel]].map(([label,value])=>`<article class="profile-info-card"><span>${label}</span><p>${profileText(value)}</p></article>`).join('')}</div>`;
+    else if (section === 'availability') content = `<div class="profile-info-grid"><article class="profile-info-card"><span>Períodos</span><p>${profileText(data.periods.join(', '))}</p></article></div>`;
     else {
       if (section === 'education') content += `<p><b>Escolaridade atual:</b> ${profileText(data.level)}</p>`;
       if (section === 'skills') content += `<div class="profile-tags">${data.items.map(item=>`<span>${escapeHtml(item.name)}</span>`).join('')}</div>`;
@@ -75,7 +79,7 @@ function editorField(name,label,value='',options={}) {
   let control;
   if (options.choices) control = `<select ${attrs}><option value="">Selecione</option>${options.choices.map(v=>`<option value="${escapeHtml(v)}" ${v===value ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('')}</select>`;
   else if (options.textarea) control = `<textarea ${attrs} maxlength="${options.limit || 2000}">${escapeHtml(value)}</textarea>`;
-  else control = `<input ${attrs} type="${options.type || 'text'}" value="${escapeHtml(value)}" maxlength="${options.limit || 300}" ${name==='age'?'min="1" max="120" step="1"':''} ${options.numeric ? 'inputmode="numeric" pattern="[0-9]*" data-numeric-limit="'+options.numeric+'"' : ''} ${options.placeholder ? `placeholder="${escapeHtml(options.placeholder)}"` : ''} />`;
+  else control = `<input ${attrs} type="${options.type || 'text'}" value="${escapeHtml(value)}" maxlength="${options.limit || 300}" ${name==='age'?'min="1" max="120" step="1"':''} ${options.numeric ? `inputmode="numeric" ${name==='phone'?'':'pattern="[0-9]*"'} data-numeric-limit="${options.numeric}"` : ''} ${options.placeholder ? `placeholder="${escapeHtml(options.placeholder)}"` : ''} />`;
   if (options.autocomplete) {
     const kind = options.autocomplete;
     control = control.replace(' />',` autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${id}-options" />`);
@@ -112,14 +116,16 @@ function readEditorData() {
     if(itemIndex==='new') data.items.push(item); else data.items[itemIndex]=item;
     if(section==='education' && !data.level) data.level=item.level;
     if(section==='experiences') data.no_experience=false;
-  } else if(section==='contact') for(const field of ['phone','age','city','state']) data[field]=values[field] || '';
+  } else if(section==='contact') {
+    for(const field of ['phone','age','city','state']) data[field]=values[field] || '';
+    data.phone=data.phone.replace(/\D/g,'');
+  }
   else if(section==='goals') {
     for(const field of ['desired_area','objective','salary','sector','target_role']) data[field]=values[field] || '';
     data.desired_area=data.sector || draft.desired_area;
     for(const field of ['contracts','work_modes']) data[field]=new FormData(form).getAll(field);
   } else if(section==='availability') {
-    for(const field of ['periods','days']) data[field]=new FormData(form).getAll(field);
-    for(const field of ['other_city','travel']) data[field]=values[field] || '';
+    data.periods=new FormData(form).getAll('periods');
   } else {
     if('legacy' in values) data.legacy=values.legacy;
     if(section==='education') data.level=values.level || '';
@@ -135,9 +141,9 @@ function renderProfileEditor() {
   $('#profile-modal-hint').textContent = section==='contact' ? config.hint+' Nome e e-mail são dados da conta e não podem ser alterados neste formulário. Idade não determina elegibilidade para vagas.' : config.hint;
   let fields='';
   if(itemIndex!==null) fields=itemFields(section,itemIndex==='new'?blankRecord(section):draft.items[itemIndex]);
-  else if(section==='contact') fields=editorField('account_name','Nome completo (definido no cadastro)',state.me.user.name,{disabled:true})+editorField('account_email','E-mail de acesso (definido no cadastro)',state.me.user.email,{disabled:true})+editorField('phone','Telefone',draft.phone,{required:true,numeric:11,type:'tel',placeholder:'DDD + número, sem espaços'})+editorField('age','Idade',draft.age,{required:true,numeric:3,type:'number'})+editorField('city','Cidade',draft.city,{required:true,autocomplete:'city'})+editorField('state','Estado',draft.state,{required:true,autocomplete:'state'});
+  else if(section==='contact') fields=editorField('account_name','Nome completo (definido no cadastro)',state.me.user.name,{disabled:true})+editorField('account_email','E-mail de acesso (definido no cadastro)',state.me.user.email,{disabled:true})+editorField('phone','Telefone',formatProfilePhone(draft.phone),{required:true,numeric:11,type:'tel',limit:15,placeholder:'(41) 99620-1002'})+editorField('age','Idade',draft.age,{required:true,numeric:3,type:'number'})+editorField('city','Cidade',draft.city,{required:true,autocomplete:'city'})+editorField('state','Estado',draft.state,{required:true,autocomplete:'state'});
   else if(section==='goals') fields=editorField('sector','Área profissional',draft.sector,{required:true,choices:['Tecnologia','Administração','Finanças e contabilidade','Comércio e atendimento','Marketing e Comunicação','Logística','Recursos humanos','Indústria e Engenharia','Saúde','Educação e Pedagogia']})+editorField('target_role','Cargo-alvo (opcional)',draft.target_role)+`<p class="muted span-3">Escolha anterior preservada: ${escapeHtml(draft.desired_area || 'Nenhuma')}. Selecione a área e marque os vínculos separadamente.</p>`+editorField('objective','Objetivo profissional',draft.objective,{textarea:true})+editorField('salary','Pretensão salarial (opcional)',draft.salary,{placeholder:'Ex.: A combinar'})+`<div class="span-3"><p>Áreas adicionais (até 3)</p><div class="profile-tags">${draft.secondary_areas.map((v,i)=>`<span>${escapeHtml(v)} <button type="button" data-remove-area="${i}" aria-label="Remover ${escapeHtml(v)}">×</button></span>`).join('')}</div>${editorField('secondary_choice','Adicionar outra área','',{autocomplete:'desired_area'})}<button type="button" class="small-button" data-add-area>Adicionar área</button><span class="field-error" data-error-for="secondary_areas"></span></div>`+checks('contracts','Tipos de oportunidade',[['aprendiz','Jovem Aprendiz'],['estagio','Estágio'],['clt','CLT']],draft.contracts)+checks('work_modes','Modalidades de trabalho',[['Presencial','Presencial'],['Híbrido','Híbrido'],['Remoto','Remoto']],draft.work_modes)+`<p class="muted span-3">Escolha os vínculos desejados. Sem seleção, mostramos os tipos disponíveis para a área. Modalidade de trabalho é uma preferência informativa; confira o anúncio.</p>`;
-  else if(section==='availability') fields=checks('periods','Períodos disponíveis',['Manhã','Tarde','Noite'].map(v=>[v,v]),draft.periods)+checks('days','Dias disponíveis',['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].map(v=>[v,v]),draft.days)+editorField('other_city','Aceita trabalhar em outra cidade?',draft.other_city,{choices:['Sim','Não']})+editorField('travel','Disponível para viagens?',draft.travel,{choices:['Sim','Não']});
+  else if(section==='availability') fields=checks('periods','Períodos disponíveis',['Manhã','Tarde','Noite'].map(v=>[v,v]),draft.periods);
   else {
     if(section==='education') fields+=editorField('level','Escolaridade atual',draft.level,{choices:educationLevels,required:true});
     if(section==='experiences') fields+=`<label class="profile-check span-3"><input type="checkbox" name="no_experience" ${draft.no_experience?'checked':''} /> Ainda não tenho experiência profissional</label><span class="field-error" data-error-for="no_experience"></span>`;
@@ -236,6 +242,9 @@ async function removeProfileRecord(section,index) {
   } catch(error){toast(error.message,'error');}
 }
 function bindProfileEvents() {
+  $('#profile-form').addEventListener('focusout',event=>{
+    if(event.target.name==='phone') event.target.value=formatProfilePhone(event.target.value);
+  });
   $('#profile-form').addEventListener('input',event=>{
     if(event.target.dataset.numericLimit && event.target.name!=='age') event.target.value=event.target.value.replace(/\D/g,'').slice(0,Number(event.target.dataset.numericLimit));
   });
