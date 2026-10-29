@@ -451,6 +451,31 @@ function populateBuilder() {
   $('#builder-modal').dataset.draft=JSON.stringify(Object.fromEntries(new FormData(form)));
 }
 
+function resumeSectionHtml(section) {
+  const records = ['Formação acadêmica','Curso em andamento ou concluído','Experiência profissional','Experiências acadêmicas e projetos','Cursos e certificações'].includes(section.title);
+  const skills = section.title === 'Habilidades';
+  return section.content.trim().split(/\n\s*\n/).map(group => {
+    const lines = group.split(skills ? /[;\n]+/ : /\n/).map(line=>line.trim()).filter(Boolean);
+    return `<div class="resume-record">${lines.map((line,index)=>{
+      const bullet = skills || /^[-•●*]\s+/.test(line);
+      if(bullet) line = line.replace(/^[-•●*]\s+/, '');
+      let text = escapeHtml(line);
+      if(records && index===0 && !bullet && line.split(' · ')[0].length<=180) {
+        const [title,...details] = line.split(' · ');
+        text = `<strong>${escapeHtml(title)}</strong>${details.length ? escapeHtml(' · '+details.join(' · ')) : ''}`;
+      }
+      return `<p${bullet ? ' class="resume-bullet"' : ''}>${text}</p>`;
+    }).join('')}</div>`;
+  }).join('');
+}
+
+function resumeContactHtml(contact) {
+  const phone = /^(?:\d{10,11}|\(\d{2}\) ?\d{4,5}-\d{4})$/.test(contact);
+  const label = phone ? 'Telefone' : contact.includes('@') ? 'E-mail' : 'Localização';
+  const value = phone ? contact.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3') : contact;
+  return `<p><strong>${label}:</strong> ${escapeHtml(value)}</p>`;
+}
+
 function renderResumePreview(data, resumeId, returnToBuilder = false) {
   $("#preview-title").textContent = returnToBuilder ? "Currículo pronto para revisar" : "Prévia do currículo";
   $('#preview-modal').classList.toggle('return-to-builder', returnToBuilder);
@@ -458,15 +483,16 @@ function renderResumePreview(data, resumeId, returnToBuilder = false) {
   const sections = data.sections.map((section) => `
     <section class="resume-document-section">
       <h2>${escapeHtml(section.title)}</h2>
-      <p>${escapeHtml(section.content)}</p>
+      ${resumeSectionHtml(section)}
     </section>
   `).join("");
   $("#resume-preview").innerHTML = `
     <p class="muted">Versão #${resumeId} · ${escapeHtml(data.source || 'Versão histórica salva')} · independente do perfil atual.</p><article class="resume-document">
       <header class="resume-document-header">
         <h1>${escapeHtml(data.name).toUpperCase()}</h1>
-        <p class="resume-headline">${escapeHtml(data.headline || "")}</p><p>${data.contacts.map(escapeHtml).join(" &nbsp;•&nbsp; ")}</p>
+        <p class="resume-headline">${escapeHtml(data.headline || "")}</p>
       </header>
+      <div class="resume-document-contacts">${data.contacts.map(resumeContactHtml).join("")}</div>
       ${sections}
       <div class="preview-actions">
         <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a><a class="button button--outline" href="/api/resumes/${resumeId}/pdf?inline=1" target="_blank" rel="noopener">Abrir prévia em PDF ↗</a>

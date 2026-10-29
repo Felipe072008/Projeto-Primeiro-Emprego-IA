@@ -22,6 +22,13 @@ const vm = require('node:vm');
   const source = fs.readFileSync(path.join(__dirname, '../static/app.js'), 'utf8');
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../static/profile.js'), 'utf8'), context);
   vm.runInContext(source.replace(/boot\(\);\s*$/, ''), context);
+  const resumeMarkup = context.resumeSectionHtml({title:'Cursos e certificações',content:'<Curso> · Escola\nDescrição\n\nOutro curso · Outra escola'});
+  assert.ok(resumeMarkup.includes('<strong>&lt;Curso&gt;</strong> · Escola'));
+  assert.equal((resumeMarkup.match(/class="resume-record"/g) || []).length, 2);
+  assert.ok(!resumeMarkup.includes('<Curso>'));
+  const skillMarkup = context.resumeSectionHtml({title:'Habilidades',content:'Organização; Comunicação\n● Excel'});
+  assert.equal((skillMarkup.match(/class="resume-bullet"/g) || []).length, 3);
+  assert.ok(context.resumeContactHtml('41996201002').includes('(41) 99620-1002'));
   const originalNavigate = context.navigate;
   const originalReadEditorData = context.readEditorData;
   for (const [raw, formatted] of [['41996201002','(41) 99620-1002'],['1132345678','(11) 3234-5678'],['',''],['4199','4199']]) {
