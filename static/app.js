@@ -1,3 +1,4 @@
+/* teste commit e branch */
 const state = { me: null, aiAvailable: false };
 const optionCache = { locations: null, occupations: null };
 const openOptionLists = new WeakMap();

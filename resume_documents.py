@@ -1,3 +1,4 @@
+# teste commit e branch
 """PDF validation, extraction and a readable, single-column resume layout."""
 import io
 import re
