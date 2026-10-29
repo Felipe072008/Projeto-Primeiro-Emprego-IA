@@ -213,7 +213,7 @@ def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> d
         ("Cursos e certificações", choose("courses")),
         ("Habilidades", choose("skills")),
         ("Idiomas", choose("languages")),
-        ("Informações adicionais", choose("additional_information")),
+        ("Informações adicionais", str(supplied.get("additional_information", "") or "").strip()),
     ]
     return {
         "name": choose("full_name") or user["name"],

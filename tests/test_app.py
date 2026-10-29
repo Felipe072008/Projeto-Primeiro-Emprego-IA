@@ -31,6 +31,14 @@ class SiteTests(unittest.TestCase):
     def pdf(self):
         return build_resume_pdf({'name':'Pessoa de Teste', 'headline':'Tecnologia', 'contacts':['teste@example.com'], 'sections':[{'title':'Formação', 'content':'Ensino médio concluído em 2025. Desenvolvi um projeto escolar com Python e Git.'}]}).getvalue()
 
+    def test_resume_additional_information_starts_blank(self):
+        user = {'name': 'Pessoa de Teste', 'email': 'teste@example.test'}
+        profile = {'resume_fields': {'additional_information': 'Manhã, Tarde'}}
+        data = site.resume_payload(user, profile)
+        self.assertFalse(any(s['title'] == 'Informações adicionais' for s in data['sections']))
+        data = site.resume_payload(user, profile, {'additional_information': 'Texto informado manualmente'})
+        self.assertIn({'title': 'Informações adicionais', 'content': 'Texto informado manualmente'}, data['sections'])
+
     def test_auth_rejects_nonobject_json(self):
         for endpoint in ('register', 'login'):
             for payload in ([1], 'invalid', 42, True):

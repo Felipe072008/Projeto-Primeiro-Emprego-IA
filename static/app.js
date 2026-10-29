@@ -444,7 +444,7 @@ function populateBuilder() {
     email: user.email,
     headline: profile.sections?.goals?.target_role || profile.desired_area || "",
     location: [profile.city, profile.state].filter(Boolean).join(" / "),
-    additional_information: profile.resume_fields?.additional_information || "",
+    additional_information: "",
   };
   $$('[name]', form).forEach((field) => {
     field.value = values[field.name] || "";
