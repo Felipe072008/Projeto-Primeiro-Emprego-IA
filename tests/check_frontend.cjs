@@ -24,6 +24,12 @@ const vm = require('node:vm');
   vm.runInContext(source.replace(/boot\(\);\s*$/, ''), context);
   const originalNavigate = context.navigate;
   const originalReadEditorData = context.readEditorData;
+  for (const [raw, formatted] of [['41996201002','(41) 99620-1002'],['1132345678','(11) 3234-5678'],['',''],['4199','4199']]) {
+    assert.equal(context.formatProfilePhone(raw), formatted);
+    assert.equal(context.formatProfilePhone(formatted), formatted);
+  }
+  const indexHtml = fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8');
+  assert.deepEqual(Array.from(indexHtml.matchAll(/class="nav-link(?: active)?" data-route="([^"]+)"/g), match=>match[1]), ['dashboard','profile','jobs','courses','resume']);
   let modalClosed = false;
   const pendingModal = {
     classList: {contains: () => false, add: () => { modalClosed = true; }},
@@ -101,6 +107,33 @@ const vm = require('node:vm');
   payload=context.readEditorData();
   assert.equal(payload.level,'Superior Completo');
   assert.equal(payload.legacy,'Formação antiga');
+
+  editorForm.data={phone:'(41) 99620-1002',age:'18',city:'Curitiba',state:'Paraná'};
+  vm.runInContext("profileEditor={section:'contact',draft:{},itemIndex:null};",context);
+  payload=context.readEditorData();
+  assert.equal(payload.phone,'41996201002');
+  assert.deepEqual(Object.keys(context.validateContact(payload)),[]);
+  editorForm.data={periods:['Tarde']};
+  vm.runInContext("profileEditor={section:'availability',draft:{periods:['Manhã'],days:['Segunda'],other_city:'Não',travel:'Sim'},itemIndex:null};",context);
+  payload=context.readEditorData();
+  assert.deepEqual(Array.from(payload.periods),['Tarde']);
+  assert.deepEqual(Array.from(payload.days),['Segunda']);
+  assert.equal(payload.other_city,'Não');
+  assert.equal(payload.travel,'Sim');
+  vm.runInContext('bindOptionLists = () => {};',context);
+  editorForm.querySelector=()=>null;
+  context.renderProfileEditor();
+  assert.ok(editorForm.innerHTML.includes('name="periods"'));
+  for(const removed of ['days','other_city','travel']) assert.ok(!editorForm.innerHTML.includes(`name="${removed}"`));
+  const handlers={};
+  editorForm.addEventListener=(type,handler)=>{handlers[type]=handler;};
+  context.document.addEventListener=()=>{};
+  context.bindProfileEvents();
+  const phoneInput={name:'phone',value:'(41) 99620-1002',dataset:{numericLimit:'11'}};
+  handlers.input({target:phoneInput});
+  assert.equal(phoneInput.value,'41996201002');
+  handlers.focusout({target:phoneInput});
+  assert.equal(phoneInput.value,'(41) 99620-1002');
 
   calls.length=0;
   context.document.querySelector=()=>({disabled:false,scrollIntoView(){},focus(){},querySelector(){return this;}});
