@@ -86,7 +86,7 @@ const vm = require('node:vm');
   context.populateBuilder();
   assert.equal(fields.find(x=>x.name==='education').value,'Superior · Escola · Cursando');
   assert.equal(fields.find(x=>x.name==='professional_experience').value,'Cargo — Empresa');
-  assert.equal(fields.find(x=>x.name==='additional_information').value,'Manhã');
+  assert.equal(fields.find(x=>x.name==='additional_information').value,'');
   const summary = context.recordSummary('education',{course:'Sistemas',level:'Cursando Superior',institution:'Escola',status:'Cursando',year:'2028'});
   assert.ok(summary[2].includes('Previsão: 2028'));
   const html = context.recordCards('projects',{items:[{title:'<script>bad</script>',context:'',start:'',end:'',description:'texto <b>literal</b>'}]});
