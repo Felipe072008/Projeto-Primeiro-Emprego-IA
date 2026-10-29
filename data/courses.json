@@ -328,5 +328,34 @@
     "review_by": "2027-01-06",
     "expires_on": null,
     "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+  },
+  {
+    "id": "fb-hardware",
+    "title": "Fundamentos de TI: Hardware e Software",
+    "institution": "Fundação Bradesco — Escola Virtual",
+    "source": "Fundação Bradesco — Escola Virtual",
+    "original_url": "https://www.ev.org.br/cursos/fundamentos-de-ti-hardware-e-software",
+    "areas": [
+      "tecnologia"
+    ],
+    "duration": "7 horas",
+    "description": "Introdução a componentes de computadores, sistemas operacionais e segurança da informação, útil para quem inicia em suporte.",
+    "requirements": [
+      "Idade mínima de 14 anos; sem pré-requisitos de conhecimento.",
+      "Prazo para concluir: 60 dias após inscrição."
+    ],
+    "certificate": "Certificado digital para aprovados, conforme avaliação e condições da instituição.",
+    "certificate_source": "https://www.ev.org.br/cursos/fundamentos-de-ti-hardware-e-software",
+    "certificate_cost": "Gratuito",
+    "course_type": "livre",
+    "modality": "Online",
+    "free": true,
+    "price": "Gratuito",
+    "availability": "Matrícula online na instituição.",
+    "status": "published",
+    "checked_on": "2026-10-28",
+    "review_by": "2027-01-26",
+    "expires_on": null,
+    "access_note": "Exige cadastro na Escola Virtual. Confira os termos e requisitos antes de se inscrever."
   }
 ]

@@ -1,0 +1,42 @@
+[
+  {
+    "element": "Texto principal",
+    "foreground": "#142435",
+    "background": "#ffffff",
+    "ratio": 15.75,
+    "minimum": 4.5,
+    "passed": true
+  },
+  {
+    "element": "Texto auxiliar",
+    "foreground": "#526575",
+    "background": "#f3f6f6",
+    "ratio": 5.56,
+    "minimum": 4.5,
+    "passed": true
+  },
+  {
+    "element": "Botão pequeno",
+    "foreground": "#126b81",
+    "background": "#eaf3f2",
+    "ratio": 5.4,
+    "minimum": 4.5,
+    "passed": true
+  },
+  {
+    "element": "Erro",
+    "foreground": "#992e24",
+    "background": "#ffffff",
+    "ratio": 7.58,
+    "minimum": 4.5,
+    "passed": true
+  },
+  {
+    "element": "Excluir",
+    "foreground": "#a24e44",
+    "background": "#f9eae6",
+    "ratio": 4.84,
+    "minimum": 4.5,
+    "passed": true
+  }
+]

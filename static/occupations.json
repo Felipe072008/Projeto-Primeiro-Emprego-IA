@@ -372,5 +372,144 @@
         "infantil"
       ]
     }
+  ],
+  "sectors": [
+    {
+      "code": "tecnologia",
+      "title": "Tecnologia",
+      "aliases": [
+        "tecnologia",
+        "informatica",
+        "sistemas",
+        "programacao",
+        "desenvolvimento",
+        "desenvolvedor",
+        "software",
+        "ti",
+        "python",
+        "dados",
+        "computacao",
+        "programador",
+        "suporte tecnico"
+      ]
+    },
+    {
+      "code": "administracao",
+      "title": "Administração",
+      "aliases": [
+        "administracao",
+        "administrativo",
+        "administrativa",
+        "escritorio",
+        "secretariado",
+        "gestao empresarial",
+        "adm"
+      ]
+    },
+    {
+      "code": "financeiro",
+      "title": "Finanças e contabilidade",
+      "aliases": [
+        "financeiro",
+        "financeira",
+        "financas",
+        "contabilidade",
+        "contabil",
+        "economia",
+        "fiscal"
+      ]
+    },
+    {
+      "code": "comercial",
+      "title": "Comércio e atendimento",
+      "aliases": [
+        "vendas",
+        "vendedor",
+        "comercio",
+        "comercial",
+        "atendimento",
+        "recepcao",
+        "caixa",
+        "varejo",
+        "cliente"
+      ]
+    },
+    {
+      "code": "marketing",
+      "title": "Marketing e Comunicação",
+      "aliases": [
+        "marketing",
+        "design",
+        "publicidade",
+        "comunicacao",
+        "social media",
+        "midias",
+        "audiovisual"
+      ]
+    },
+    {
+      "code": "logistica",
+      "title": "Logística",
+      "aliases": [
+        "logistica",
+        "estoque",
+        "almoxarifado",
+        "expedicao",
+        "transportes",
+        "transporte",
+        "suprimentos"
+      ]
+    },
+    {
+      "code": "rh",
+      "title": "Recursos humanos",
+      "aliases": [
+        "recursos humanos",
+        "rh",
+        "recrutamento",
+        "gestao de pessoas",
+        "departamento pessoal"
+      ]
+    },
+    {
+      "code": "industria",
+      "title": "Indústria e Engenharia",
+      "aliases": [
+        "industria",
+        "industrial",
+        "mecanica",
+        "eletrica",
+        "eletrotecnica",
+        "manutencao",
+        "producao",
+        "automacao",
+        "engenharia"
+      ]
+    },
+    {
+      "code": "saude",
+      "title": "Saúde",
+      "aliases": [
+        "saude",
+        "enfermagem",
+        "farmacia",
+        "farmaceutico",
+        "biomedicina",
+        "nutricao",
+        "clinica",
+        "hospital"
+      ]
+    },
+    {
+      "code": "educacao",
+      "title": "Educação e Pedagogia",
+      "aliases": [
+        "educacao",
+        "pedagogia",
+        "escolar",
+        "escola",
+        "auxiliar de sala"
+      ]
+    }
   ]
 }

@@ -1,0 +1,152 @@
+[
+  {
+    "mainVisible": 1,
+    "scrollWidth": 345,
+    "section": "dashboard",
+    "width": 360
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 345,
+    "section": "profile",
+    "width": 360
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 345,
+    "section": "jobs",
+    "width": 360
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 345,
+    "section": "courses",
+    "width": 360
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 345,
+    "section": "resume",
+    "width": 360
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 375,
+    "section": "dashboard",
+    "width": 390
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 375,
+    "section": "profile",
+    "width": 390
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 375,
+    "section": "jobs",
+    "width": 390
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 375,
+    "section": "courses",
+    "width": 390
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 375,
+    "section": "resume",
+    "width": 390
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 753,
+    "section": "dashboard",
+    "width": 768
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 753,
+    "section": "profile",
+    "width": 768
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 753,
+    "section": "jobs",
+    "width": 768
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 753,
+    "section": "courses",
+    "width": 768
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 753,
+    "section": "resume",
+    "width": 768
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1009,
+    "section": "dashboard",
+    "width": 1024
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1009,
+    "section": "profile",
+    "width": 1024
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1009,
+    "section": "jobs",
+    "width": 1024
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1009,
+    "section": "courses",
+    "width": 1024
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1009,
+    "section": "resume",
+    "width": 1024
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1425,
+    "section": "dashboard",
+    "width": 1440
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1425,
+    "section": "profile",
+    "width": 1440
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1440,
+    "section": "jobs",
+    "width": 1440
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1425,
+    "section": "courses",
+    "width": 1440
+  },
+  {
+    "mainVisible": 1,
+    "scrollWidth": 1425,
+    "section": "resume",
+    "width": 1440
+  }
+]

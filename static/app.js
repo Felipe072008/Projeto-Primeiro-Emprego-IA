@@ -1,4 +1,4 @@
-const state = { me: null };
+const state = { me: null, aiAvailable: false };
 const optionCache = { locations: null, occupations: null };
 const openOptionLists = new WeakMap();
 
@@ -20,7 +20,7 @@ function formatTime(value) {
   if (Number.isNaN(parsed.getTime())) return "";
   return new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
-    dateStyle: "medium",
+    dateStyle: "medium", timeStyle: "short",
   }).format(parsed);
 }
 
@@ -33,7 +33,7 @@ function toast(message, type = "success") {
 }
 
 async function api(path, options = {}) {
-  const config = { credentials: "same-origin", ...options };
+  const config = { credentials: "same-origin", ...options, headers: { ...options.headers, "X-Requested-With": "FirstJob" } };
   if (config.body && !(config.body instanceof FormData) && typeof config.body !== "string") {
     config.headers = { "Content-Type": "application/json", ...(config.headers || {}) };
     config.body = JSON.stringify(config.body);
@@ -72,11 +72,16 @@ function accountDetails() {
   $("#welcome-name").textContent = user.name.trim().split(/\s+/)[0] || "";
 }
 
-function navigate(route) {
+function navigate(route, fromHistory = false) {
+  if (!['dashboard','profile','jobs','courses','resume'].includes(route)) route='dashboard';
+  if (!fromHistory && location.hash !== '#'+route) history.pushState(null, '', '#'+route);
+  $$('.nav-link').forEach(button => { if(button.dataset.route===route) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current'); });
   $$(".page").forEach((page) => page.classList.toggle("active", page.dataset.page === route));
   $$(".nav-link").forEach((button) => button.classList.toggle("active", button.dataset.route === route));
   setMobileMenuOpen(false);
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  const heading = $(`[data-page="${route}"] h1`);
+  if (heading) { heading.tabIndex=-1; heading.focus({preventScroll:true}); }
   if (route === "dashboard") loadDashboard();
   if (route === "profile") populateProfileForm();
   if (route === "jobs" || route === "courses") loadCatalog(route);
@@ -98,7 +103,8 @@ function renderRecommendationCards(target, recommendations, emptyMessage) {
 
 function renderDashboard(data) {
   const completion = data.profile_completion || 0;
-  $("#profile-progress-text").textContent = `${completion}% concluído`;
+  $('#page-dashboard [data-go="profile"]').textContent = completion === 100 ? 'Revisar perfil' : 'Completar meu perfil';
+  $("#profile-progress-text").textContent = completion === 100 ? "Perfil básico completo" : `${completion}% do perfil básico`;
   $("#profile-progress-number").innerHTML = `${completion}<small>%</small>`;
   $("#profile-progress-line").style.width = `${completion}%`;
   $("#profile-progress-message").textContent = completion === 100
@@ -137,7 +143,7 @@ function loadOptionData(kind) {
         data.stateOptions = data.states.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
         data.cityOptions = data.cities.map((item) => ({ value: item.name, label: `${item.name} · ${item.uf}`, key: normalizeOptionText(`${item.name} ${item.uf}`), stateName: stateNames.get(item.uf) })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
       } else {
-        data.options = data.occupations.map((item) => ({ value: item.title, label: item.title, key: normalizeOptionText(item.title), aliases: normalizeOptionText(item.aliases.join(" ")), family: item.areas.length === 1 ? item.areas[0] : item.code }));
+        data.options = data.sectors.map((item) => ({value:item.title,label:item.title,key:normalizeOptionText(item.title),aliases:normalizeOptionText(item.aliases.join(' ')),family:item.code}));
       }
       return data;
     }).catch((error) => { optionCache[kind] = null; throw error; });
@@ -285,28 +291,31 @@ async function loadCatalog(kind) {
   const target = $(`#${kind}-list`);
   target.innerHTML = '<p role="status">Carregando oportunidades…</p>';
   const filters = new URLSearchParams(new FormData($(`#${kind}-filters`)));
+  try { sessionStorage.setItem('filters-'+kind, filters.toString()); } catch {}
   try {
     const data = await api(`/api/${kind}?${filters}`);
     if (version !== catalogVersions[kind]) return;
     catalogRows[kind] = data[kind];
-    $(`#${kind}-context`).textContent = `${data.total} resultado(s). ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice}`;
+    $(`#${kind}-context`).textContent = `${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice}`;
     target.innerHTML = data[kind].length ? data[kind].map((item, index) => `
       <article class="job-card catalog-card">
-        <div class="job-card-main"><p class="job-source">${escapeHtml(item.company || item.institution)} · ${escapeHtml(item.source)}</p>
+        <div class="job-card-main"><p class="job-source">${escapeHtml(item.company || item.institution)}${(item.company || item.institution) !== item.source ? ` · Fonte: ${escapeHtml(item.source)}` : ""}</p>
         <span class="match-badge ${item.match}">${item.match === 'direct' ? 'Sua área' : item.match === 'related' ? 'Área correlata' : 'Para explorar'}</span>
         <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.location || item.modality)}</p>
         <p>${escapeHtml(item.description)}</p><p class="match-reason">${escapeHtml(item.match_reason)}</p>
         <div class="job-meta"><span>${escapeHtml(kind === 'jobs' ? item.contract : item.duration)}</span><span>${escapeHtml(item.salary || item.price || 'Consultar condições')}</span>${kind === 'courses' ? '<span>Com certificado</span>' : ''}<span>Consultado em ${catalogDate(item.checked_on)}</span></div></div>
         <button class="button button--outline" data-catalog="${kind}" data-index="${index}">Ver detalhes</button>
-      </article>`).join('') : '<div class="empty-card">Nenhum resultado disponível para estes filtros. Experimente outra busca ou escolha “Todas as áreas”. Anúncios com revisão vencida ficam ocultos.</div>';
-  } catch (error) { if (version === catalogVersions[kind]) target.innerHTML = `<div class="empty-card">${escapeHtml(error.message)}</div>`; }
+      </article>`).join('') : `<div class="empty-card">${data.catalog_status === 'unavailable' ? (kind === 'jobs' ? 'Ainda não há vagas com revisão válida em Curitiba/PR. Os anúncios antigos permanecem ocultos até nova verificação. Consulte as fontes abaixo.' : 'O catálogo de cursos aguarda revisão. Consulte novamente mais tarde.') : (kind === 'courses' && filters.get('type') === 'tecnico' ? 'Não há curso técnico cadastrado para estes filtros.' : 'Nenhum resultado corresponde aos filtros aplicados.')} ${data.catalog_status !== 'unavailable' && filters.get('all') !== '1' ? 'Você pode explorar Todas as áreas.' : ''} Use Limpar filtros para reiniciar a busca.</div>`;
+  } catch (error) { if (version === catalogVersions[kind]) { $(`#${kind}-context`).textContent='Falha ao carregar. Seus filtros foram mantidos.'; target.innerHTML = `<div class="empty-card" role="alert">${escapeHtml(error.message)} Use Buscar para tentar novamente.</div>`; } }
 }
 async function loadAIStatus() {
   const target = $('#ai-availability');
   try {
     const status = await api('/api/ai/status');
-    target.textContent = status.available ? `Análise com IA local disponível (${status.model}).` : 'Revisão automática disponível. A análise contextual com IA local será ativada quando o modelo gratuito estiver instalado neste servidor.';
-  } catch { target.textContent = 'Revisão automática disponível. Não foi possível verificar o serviço de IA local.'; }
+    state.aiAvailable = !!status.available;
+    target.textContent = status.available ? 'Revisão de estrutura e análise contextual disponíveis.' : 'Revisão de estrutura disponível. As regras automáticas não substituem uma revisão de redação.';
+  } catch { state.aiAvailable=false; target.textContent='Revisão de estrutura disponível.'; }
+  $$('[data-resume-action="analyze"]').forEach(button => button.textContent=state.aiAvailable?'Analisar currículo':'Revisar estrutura');
 }
 function showCatalogDetail(kind, index) {
   const item = catalogRows[kind][index];
@@ -321,7 +330,7 @@ function showCatalogDetail(kind, index) {
 
 function resumeTitle(resume) {
   if (resume.kind === "uploaded") return resume.original_name || "Currículo enviado";
-  return "Currículo criado no PrimeiroEmprego IA";
+  return resume.original_name || `Currículo #${resume.id}`;
 }
 
 function renderResumes(resumes) {
@@ -335,12 +344,12 @@ function renderResumes(resumes) {
       <span class="resume-file-icon">${resume.kind === "uploaded" ? "PDF" : "CV"}</span>
       <div class="resume-row-main">
         <h3>${escapeHtml(resumeTitle(resume))}</h3>
-        <p>${resume.kind === "uploaded" ? "Arquivo enviado" : "Currículo gerado"} · ${escapeHtml(formatTime(resume.updated_at))}</p>
+        <p>${resume.kind === "uploaded" ? "Arquivo enviado" : "Currículo gerado"} · ${escapeHtml(formatTime(resume.created_at))} · #${resume.id}</p>
       </div>
       <div class="resume-actions">
         <button class="small-button" data-resume-action="view">Visualizar</button>
-        <button class="small-button" data-resume-action="analyze">Analisar currículo</button>
-        ${resume.kind === "generated" ? '<button class="small-button" data-resume-action="download">Baixar PDF</button>' : ""}
+        <button class="small-button" data-resume-action="analyze">${state.aiAvailable ? "Analisar currículo" : "Revisar estrutura"}</button><button class="small-button" data-resume-action="rename">Renomear</button>
+        ${resume.kind === "generated" ? '<button class="small-button" data-resume-action="download">Baixar PDF</button><button class="small-button" data-resume-action="edit">Editar nova versão</button><button class="small-button" data-resume-action="duplicate">Duplicar</button>' : ""}
         <button class="small-button danger" data-resume-action="delete">Excluir</button>
       </div>
     </article>
@@ -371,6 +380,16 @@ function openModal(selector) {
 function closeModal(selector) {
   const modal = $(selector);
   if (modal.classList.contains('hidden')) return;
+  if (selector === '#preview-modal' && $('button[type="submit"]:disabled', modal)) return;
+  if(selector === '#builder-modal') {
+    const form=$('#resume-builder-form');
+    if($('button[type="submit"]',form).disabled) return;
+    if(modal.dataset.draft !== JSON.stringify(Object.fromEntries(new FormData(form))) && !confirm('Descartar alterações não salvas do currículo?')) return;
+  }
+  if (selector === '#preview-modal' && modal.dataset.versionDraft && $('#version-form')) {
+    if (modal.dataset.versionDraft !== JSON.stringify(Object.fromEntries(new FormData($('#version-form')))) && !confirm('Descartar alterações desta versão?')) return;
+    delete modal.dataset.versionDraft;
+  }
   modal.classList.add('hidden');
   if (selector === '#preview-modal') $('#builder-modal').inert = false;
   if (!$$('.modal:not(.hidden)').length) {
@@ -380,14 +399,25 @@ function closeModal(selector) {
   }
   const origin = modalOrigins.get(modal);
   if (origin?.isConnected && !origin.closest('.hidden')) origin.focus();
+  else {
+    const resumeId=origin?.closest?.('[data-resume-id]')?.dataset.resumeId;
+    const action=origin?.dataset.resumeAction;
+    const replacement=resumeId && action ? $(`[data-resume-id="${resumeId}"] [data-resume-action="${action}"]`) : null;
+    (replacement || $('.page.active h1'))?.focus();
+  }
   modalOrigins.delete(modal);
-  if (selector === '#preview-modal') modal.classList.remove('return-to-builder');
+  if (selector === '#preview-modal') {
+    modal.classList.remove('return-to-builder');
+    $('[data-close-preview].modal-close').setAttribute('aria-label','Fechar');
+  }
 }
 function setMobileMenuOpen(open) {
   const mobile = window.matchMedia('(max-width: 900px)').matches;
   $('.sidebar').classList.toggle('open', mobile && open);
   $('#app-view').classList.toggle('menu-open', mobile && open);
   syncMobileMenu();
+  if (mobile && open) $('.sidebar .nav-link')?.focus();
+  else if (mobile && $('.sidebar').contains(document.activeElement)) $('#mobile-menu').focus();
 }
 function syncMobileMenu() {
   const mobile = window.matchMedia('(max-width: 900px)').matches;
@@ -397,6 +427,7 @@ function syncMobileMenu() {
   }
   const open = mobile && $('.sidebar').classList.contains('open');
   $('.sidebar').inert = mobile && !open;
+  $('.sidebar').setAttribute('aria-hidden', String(mobile && !open));
   $('#mobile-menu').setAttribute('aria-expanded', String(open));
   $('#mobile-menu').setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
 }
@@ -410,13 +441,14 @@ function populateBuilder() {
     ...profile.resume_fields,
     full_name: user.name,
     email: user.email,
-    headline: profile.desired_area || "",
+    headline: profile.sections?.goals?.target_role || profile.desired_area || "",
     location: [profile.city, profile.state].filter(Boolean).join(" / "),
     additional_information: profile.resume_fields?.additional_information || "",
   };
   $$('[name]', form).forEach((field) => {
     field.value = values[field.name] || "";
   });
+  $('#builder-modal').dataset.draft=JSON.stringify(Object.fromEntries(new FormData(form)));
 }
 
 function renderResumePreview(data, resumeId, returnToBuilder = false) {
@@ -430,7 +462,7 @@ function renderResumePreview(data, resumeId, returnToBuilder = false) {
     </section>
   `).join("");
   $("#resume-preview").innerHTML = `
-    <article class="resume-document">
+    <p class="muted">Versão #${resumeId} · ${escapeHtml(data.source || 'Versão histórica salva')} · independente do perfil atual.</p><article class="resume-document">
       <header class="resume-document-header">
         <h1>${escapeHtml(data.name).toUpperCase()}</h1>
         <p class="resume-headline">${escapeHtml(data.headline || "")}</p><p>${data.contacts.map(escapeHtml).join(" &nbsp;•&nbsp; ")}</p>
@@ -441,6 +473,7 @@ function renderResumePreview(data, resumeId, returnToBuilder = false) {
       </div>
     </article>`;
   openModal("#preview-modal");
+  $('[data-close-preview].modal-close').focus();
   if (returnToBuilder) $('#builder-modal').inert = true;
 }
 
@@ -452,6 +485,22 @@ async function handleResumeAction(event) {
   const kind = row.dataset.resumeKind;
   const action = button.dataset.resumeAction;
   try {
+    if (action === 'rename') {
+      $('#preview-title').textContent='Renomear currículo';
+      $('#resume-preview').innerHTML=`<form id="rename-resume-form" class="builder-form"><label>Nome desta versão<input name="title" required maxlength="120" value="${escapeHtml($('h3',row).textContent)}" /></label><p class="muted">O conteúdo e a data da versão permanecem iguais.</p><p role="alert" id="rename-error"></p><button type="submit" class="button button--primary">Salvar título</button></form>`;
+      openModal('#preview-modal');
+      $('#rename-resume-form').addEventListener('submit',async event=>{
+        event.preventDefault();const form=event.currentTarget;const save=$('button',form);if(save.disabled)return;save.disabled=true;
+        try{await api(`/api/resumes/${id}`,{method:'PATCH',body:{title:form.elements.title.value}});await loadResumes();save.disabled=false;closeModal('#preview-modal');toast('Título atualizado.');}
+        catch(error){$('#rename-error').textContent=error.message;}finally{save.disabled=false;}
+      });
+      return;
+    }
+    if (action === 'duplicate') {
+      button.disabled=true;
+      await api(`/api/resumes/${id}/version`,{method:'POST',body:{}}); await loadResumes(); return;
+    }
+    if (action === 'edit') { await editResumeVersion(id); return; }
     if (action === "delete") {
       if (!window.confirm("Excluir este currículo? Esta ação não pode ser desfeita.")) return;
       const result = await api(`/api/resumes/${id}`, { method: "DELETE" });
@@ -477,16 +526,16 @@ async function handleResumeAction(event) {
       if (button.disabled) return;
       button.disabled = true;
       $('#preview-title').textContent = 'Análise do currículo';
-      $('#resume-preview').innerHTML = '<p role="status">Lendo o PDF e analisando as informações… A IA local pode levar alguns minutos.</p>';
+      $('#resume-preview').innerHTML = `<p role="status">${state.aiAvailable ? 'Analisando o documento. A análise contextual pode levar alguns minutos.' : 'Revisando a estrutura e as informações do documento…'}</p>`;
       openModal('#preview-modal');
       try {
-        const analysis = await api(`/api/resumes/${id}/analyze`, { method: 'POST' });
+        const analysis = await api(`/api/resumes/${id}/analyze${state.aiAvailable ? "" : "?mode=checks"}`, { method: 'POST' });
         renderAnalysis(analysis);
       } catch (error) { $('#resume-preview').innerHTML = `<p role="alert">${escapeHtml(error.message)}</p>`; }
       finally { button.disabled = false; }
     }
   } catch (error) {
-    toast(error.message, "error");
+    button.disabled=false; toast(error.message, "error");
   }
 }
 
@@ -497,6 +546,26 @@ function renderAnalysis(data) {
     ${ai ? `<h3>Pontos fortes com evidências</h3>${cards(ai.strengths, x => `<h4>${escapeHtml(x.title)}</h4><blockquote>${escapeHtml(x.evidence)}</blockquote><p>${escapeHtml(x.explanation)}</p>`)}<h3>Melhorias prioritárias</h3>${cards(ai.improvements, x => `<span class="match-badge">Prioridade ${escapeHtml(x.priority)}</span><h4>${escapeHtml(x.title)}</h4><p>${escapeHtml(x.evidence)}</p><p>${escapeHtml(x.suggestion)}</p>`)}${ai.rewrites.length ? `<h3>Sugestões de reescrita</h3><p>Confira se cada sugestão preserva seus fatos antes de usá-la.</p>${cards(ai.rewrites, x => `<p><b>Original:</b> ${escapeHtml(x.original)}</p><p><b>Sugestão:</b> ${escapeHtml(x.suggested)}</p><p class="muted">${escapeHtml(x.reason)}</p>`)}` : ''}<h3>Próximos passos</h3><ol>${ai.next_steps.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ol>` : ''}
     <h3>Verificação do documento</h3>${cards(data.checks, x => `<h4>${escapeHtml(x.title)} <span class="check-status">${x.status === 'ok' ? 'Identificado' : x.status === 'attention' ? 'Revisar' : 'Orientação'}</span></h4><p>${escapeHtml(x.evidence)}</p><p>${escapeHtml(x.suggestion)}</p>`)}
     <h3>Relação com a área desejada</h3><p>${escapeHtml(data.alignment.desired_area || 'Área ainda não informada no perfil.')}</p><p><b>Conhecimentos encontrados:</b> ${escapeHtml(data.alignment.skills_found.join(', ') || 'Nenhum dos termos monitorados.')}</p><p><b>Termos das vagas para revisar ou estudar:</b> ${escapeHtml(data.alignment.terms_to_review.join(', ') || 'Nenhum termo adicional identificado nas vagas disponíveis.')}</p><ul>${data.alignment.jobs.map(j => `<li><a href="${escapeHtml(j.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(j.title)} ↗</a></li>`).join('')}</ul><p class="muted">${escapeHtml(data.alignment.note)}</p><p class="muted">${escapeHtml(data.limitations)}</p></article>`;
+}
+
+async function editResumeVersion(id) {
+  const saved=await api(`/api/resumes/${id}`);
+  const content=saved.content;
+  $('#preview-title').textContent='Editar uma nova versão';
+  const field=(name,label,value,textarea=false)=>`<label>${escapeHtml(label)}${textarea?`<textarea name="${name}" maxlength="12000">${escapeHtml(value)}</textarea>`:`<input name="${name}" value="${escapeHtml(value)}" maxlength="300" />`}</label>`;
+  $('#resume-preview').innerHTML=`<p>Origem: currículo #${id}, salvo em ${escapeHtml(formatTime(saved.created_at))}. A versão anterior será preservada.</p><form id="version-form" class="builder-form">${field('name','Nome',content.name)}${field('headline','Cargo-alvo',content.headline)}${field('contacts','Contatos (um por linha)',content.contacts.join('\n'),true)}${content.sections.map((s,i)=>field('section-'+i,s.title,s.content,true)).join('')}<button class="button button--primary" type="submit">Salvar nova versão</button></form><button class="button button--outline" type="button" id="version-from-profile">Criar outra a partir do perfil atual</button>`;
+  openModal('#preview-modal');
+  const form=$('#version-form');
+  const initial=JSON.stringify(Object.fromEntries(new FormData(form)));
+  $('#preview-modal').dataset.versionDraft=initial;
+  form.addEventListener('submit',async event=>{
+    event.preventDefault(); const button=$('button',form); if(button.disabled)return;button.disabled=true;
+    const values=Object.fromEntries(new FormData(form));
+    const next={name:values.name,headline:values.headline,contacts:values.contacts.split('\n').map(x=>x.trim()).filter(Boolean),sections:content.sections.map((s,i)=>({title:s.title,content:values['section-'+i]}))};
+    try {const result=await api(`/api/resumes/${id}/version`,{method:'POST',body:{content:next}});delete $('#preview-modal').dataset.versionDraft;renderResumePreview(result.resume,result.id);loadResumes();toast(result.message);}
+    catch(error){toast(error.message,'error');} finally{button.disabled=false;}
+  });
+  $('#version-from-profile').addEventListener('click',()=>{if($('button[type="submit"]',form).disabled || !confirm('Abrir um novo currículo com o perfil atual? Alterações não salvas desta edição serão descartadas.'))return;delete $('#preview-modal').dataset.versionDraft;closeModal('#preview-modal');populateBuilder();openModal('#builder-modal');});
 }
 async function uploadResume(event) {
   event.preventDefault();
@@ -527,6 +596,7 @@ async function generateResume(event) {
   button.disabled = true;
   try {
     const result = await api("/api/resumes/generate", { method: "POST", body: values });
+    $('#builder-modal').dataset.draft=JSON.stringify(values);
     toast(result.message);
     renderResumePreview(result.resume, result.id, true);
     loadResumes();
@@ -542,11 +612,14 @@ async function enterApplication(me) {
   switchView(true);
   accountDetails();
   populateProfileForm();
-  await loadDashboard();
+  navigate(location.hash.slice(1) || 'dashboard', true);
 }
 
 async function handleAuth(event) {
   event.preventDefault();
+  const submit = event.currentTarget.querySelector?.('button[type="submit"]');
+  if(submit?.disabled) return;
+  if(submit) submit.disabled=true;
   const mode = event.currentTarget.id === "register-form" ? "register" : "login";
   const data = Object.fromEntries(new FormData(event.currentTarget));
   try {
@@ -556,7 +629,7 @@ async function handleAuth(event) {
     if (mode === "register") navigate("profile");
   } catch (error) {
     toast(error.message, "error");
-  }
+  } finally { if(submit) submit.disabled=false; }
 }
 
 async function logout() {
@@ -572,11 +645,16 @@ async function logout() {
 }
 
 function bindEvents() {
+  $('.skip-link').addEventListener('click',event=>{event.preventDefault();$('#main-content').focus();});
+  window.addEventListener('hashchange', () => { if(state.me && location.hash !== '#main-content') navigate(location.hash.slice(1),true); });
   bindProfileEvents();
   document.addEventListener("pointerdown", (event) => {
     if (!event.target.closest(".autocomplete-field")) closeAllOptionLists();
   });
   ['jobs', 'courses'].forEach(kind => {
+    const form=$(`#${kind}-filters`);
+    try { const saved=new URLSearchParams(sessionStorage.getItem('filters-'+kind)||''); for(const [name,value] of saved) { const field=form.elements.namedItem(name); if(field) { if(field.type==='checkbox') field.checked=value==='1'; else field.value=value; } } } catch {}
+    form.addEventListener('reset', () => { setTimeout(() => loadCatalog(kind), 0); });
     $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
     $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });
     $(`#${kind}-list`).addEventListener('click', event => { const button = event.target.closest('[data-catalog]'); if (button) showCatalogDetail(button.dataset.catalog, Number(button.dataset.index)); });
@@ -586,7 +664,14 @@ function bindEvents() {
   syncMobileMenu();
   document.addEventListener('keydown', event => {
     const modal = $$('.modal:not(.hidden)').at(-1);
-    if (!modal || event.key !== 'Tab') return;
+    if (event.key !== 'Tab') return;
+    if (!modal && $('.sidebar').classList.contains('open')) {
+      const buttons=$$('a[href], button', $('.sidebar')).filter(x=>x.getClientRects().length);
+      if(event.shiftKey && document.activeElement===buttons[0]) { event.preventDefault(); buttons.at(-1)?.focus(); }
+      else if(!event.shiftKey && document.activeElement===buttons.at(-1)) { event.preventDefault(); buttons[0]?.focus(); }
+      return;
+    }
+    if (!modal) return;
     const focusable = $$('button:not(:disabled), a[href], input:not(:disabled), textarea, select', modal).filter(x => x.getClientRects().length);
     const first = focusable[0], last = focusable.at(-1);
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }

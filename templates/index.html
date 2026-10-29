@@ -79,7 +79,7 @@
     </main>
 
     <div id="app-view" class="app-shell hidden">
-      <aside class="sidebar" id="main-sidebar">
+      <a class="skip-link" href="#main-content">Pular para o conteúdo</a><aside class="sidebar" id="main-sidebar">
         <a class="brand" id="app-brand" href="#dashboard" aria-label="PrimeiroEmprego IA — ir para Visão geral">
           <span class="brand-mark">p.</span><span>primeiro<span>emprego</span><b>IA</b></span>
         </a>
@@ -101,7 +101,7 @@
       </aside>
       <button id="sidebar-backdrop" class="sidebar-backdrop" type="button" aria-label="Fechar menu" tabindex="-1"></button>
 
-      <section class="app-main">
+      <main class="app-main" id="main-content" tabindex="-1">
         <header class="topbar">
           <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-sidebar">☰</button>
           <div class="topbar-date"><span class="live-dot"></span> <span id="site-date">--/--/----</span></div>
@@ -155,9 +155,9 @@
                 <h1>Seu perfil profissional.</h1>
                 <p class="lead">Organize suas informações e deixe que suas escolhas guiem os próximos passos.</p>
               </div>
-              <button class="button button--secondary" data-open-profile type="button"><span>✎</span> Editar perfil</button>
+              <button class="button button--secondary" data-open-profile type="button"><span>✎</span> Editar dados pessoais</button>
             </div>
-            <div id="profile-summary" class="profile-summary" aria-live="polite"></div>
+            <details class="profile-criteria"><summary>O que completa o perfil básico?</summary><p>Telefone válido, idade válida, cidade, estado, área profissional, escolaridade, habilidades e idiomas. Experiência profissional não é obrigatória.</p></details><div id="profile-summary" class="profile-summary" aria-live="polite"></div>
           </section>
 
           <section class="page" id="page-jobs" data-page="jobs">
@@ -165,7 +165,7 @@
               <div><p class="eyebrow">Oportunidades</p><h1>Vagas com destino certo.</h1><p class="lead">Cada oportunidade exibida direciona para a página original onde foi publicada.</p></div>
               <span class="verified-pill">Curitiba · PR</span>
             </div>
-            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button></form>
+            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button><button class="button button--outline" type="reset">Limpar filtros</button></form><p class="muted">Cobertura atual: Curitiba/PR. A busca não altera sua cidade no perfil.</p><p class="muted">Outras buscas externas (não são vagas verificadas): <a href="https://portal.gupy.io/" target="_blank" rel="noopener noreferrer">Gupy</a> · <a href="https://www.cieepr.org.br/" target="_blank" rel="noopener noreferrer">CIEE/PR</a></p>
             <p id="jobs-context" class="muted" aria-live="polite"></p>
             <div id="jobs-list" class="jobs-list"></div>
           </section>
@@ -174,7 +174,7 @@
             <div class="page-heading split-heading">
               <div><p class="eyebrow">Meu currículo</p><h1>Conte sua história com clareza.</h1><p class="lead">Envie um currículo pronto ou crie uma versão profissional com as suas próprias informações.</p></div>
             </div>
-            <p id="ai-availability" class="muted" role="status">Verificando disponibilidade da análise com IA local…</p>
+            <p id="ai-availability" class="muted" role="status">Verificando opções de revisão…</p>
             <div class="resume-options">
               <article class="resume-option upload-option">
                 <div class="option-icon">↑</div><h2>Já tenho um currículo</h2><p>Envie um arquivo em PDF para guardar, visualizar e receber observações de organização.</p>
@@ -200,13 +200,13 @@
             <div class="course-hero">
               <p class="eyebrow eyebrow--light">Cursos e capacitação</p><h1>Desenvolva suas habilidades.</h1><p>Encontre instituições confiáveis e desenvolva competências que o mercado procura.</p><span class="course-hero-star">✦</span>
             </div>
-            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Somente gratuitos</label><button class="button button--primary">Buscar cursos</button></form>
+            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Somente gratuitos</label><button class="button button--primary">Buscar cursos</button><button class="button button--outline" type="reset">Limpar filtros</button></form>
             <p id="courses-context" class="muted" aria-live="polite"></p>
             <div id="courses-list" class="jobs-list"></div>
 
           </section>
         </div>
-      </section>
+      </main>
     </div>
 
     <div id="profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" aria-describedby="profile-modal-hint">
@@ -224,7 +224,7 @@
         <button class="modal-close" data-close-modal aria-label="Fechar">×</button>
         <div class="builder-header"><p class="eyebrow">Criar currículo</p><h2 id="builder-title">Revise as suas informações</h2><p class="muted">Preencha ou ajuste apenas o que quiser incluir. Campos vazios não aparecem no currículo.</p></div>
         <form id="resume-builder-form" class="builder-form">
-          <label>Nome completo<input name="full_name" required maxlength="120" /></label><label>Área ou cargo pretendido<input name="headline" maxlength="160" /></label><label>E-mail para o currículo<input name="email" type="email" /></label>
+          <label>Nome desta versão<input name="title" maxlength="120" placeholder="Ex.: Currículo para suporte de TI" /></label><p class="muted">Uma versão salva é independente do perfil. Editar o perfil não altera currículos anteriores.</p><label>Nome completo<input name="full_name" required maxlength="120" /></label><label>Área ou cargo pretendido<input name="headline" maxlength="160" /></label><label>E-mail para o currículo<input name="email" type="email" /></label>
           <div class="form-grid">
             <label>Telefone<input name="phone" /></label>
             <label>Cidade / Estado<input name="location" maxlength="160" /></label>

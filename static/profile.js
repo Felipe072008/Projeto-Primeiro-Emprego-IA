@@ -12,6 +12,14 @@ const profileSections = {
 const educationLevels = ['Fundamental Incompleto','Fundamental Completo','Médio Incompleto','Médio Completo','Cursando Ensino Médio','Superior Incompleto','Cursando Superior','Superior Completo'];
 let profileEditor = null;
 
+function validateContact(data) {
+  const ddds = '11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split(' ');
+  const errors={};
+  if(!/^(?:\d{2}[2-5]\d{7}|\d{2}9\d{8})$/.test(data.phone) || !ddds.includes(data.phone.slice(0,2)) || new Set(data.phone).size===1 || data.phone.slice(2)==='900000000') errors.phone='Informe DDD válido e telefone: 10 dígitos para fixo ou 11 para celular iniciado por 9.';
+  if(!/^\d{1,3}$/.test(data.age) || Number(data.age)<1 || Number(data.age)>120) errors.age='Informe uma idade de 1 a 120 anos.';
+  return errors;
+}
+
 function populateProfileForm() { renderProfileSummary(); }
 function sectionData(section) { return state.me.profile.sections[section]; }
 function sectionButton(section, text = 'Editar', index = '', accessible = '') {
@@ -43,7 +51,7 @@ function renderProfileSummary() {
     const data = sectionData(section);
     let content = '';
     if (section === 'contact') content = `<div class="profile-info-grid">${[['Telefone',data.phone],['Idade',data.age ? data.age+' anos' : ''],['Cidade / Estado',[data.city,data.state].filter(Boolean).join(' / ')]].map(([label,value])=>`<article class="profile-info-card"><span>${label}</span><p>${profileText(value)}</p></article>`).join('')}</div>`;
-    else if (section === 'goals') content = `<div class="profile-info-grid"><article class="profile-info-card"><span>Área principal</span><strong>${profileText(data.desired_area)}</strong></article><article class="profile-info-card"><span>Objetivo</span><p>${profileText(data.objective)}</p></article><article class="profile-info-card"><span>Pretensão salarial</span><p>${profileText(data.salary)}</p></article></div><div class="profile-tags">${data.secondary_areas.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}${data.contracts.map(v=>`<span>${({aprendiz:'Jovem Aprendiz',estagio:'Estágio',clt:'CLT'})[v]}</span>`).join('')}${data.work_modes.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}</div>`;
+    else if (section === 'goals') content = `<div class="profile-info-grid"><article class="profile-info-card"><span>Área principal</span><strong>${profileText(data.sector || data.desired_area)}</strong></article><article class="profile-info-card"><span>Cargo-alvo</span><p>${profileText(data.target_role)}</p><span>Objetivo</span><p>${profileText(data.objective)}</p></article><article class="profile-info-card"><span>Pretensão salarial</span><p>${profileText(data.salary)}</p></article></div><div class="profile-tags">${data.secondary_areas.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}${data.contracts.map(v=>`<span>${({aprendiz:'Jovem Aprendiz',estagio:'Estágio',clt:'CLT'})[v]}</span>`).join('')}${data.work_modes.map(v=>`<span>${escapeHtml(v)}</span>`).join('')}</div>`;
     else if (section === 'availability') content = `<div class="profile-info-grid">${[['Períodos',data.periods.join(', ')],['Dias',data.days.join(', ')],['Outra cidade',data.other_city],['Viagens',data.travel]].map(([label,value])=>`<article class="profile-info-card"><span>${label}</span><p>${profileText(value)}</p></article>`).join('')}</div>`;
     else {
       if (section === 'education') content += `<p><b>Escolaridade atual:</b> ${profileText(data.level)}</p>`;
@@ -53,8 +61,9 @@ function renderProfileSummary() {
       if (section === 'experiences' && data.no_experience) content += '<p class="not-informed">Você informou que ainda não tem experiência profissional.</p>';
       else if (!data.items.length && !data.legacy) content += `<div class="profile-empty-state"><span>+</span><p>${section === 'experiences' ? 'Seu primeiro emprego pode começar aqui. Projetos e habilidades também ajudam a contar sua história.' : config.hint}</p></div>`;
     }
+    if(section==='contact' && Object.keys(profile.validation_errors || {}).some(k=>data[k])) content += '<p class="field-error">Há dados antigos que precisam de revisão. Eles foram preservados; edite esta seção para corrigir telefone ou idade.</p>';
     const add = config.singular ? sectionButton(section,`Adicionar ${config.singular}`,'new') : '';
-    return `<section id="profile-block-${section}" class="profile-summary-section"><div class="profile-section-heading"><div><p class="eyebrow">Meu perfil</p><h2>${config.title}</h2></div><div class="section-actions">${sectionButton(section)}${add}</div></div>${content}</section>`;
+    return `<section id="profile-block-${section}" class="profile-summary-section"><div class="profile-section-heading"><div><h2>${config.title}</h2></div><div class="section-actions">${sectionButton(section)}${add}</div></div>${content}</section>`;
   }).join('');
   const missing = profile.missing_fields || [];
   target.innerHTML = `<section class="profile-overview-card"><div class="profile-avatar">${escapeHtml(user.name[0] || 'P')}</div><div class="profile-overview-main"><p class="eyebrow">Seu espaço profissional</p><h2>${escapeHtml(user.name)}</h2><p>${escapeHtml(user.email)}</p><p class="profile-basic-status">${missing.length ? `Para completar o básico: ${escapeHtml(missing.join(', '))}.` : 'Seu perfil básico está completo. Continue acrescentando suas vivências no seu ritmo.'}</p></div><div class="profile-completion"><span>${state.me.completion}%</span><small>perfil básico</small></div></section>${blocks}`;
@@ -66,7 +75,7 @@ function editorField(name,label,value='',options={}) {
   let control;
   if (options.choices) control = `<select ${attrs}><option value="">Selecione</option>${options.choices.map(v=>`<option value="${escapeHtml(v)}" ${v===value ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('')}</select>`;
   else if (options.textarea) control = `<textarea ${attrs} maxlength="${options.limit || 2000}">${escapeHtml(value)}</textarea>`;
-  else control = `<input ${attrs} type="${options.type || 'text'}" value="${escapeHtml(value)}" maxlength="${options.limit || 300}" ${options.numeric ? 'inputmode="numeric" pattern="[0-9]*" data-numeric-limit="'+options.numeric+'"' : ''} ${options.placeholder ? `placeholder="${escapeHtml(options.placeholder)}"` : ''} />`;
+  else control = `<input ${attrs} type="${options.type || 'text'}" value="${escapeHtml(value)}" maxlength="${options.limit || 300}" ${name==='age'?'min="1" max="120" step="1"':''} ${options.numeric ? 'inputmode="numeric" pattern="[0-9]*" data-numeric-limit="'+options.numeric+'"' : ''} ${options.placeholder ? `placeholder="${escapeHtml(options.placeholder)}"` : ''} />`;
   if (options.autocomplete) {
     const kind = options.autocomplete;
     control = control.replace(' />',` autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${id}-options" />`);
@@ -87,7 +96,7 @@ function blankRecord(section) {
 function itemFields(section,item) {
   const field=(name,label,options={})=>editorField(name,label,item[name],options);
   if(section==='experiences') return field('role','Cargo ou função',{required:true})+field('company','Empresa',{required:true})+field('contract','Tipo de vínculo',{choices:['Jovem Aprendiz','Estágio','CLT','Outra experiência']})+field('start','Data de início',{type:'date',required:true})+field('end','Data de término',{type:'date',disabled:item.current})+`<label class="profile-check"><input type="checkbox" name="current" ${item.current?'checked':''} /> É meu trabalho atual</label>`+field('description','Principais atividades realizadas',{textarea:true});
-  if(section==='education') return field('level','Nível da formação',{choices:educationLevels,required:true})+field('course','Nome do curso (quando aplicável)')+field('institution','Instituição de ensino',{required:true})+field('status','Situação',{choices:['Cursando','Concluído','Interrompido'],required:true})+field('year','Ano de conclusão ou previsão',{numeric:4})+field('city','Cidade',{autocomplete:'city'})+field('state','Estado',{autocomplete:'state'});
+  if(section==='education') return (profileEditor.draft.legacy ? `<aside class="span-3"><b>Use seu texto anterior como referência</b><p>${escapeHtml(profileEditor.draft.legacy)}</p><p>Transcreva somente informações confirmadas; preencha os dados faltantes. O texto anterior continuará preservado até você removê-lo explicitamente.</p></aside>` : '')+field('level','Nível da formação',{choices:educationLevels,required:true})+field('course','Nome do curso (quando aplicável)')+field('institution','Instituição de ensino',{required:true})+field('status','Situação',{choices:['Cursando','Concluído','Interrompido'],required:true})+field('year','Ano de conclusão ou previsão',{numeric:4})+field('city','Cidade',{autocomplete:'city'})+field('state','Estado',{autocomplete:'state'});
   if(section==='courses') return field('name','Nome do curso',{required:true})+field('institution','Instituição',{required:true})+field('hours','Carga horária (horas)',{numeric:5})+field('status','Situação',{choices:['Cursando','Concluído','Interrompido'],required:true})+field('year','Ano de conclusão ou previsão',{numeric:4})+field('certificate_url','Link do certificado (opcional)',{type:'url'});
   if(section==='languages') return field('language','Idioma',{required:true,placeholder:'Ex.: Português, Inglês, Libras'})+`<datalist id="language-suggestions">${['Português','Inglês','Espanhol','Francês','Alemão','Italiano','Japonês','Mandarim','Libras'].map(v=>`<option value="${v}">`).join('')}</datalist>`+field('level','Nível',{choices:['Básico','Intermediário','Avançado','Fluente','Nativo'],required:true});
   return field('title','Título do projeto ou voluntariado',{required:true})+field('context','Instituição ou contexto')+field('start','Data de início (opcional)',{type:'date'})+field('end','Data de término (opcional)',{type:'date'})+field('description','Descreva sua participação',{textarea:true,required:true});
@@ -105,7 +114,8 @@ function readEditorData() {
     if(section==='experiences') data.no_experience=false;
   } else if(section==='contact') for(const field of ['phone','age','city','state']) data[field]=values[field] || '';
   else if(section==='goals') {
-    for(const field of ['desired_area','objective','salary']) data[field]=values[field] || '';
+    for(const field of ['desired_area','objective','salary','sector','target_role']) data[field]=values[field] || '';
+    data.desired_area=data.sector || draft.desired_area;
     for(const field of ['contracts','work_modes']) data[field]=new FormData(form).getAll(field);
   } else if(section==='availability') {
     for(const field of ['periods','days']) data[field]=new FormData(form).getAll(field);
@@ -122,11 +132,11 @@ function renderProfileEditor() {
   const config = profileSections[section];
   const form = $('#profile-form');
   $('#profile-modal-title').textContent = itemIndex!==null ? `${itemIndex==='new'?'Adicionar':'Editar'} ${config.singular}` : config.title;
-  $('#profile-modal-hint').textContent = config.hint;
+  $('#profile-modal-hint').textContent = section==='contact' ? config.hint+' Nome e e-mail são dados da conta e não podem ser alterados neste formulário. Idade não determina elegibilidade para vagas.' : config.hint;
   let fields='';
   if(itemIndex!==null) fields=itemFields(section,itemIndex==='new'?blankRecord(section):draft.items[itemIndex]);
-  else if(section==='contact') fields=editorField('account_name','Nome completo',state.me.user.name,{disabled:true})+editorField('account_email','E-mail',state.me.user.email,{disabled:true})+editorField('phone','Telefone',draft.phone,{required:true,numeric:11})+editorField('age','Idade',draft.age,{required:true,numeric:3})+editorField('city','Cidade',draft.city,{required:true,autocomplete:'city'})+editorField('state','Estado',draft.state,{required:true,autocomplete:'state'});
-  else if(section==='goals') fields=editorField('desired_area','Área profissional principal',draft.desired_area,{required:true,autocomplete:'desired_area'})+editorField('objective','Objetivo profissional',draft.objective,{textarea:true})+editorField('salary','Pretensão salarial (opcional)',draft.salary,{placeholder:'Ex.: A combinar'})+`<div class="span-3"><p>Áreas adicionais (até 3)</p><div class="profile-tags">${draft.secondary_areas.map((v,i)=>`<span>${escapeHtml(v)} <button type="button" data-remove-area="${i}" aria-label="Remover ${escapeHtml(v)}">×</button></span>`).join('')}</div>${editorField('secondary_choice','Adicionar outra área','',{autocomplete:'desired_area'})}<button type="button" class="small-button" data-add-area>Adicionar área</button><span class="field-error" data-error-for="secondary_areas"></span></div>`+checks('contracts','Tipos de oportunidade',[['aprendiz','Jovem Aprendiz'],['estagio','Estágio'],['clt','CLT']],draft.contracts)+checks('work_modes','Modalidades de trabalho',[['Presencial','Presencial'],['Híbrido','Híbrido'],['Remoto','Remoto']],draft.work_modes)+`<p class="muted span-3">Sem marcar um tipo, usamos as escolhas de área. Modalidade de trabalho é uma preferência informativa; confira o anúncio.</p>`;
+  else if(section==='contact') fields=editorField('account_name','Nome completo (definido no cadastro)',state.me.user.name,{disabled:true})+editorField('account_email','E-mail de acesso (definido no cadastro)',state.me.user.email,{disabled:true})+editorField('phone','Telefone',draft.phone,{required:true,numeric:11,type:'tel',placeholder:'DDD + número, sem espaços'})+editorField('age','Idade',draft.age,{required:true,numeric:3,type:'number'})+editorField('city','Cidade',draft.city,{required:true,autocomplete:'city'})+editorField('state','Estado',draft.state,{required:true,autocomplete:'state'});
+  else if(section==='goals') fields=editorField('sector','Área profissional',draft.sector,{required:true,choices:['Tecnologia','Administração','Finanças e contabilidade','Comércio e atendimento','Marketing e Comunicação','Logística','Recursos humanos','Indústria e Engenharia','Saúde','Educação e Pedagogia']})+editorField('target_role','Cargo-alvo (opcional)',draft.target_role)+`<p class="muted span-3">Escolha anterior preservada: ${escapeHtml(draft.desired_area || 'Nenhuma')}. Selecione a área e marque os vínculos separadamente.</p>`+editorField('objective','Objetivo profissional',draft.objective,{textarea:true})+editorField('salary','Pretensão salarial (opcional)',draft.salary,{placeholder:'Ex.: A combinar'})+`<div class="span-3"><p>Áreas adicionais (até 3)</p><div class="profile-tags">${draft.secondary_areas.map((v,i)=>`<span>${escapeHtml(v)} <button type="button" data-remove-area="${i}" aria-label="Remover ${escapeHtml(v)}">×</button></span>`).join('')}</div>${editorField('secondary_choice','Adicionar outra área','',{autocomplete:'desired_area'})}<button type="button" class="small-button" data-add-area>Adicionar área</button><span class="field-error" data-error-for="secondary_areas"></span></div>`+checks('contracts','Tipos de oportunidade',[['aprendiz','Jovem Aprendiz'],['estagio','Estágio'],['clt','CLT']],draft.contracts)+checks('work_modes','Modalidades de trabalho',[['Presencial','Presencial'],['Híbrido','Híbrido'],['Remoto','Remoto']],draft.work_modes)+`<p class="muted span-3">Escolha os vínculos desejados. Sem seleção, mostramos os tipos disponíveis para a área. Modalidade de trabalho é uma preferência informativa; confira o anúncio.</p>`;
   else if(section==='availability') fields=checks('periods','Períodos disponíveis',['Manhã','Tarde','Noite'].map(v=>[v,v]),draft.periods)+checks('days','Dias disponíveis',['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].map(v=>[v,v]),draft.days)+editorField('other_city','Aceita trabalhar em outra cidade?',draft.other_city,{choices:['Sim','Não']})+editorField('travel','Disponível para viagens?',draft.travel,{choices:['Sim','Não']});
   else {
     if(section==='education') fields+=editorField('level','Escolaridade atual',draft.level,{choices:educationLevels,required:true});
@@ -136,7 +146,7 @@ function renderProfileEditor() {
     else fields+=`<div class="span-3 profile-record-grid">${recordCards(section,draft,true)}</div><button type="button" class="button button--outline" data-new-draft>Adicionar ${config.singular}</button>`;
     fields+='<span class="field-error span-3" data-error-for="items"></span>';
   }
-  form.innerHTML=`<p class="editor-form-error" data-error-for="_form" role="alert"></p><div class="profile-editor-grid">${fields}</div><div class="form-actions profile-modal-actions"><p class="form-note">* Campos obrigatórios desta seção.</p><div><button class="button button--outline" type="button" data-cancel-section>Cancelar</button><button class="button button--primary" type="submit">Salvar ${itemIndex!==null?config.singular:'informações'}</button></div></div>`;
+  form.innerHTML=`<p class="editor-form-error" data-error-for="_form" role="alert"></p><div class="profile-editor-grid">${fields}</div><div class="form-actions profile-modal-actions"><p class="form-note">${fields.includes('required') ? '* Campos obrigatórios desta seção.' : 'Preencha somente o que desejar informar.'}</p><div><button class="button button--outline" type="button" data-cancel-section>Cancelar</button><button class="button button--primary" type="submit">Salvar ${itemIndex!==null?config.singular:'informações'}</button></div></div>`;
   bindOptionLists(form);
   $('[name="skill_name"]',form)?.setAttribute('list','skill-suggestions');
   $('[name="language"]',form)?.setAttribute('list','language-suggestions');
@@ -181,6 +191,10 @@ async function saveProfile(event) {
   if(profileEditor.section==='skills' && $('#profile-form').elements.skill_name.value.trim() && !addDraftSkill()) return;
   const data=readEditorData();
   const section=profileEditor.section;
+  if(section==='contact') {
+    const errors=validateContact(data);
+    if(Object.keys(errors).length) {showProfileErrors(errors);return;}
+  }
   profileEditor.pending=true;
   const save=$('button[type="submit"]',$('#profile-form'));
   save.disabled=true;
@@ -193,7 +207,7 @@ async function saveProfile(event) {
     renderProfileSummary();
     loadDashboard();
     const block=$(`#profile-block-${section}`);
-    block?.scrollIntoView({block:'nearest',behavior:'smooth'});
+    block?.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     $('button',block)?.focus({preventScroll:true});
     toast(result.message);
   } catch(error) {showProfileErrors(error.fields || {_form:error.message});}
@@ -223,7 +237,7 @@ async function removeProfileRecord(section,index) {
 }
 function bindProfileEvents() {
   $('#profile-form').addEventListener('input',event=>{
-    if(event.target.dataset.numericLimit) event.target.value=event.target.value.replace(/\D/g,'').slice(0,Number(event.target.dataset.numericLimit));
+    if(event.target.dataset.numericLimit && event.target.name!=='age') event.target.value=event.target.value.replace(/\D/g,'').slice(0,Number(event.target.dataset.numericLimit));
   });
   $('#profile-form').addEventListener('change',event=>{
     if(event.target.name==='current') {const end=event.currentTarget.elements.end;end.disabled=event.target.checked;if(end.disabled)end.value='';}

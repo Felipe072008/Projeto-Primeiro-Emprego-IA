@@ -1,0 +1,38 @@
+test_valid_response_and_fabricated_rewrite_filter (test_app.AITests.test_valid_response_and_fabricated_rewrite_filter) ... ok
+test_course_without_certificate_is_not_listed (test_app.CatalogTests.test_course_without_certificate_is_not_listed) ... ok
+test_curated_jobs_cover_areas_and_hide_after_deadline (test_app.CatalogTests.test_curated_jobs_cover_areas_and_hide_after_deadline) ... ok
+test_every_profile_choice_has_direct_certified_course (test_app.CatalogTests.test_every_profile_choice_has_direct_certified_course) ... ok
+test_job_contract_and_area_are_both_respected (test_app.CatalogTests.test_job_contract_and_area_are_both_respected) ... ok
+test_live_catalog_matching (test_app.CatalogTests.test_live_catalog_matching) ... ok
+test_rejects_nonindividual_wrong_city_and_stale (test_app.CatalogTests.test_rejects_nonindividual_wrong_city_and_stale) ... ok
+test_analysis_unavailable_is_honest (test_app.SiteTests.test_analysis_unavailable_is_honest) ... ok
+test_auth_rejects_nonobject_json (test_app.SiteTests.test_auth_rejects_nonobject_json) ... ok
+test_limits_password_and_scan (test_app.SiteTests.test_limits_password_and_scan) ... ok
+test_pdf_only_and_content (test_app.SiteTests.test_pdf_only_and_content) ... EOF marker not found
+ok
+test_profile_required_fields_and_numeric_limits (test_app.SiteTests.test_profile_required_fields_and_numeric_limits) ... ok
+test_profile_selection_drives_catalog_endpoints (test_app.SiteTests.test_profile_selection_drives_catalog_endpoints) ... ok
+test_resume_fields_escaping_and_ownership (test_app.SiteTests.test_resume_fields_escaping_and_ownership) ... ok
+test_catalog_expiry_empty_and_support_relevance (test_audit.AuditTests.test_catalog_expiry_empty_and_support_relevance) ... ok
+test_compatible_goals_and_long_pdf (test_audit.AuditTests.test_compatible_goals_and_long_pdf) ... ok
+test_contact_validation_and_legacy_progress (test_audit.AuditTests.test_contact_validation_and_legacy_progress) ... ok
+test_csrf_and_authentication (test_audit.AuditTests.test_csrf_and_authentication) ... ok
+test_request_limits (test_audit.AuditTests.test_request_limits) ... ok
+test_upload_boundaries (test_audit.AuditTests.test_upload_boundaries) ... ok
+test_versions_rename_and_cross_account_access (test_audit.AuditTests.test_versions_rename_and_cross_account_access) ... C:\Users\felip\Documents\primeiro-emprego-ia\.venv\Lib\site-packages\pypdf\_utils.py:265: ResourceWarning: unclosed file <_io.FileIO name='C:\\Users\\felip\\Documents\\ChatGPT\\Site\\tmp\\tmpe2xak0p6' mode='rb+' closefd=True>
+  m = regex.search(name + tok)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\felip\AppData\Local\Programs\Python\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <_TemporaryFileWrapper file=<_io.BufferedRandom name='C:\\Users\\felip\\Documents\\ChatGPT\\Site\\tmp\\tmpe2xak0p6'>>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_independent_saves_completion_and_first_job (test_profile_sections.ProfileSectionsTests.test_independent_saves_completion_and_first_job) ... ok
+test_invalid_sections_never_overwrite_saved_data (test_profile_sections.ProfileSectionsTests.test_invalid_sections_never_overwrite_saved_data) ... ok
+test_legacy_text_is_preserved_without_invented_records (test_profile_sections.ProfileSectionsTests.test_legacy_text_is_preserved_without_invented_records) ... ok
+test_secondary_interests_and_explicit_contract_preferences (test_profile_sections.ProfileSectionsTests.test_secondary_interests_and_explicit_contract_preferences) ... ok
+test_sections_are_private_to_logged_user (test_profile_sections.ProfileSectionsTests.test_sections_are_private_to_logged_user) ... ok
+test_structured_records_reach_resume_pdf_and_analysis (test_profile_sections.ProfileSectionsTests.test_structured_records_reach_resume_pdf_and_analysis) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 7.502s
+
+OK

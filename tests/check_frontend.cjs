@@ -15,8 +15,8 @@ const vm = require('node:vm');
       getAll(name) { return this.entries.filter(entry=>entry[0]===name).map(entry=>entry[1]); }
     },
     structuredClone,
-    document: {querySelector: () => ({querySelectorAll: () => fields}), querySelectorAll: () => []},
-    window: {scrollTo() {}},
+    document: {querySelector: () => ({dataset: {}, querySelectorAll: () => fields}), querySelectorAll: () => []},
+    window: {scrollTo() {}, matchMedia: () => ({matches:true})},
     calls,
   });
   const source = fs.readFileSync(path.join(__dirname, '../static/app.js'), 'utf8');
@@ -24,6 +24,16 @@ const vm = require('node:vm');
   vm.runInContext(source.replace(/boot\(\);\s*$/, ''), context);
   const originalNavigate = context.navigate;
   const originalReadEditorData = context.readEditorData;
+  let modalClosed = false;
+  const pendingModal = {
+    classList: {contains: () => false, add: () => { modalClosed = true; }},
+    querySelector: () => ({disabled: true}),
+  };
+  const initialQuery = context.document.querySelector;
+  context.document.querySelector = () => pendingModal;
+  context.closeModal('#preview-modal');
+  assert.equal(modalClosed, false, 'A versão não pode ser fechada durante o salvamento.');
+  context.document.querySelector = initialQuery;
   vm.runInContext(`
     api = async (url, options) => { calls.push(['api', url, options]); return {message: 'ok'}; };
     toast = (...args) => calls.push(['toast', ...args]);
@@ -96,7 +106,7 @@ const vm = require('node:vm');
   context.document.querySelector=()=>({disabled:false,scrollIntoView(){},focus(){},querySelector(){return this;}});
   vm.runInContext(`
     profileEditor = {section:'contact',pending:false};
-    readEditorData = () => ({phone:'41999999999'});
+    readEditorData = () => ({phone:'41999999999',age:'18'});
     renderProfileSummary = () => calls.push(['summary']);
     loadDashboard = () => calls.push(['dashboard']);
     closeModal = selector => calls.push(['close',selector]);

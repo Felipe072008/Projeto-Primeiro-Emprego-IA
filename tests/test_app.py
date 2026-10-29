@@ -25,6 +25,7 @@ class SiteTests(unittest.TestCase):
         site.app.config.update(TESTING=True)
         site.init_db()
         self.client = site.app.test_client()
+        self.client.environ_base['HTTP_X_REQUESTED_WITH'] = 'FirstJob'
         self.client.post('/api/auth/register', json={'name':'Pessoa de Teste', 'email':'teste@example.com', 'password':'teste1234'})
 
     def pdf(self):
@@ -132,7 +133,7 @@ class CatalogTests(unittest.TestCase):
         for option in options:
             with self.subTest(option=option['title']):
                 self.assertEqual(catalog.detect_areas(option['title']),set(option['areas']))
-                courses=catalog.recommendations('courses',{'desired_area':option['title']},today=date(2026,10,8))['courses']
+                courses=catalog.recommendations('courses',{'desired_area':option['title']},today=date(2026,10,28))['courses']
                 self.assertTrue(any(course['match']=='direct' and course['certificate'] and course['certificate_source'].startswith('https://') for course in courses))
 
     def test_job_contract_and_area_are_both_respected(self):

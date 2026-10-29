@@ -15,6 +15,22 @@ SECTIONS = ('contact', 'goals', 'experiences', 'education', 'courses', 'skills',
 LIST_FIELDS = {'experiences': 'professional_experience', 'courses': 'courses', 'skills': 'skills', 'languages': 'languages', 'projects': 'academic_experience'}
 REQUIRED = {'phone': 'Telefone', 'age': 'Idade', 'city': 'Cidade', 'state': 'Estado', 'desired_area': 'Área profissional', 'education': 'Escolaridade', 'skills': 'Habilidades', 'languages': 'Idiomas'}
 CAREERS = Path(__file__).resolve().parent / 'static' / 'occupations.json'
+DDDS = set('11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split())
+
+
+def contact_errors(data):
+    errors = {}
+    phone, age = str(data.get('phone', '')), str(data.get('age', ''))
+    if not re.fullmatch(r'(?:[0-9]{2}[2-5][0-9]{7}|[0-9]{2}9[0-9]{8})', phone) or phone[:2] not in DDDS or len(set(phone)) == 1 or phone[2:] == '900000000':
+        errors['phone'] = 'Informe DDD válido e telefone: 10 dígitos para fixo ou 11 para celular iniciado por 9.'
+    if not re.fullmatch(r'[0-9]{1,3}', age) or not 1 <= int(age) <= 120:
+        errors['age'] = 'Informe uma idade de 1 a 120 anos. Isso não define elegibilidade para vagas.'
+    return errors
+
+
+def missing_fields(profile):
+    invalid = contact_errors(profile)
+    return [label for field, label in REQUIRED.items() if not str(profile.get(field, '')).strip() or field in invalid]
 
 
 class ProfileError(ValueError):
@@ -38,6 +54,17 @@ def defaults(profile):
         result[section] = {'items': [], 'legacy': profile.get(field, '')}
     result['experiences']['no_experience'] = False
     return result
+
+
+def modern_goals(goals):
+    from catalog import AREAS, career_selection
+    goals = dict(goals)
+    old = career_selection(goals['desired_area'])
+    goals.setdefault('target_role', goals['desired_area'].split(' — ', 1)[-1] if old else '')
+    goals.setdefault('sector', AREAS[old['areas'][0]][0] if old and len(old['areas']) == 1 else goals['desired_area'] if goals['desired_area'] in {v[0] for v in AREAS.values()} else '')
+    if old and not goals['contracts']:
+        goals['contracts'] = list(dict.fromkeys(option['contract_type'] for value in [goals['desired_area'], *goals['secondary_areas']] if (option := career_selection(value))))
+    return goals
 
 
 def validate_section(section, data, previous):
@@ -70,14 +97,11 @@ def validate_section(section, data, previous):
 
     if section == 'contact':
         result = {field: text(data, field, required=True, limit=120) for field in allowed}
-        for field, maximum in (('phone', 11), ('age', 3)):
-            value = result[field]
-            if not re.fullmatch(r'[0-9]{1,' + str(maximum) + '}', value):
-                errors[field] = f'Use apenas números, com até {maximum} dígitos.'
-        if result['age'].isdigit() and not 1 <= int(result['age']) <= 120:
-            errors['age'] = 'Informe uma idade de 1 a 120 anos.'
+        errors.update(contact_errors(result))
     elif section == 'goals':
+        from catalog import AREAS
         career_titles = {item['title'] for item in json.loads(CAREERS.read_text(encoding='utf-8'))['occupations']}
+        career_titles.update(v[0] for v in AREAS.values())
         result = {field: text(data, field, required=field == 'desired_area', limit=160 if field != 'objective' else 2000) for field in ('desired_area', 'objective', 'salary')}
         if result['desired_area'] not in career_titles and result['desired_area'] != previous['desired_area']:
             errors['desired_area'] = 'Selecione uma área sugerida.'
@@ -85,6 +109,11 @@ def validate_section(section, data, previous):
         result['secondary_areas'] = [v for v in result['secondary_areas'] if v != result['desired_area']]
         result['contracts'] = choices('contracts', {'aprendiz', 'estagio', 'clt'}, 3)
         result['work_modes'] = choices('work_modes', {'Presencial', 'Híbrido', 'Remoto'}, 3)
+        for field in ('sector', 'target_role'):
+            if field in allowed:
+                result[field] = text(data, field, limit=160)
+        if result.get('sector') and result['sector'] not in {v[0] for v in AREAS.values()}:
+            errors['sector'] = 'Selecione uma área disponível.'
     elif section == 'availability':
         result['periods'] = choices('periods', {'Manhã', 'Tarde', 'Noite'}, 3)
         result['days'] = choices('days', {'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'}, 7)
@@ -148,7 +177,7 @@ def validate_section(section, data, previous):
                 errors[prefix + 'hours'] = 'Informe a quantidade de horas em números.'
             if 'status' in clean and clean['status'] not in {'Cursando', 'Concluído', 'Interrompido'}:
                 errors[prefix + 'status'] = 'Selecione uma situação válida.'
-            if clean.get('status') == 'Concluído' and clean.get('year', '').isdigit() and int(clean['year']) > date.today().year:
+            if clean.get('status') == 'Concluído' and re.fullmatch(r'[0-9]{4}', clean.get('year', '')) and int(clean['year']) > date.today().year:
                 errors[prefix + 'year'] = 'Para um ano futuro, selecione Cursando e informe a previsão.'
             if section == 'education' and clean['level'] not in EDUCATION_OPTIONS:
                 errors[prefix + 'level'] = 'Selecione um nível válido.'
@@ -162,8 +191,12 @@ def validate_section(section, data, previous):
                     errors[prefix + ('name' if section == 'skills' else 'language')] = 'Este item já foi adicionado.'
                 seen.add(identity)
             if clean.get('certificate_url'):
-                url = urlparse(clean['certificate_url'])
-                if url.scheme not in {'https', 'http'} or not url.hostname or url.username or url.password:
+                try:
+                    url = urlparse(clean['certificate_url'])
+                    valid_url = url.scheme in {'https', 'http'} and url.hostname and not url.username and not url.password
+                except ValueError:
+                    valid_url = False
+                if not valid_url:
                     errors[prefix + 'certificate_url'] = 'Use um link HTTP ou HTTPS válido.'
             result['items'].append(clean)
         if section in {'skills', 'languages'} and not result['items'] and not result['legacy'] and not previous['items'] and not previous['legacy']:
@@ -200,6 +233,7 @@ def hydrate_profile(raw, stored):
     profile = dict(raw)
     sections = defaults(raw)
     sections.update(stored)
+    sections['goals'] = modern_goals(sections['goals'])
     profile['sections'] = sections
     profile.update(sections['contact'])
     profile.update({field: sections['goals'][field] for field in ('desired_area', 'objective')})
@@ -217,5 +251,6 @@ def hydrate_profile(raw, stored):
     availability = sections['availability']
     resume_fields['additional_information'] = ' · '.join(filter(None,[', '.join(availability['periods']), ', '.join(availability['days']), 'Trabalho em outra cidade: '+availability['other_city'] if availability['other_city'] else '', 'Viagens: '+availability['travel'] if availability['travel'] else '']))
     profile['resume_fields'] = resume_fields
-    profile['missing_fields'] = [label for field,label in REQUIRED.items() if not profile.get(field,'').strip()]
+    profile['missing_fields'] = missing_fields(profile)
+    profile['validation_errors'] = contact_errors(profile)
     return profile
