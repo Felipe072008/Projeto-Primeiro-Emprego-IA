@@ -107,3 +107,13 @@ Nenhuma integração externa está habilitada: os bloqueios estão registrados p
 O motor foi testado com fixtures; isso não comprova sincronização real. A rotina está pronta
 para agendamento posterior, mas nenhuma tarefa local/online foi instalada nem foi feito deploy.
 O catálogo manual anterior mantém suas datas; sua disponibilidade não foi revalidada nesta etapa.
+
+## Revisão atual de vagas e confirmação de cursos
+
+Em 09/11/2026, foram conferidas as 17 vagas antigas nas páginas oficiais: 8 continuavam abertas,
+8 foram confirmadas encerradas e 1 estava indisponível. Foram incluídas 5 ofertas verificadas,
+totalizando 13 vagas publicadas em Curitiba; o acervo anterior foi preservado no histórico.
+Consulte a [revisão por anúncio e o teste de Administração](docs/catalogo/REVISAO_ATUAL.md).
+As datas de inscrição foram extraídas das fontes; a revisão diária não é uma prorrogação da oferta.
+Meu Emprego foi retirado da configuração. A conta PythonAnywhere informada é `felipecorreia`;
+o usuário confirmou a aba Tasks vazia. A automação segue não configurada/não comprovada.

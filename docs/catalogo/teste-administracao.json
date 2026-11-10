@@ -1,0 +1,71 @@
+{
+  "tested_at": "2026-11-09T23:51:33.814301-03:00",
+  "profile": "Sintético em banco temporário",
+  "results": [
+    {
+      "saved_area": "Administração",
+      "http_status": 200,
+      "interest": "Administração",
+      "recognized_areas": [
+        "Administração"
+      ],
+      "total": 3,
+      "personalized": true,
+      "courses": [
+        {
+          "id": "fb-atendimento",
+          "title": "Atendimento ao Público",
+          "areas": [
+            "comercial",
+            "administracao",
+            "saude"
+          ]
+        },
+        {
+          "id": "evg-logistica",
+          "title": "Estratégias de Logística na Administração Pública",
+          "areas": [
+            "logistica",
+            "administracao"
+          ]
+        },
+        {
+          "id": "fb-excel",
+          "title": "Microsoft Excel 2016 — Básico",
+          "areas": [
+            "administracao",
+            "financeiro",
+            "logistica",
+            "rh"
+          ]
+        }
+      ]
+    },
+    {
+      "saved_area": "Tecnologia",
+      "http_status": 200,
+      "interest": "Tecnologia",
+      "recognized_areas": [
+        "Tecnologia"
+      ],
+      "total": 2,
+      "personalized": true,
+      "courses": [
+        {
+          "id": "fb-hardware",
+          "title": "Fundamentos de TI: Hardware e Software",
+          "areas": [
+            "tecnologia"
+          ]
+        },
+        {
+          "id": "fb-python",
+          "title": "Linguagem de Programação Python — Básico",
+          "areas": [
+            "tecnologia"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -126,21 +126,6 @@
     "suggested_schedule": "daily 06:00"
   },
   {
-    "id": "meu_emprego",
-    "name": "Meu Emprego",
-    "kind": "jobs",
-    "official_url": null,
-    "classification": "pending",
-    "reason": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
-    "cost": "Não confirmado.",
-    "permission": "Não confirmada.",
-    "available_data": "Não confirmados.",
-    "evidence_urls": [],
-    "assessed_on": "2026-11-09",
-    "schedule_timezone": "America/Sao_Paulo",
-    "suggested_schedule": "daily 06:00"
-  },
-  {
     "id": "aprenda_mais",
     "name": "Aprenda Mais / MEC",
     "kind": "courses",
@@ -210,5 +195,107 @@
     "assessed_on": "2026-11-09",
     "schedule_timezone": "America/Sao_Paulo",
     "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "gupy",
+    "name": "Gupy",
+    "kind": "jobs",
+    "official_url": "https://portal.gupy.io/vagas",
+    "classification": "official_link",
+    "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+    "cost": "Consulta pública; nenhum serviço de integração contratado.",
+    "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+    "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+    "evidence_urls": [
+      "https://portal.gupy.io/vagas"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "central_estagios_pr",
+    "name": "Central de Estágios do Paraná",
+    "kind": "jobs",
+    "official_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_busca_vagas.jsp",
+    "classification": "official_link",
+    "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+    "cost": "Consulta pública; nenhum serviço de integração contratado.",
+    "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+    "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+    "evidence_urls": [
+      "https://www.ceestagios.pr.gov.br/cee/jsp/frm_busca_vagas.jsp"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "destro",
+    "name": "Destro — Trabalhe conosco",
+    "kind": "jobs",
+    "official_url": "https://vagas.destromacro.com.br/",
+    "classification": "official_link",
+    "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+    "cost": "Consulta pública; nenhum serviço de integração contratado.",
+    "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+    "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+    "evidence_urls": [
+      "https://vagas.destromacro.com.br/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "fundacao_bradesco",
+    "name": "Fundação Bradesco — Escola Virtual",
+    "kind": "courses",
+    "official_url": "https://www.ev.org.br/",
+    "classification": "official_link",
+    "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+    "cost": "Consulta pública; nenhum serviço de integração contratado.",
+    "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+    "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+    "evidence_urls": [
+      "https://www.ev.org.br/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "senai_sp",
+    "name": "SENAI-SP — Educação Online",
+    "kind": "courses",
+    "official_url": "https://www.sp.senai.br/unidade/online",
+    "classification": "official_link",
+    "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+    "cost": "Consulta pública; nenhum serviço de integração contratado.",
+    "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+    "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+    "evidence_urls": [
+      "https://www.sp.senai.br/unidade/online"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "aprendiz_curitiba",
+    "name": "Programa Aprendiz — Prefeitura de Curitiba",
+    "kind": "jobs",
+    "official_url": "https://aprendiz.curitiba.pr.gov.br/",
+    "classification": "official_link",
+    "reason": "Portal oficial do programa de aprendizagem; acesso às oportunidades pelo e-Cidadão. Sem feed autorizado confirmado.",
+    "cost": "Consulta ao portal público; nenhuma contratação.",
+    "permission": "Somente link oficial; não presume licença de redistribuição.",
+    "available_data": "Informações do programa e acesso de candidatos pelo e-Cidadão; não é anúncio individual.",
+    "evidence_urls": [
+      "https://aprendiz.curitiba.pr.gov.br/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
   }
 ]

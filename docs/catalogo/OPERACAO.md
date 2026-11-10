@@ -4,7 +4,7 @@
 
 Não há adaptador externo habilitado nem agendamento instalado. Nenhuma oferta nova foi importada. Esta entrega prepara o armazenamento, validação, transação, estados e ponto de entrada da rotina; não resolve os bloqueios de dados/licença documentados em [FONTES.md](FONTES.md).
 
-Hospedagem e agendador online não foram confirmados. Não foi feito deploy. Nenhuma tarefa foi criada no Windows: os passos abaixo são para instalação futura. Um agendamento no notebook depende de ele estar ligado e disponível. Nada garante execução com o computador desligado.
+O usuário informou a conta PythonAnywhere `felipecorreia` e confirmou a aba Tasks vazia. O painel não pôde ser inspecionado diretamente nesta sessão; nenhuma execução agendada foi comprovada. Não foi feito deploy. Nenhuma tarefa foi criada no Windows: os passos abaixo são para instalação futura. Um agendamento no notebook depende de ele estar ligado e disponível. Nada garante execução com o computador desligado.
 
 ## Comandos no repositório
 

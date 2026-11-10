@@ -1,0 +1,914 @@
+{
+  "jobs": [
+    {
+      "id": "magnum-aprendiz",
+      "title": "Jovem Aprendiz — apoio administrativo",
+      "company": "Magnum Tires",
+      "original_url": "https://magnumtires.gupy.io/job/eyJqb2JJZCI6MTI2MTE1NjksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "areas": [
+        "administracao"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Aprendizado em organização de arquivos, atualização de planilhas e sistemas e apoio à comunicação interna.",
+      "requirements": [
+        "A fonte pede idade de 18 a 22 anos e ensino médio completo.",
+        "Não ter participado anteriormente como aprendiz, conforme o anúncio.",
+        "Conhecimentos em Google Workspace; informática é um diferencial."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "4 horas por dia",
+      "benefits": [
+        "Vale-transporte",
+        "Educação corporativa",
+        "Cesta de Natal"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "pashal-aprendiz",
+      "title": "Jovem Aprendiz — rotinas administrativas",
+      "company": "Pashal",
+      "original_url": "https://pashal.gupy.io/jobs/12165252?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "rh",
+        "logistica",
+        "comercial"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Apoio aos setores de RH, departamento pessoal, logística e comercial, com atendimento, documentos e planilhas.",
+      "requirements": [
+        "Ensino médio completo.",
+        "Confira a faixa etária e a jornada diretamente com a empresa; não informadas no texto consultado."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Seguro de vida"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "autoglass-aprendiz",
+      "title": "Jovem Aprendiz — atendimento e administração",
+      "company": "Grupo Autoglass",
+      "original_url": "https://autoglassjovemaprendiz.gupy.io/jobs/12693816?jobBoardSource=gupy_public_page",
+      "areas": [
+        "comercial",
+        "administracao"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Formação teórica e prática com apoio ao atendimento, aos vendedores, à organização de documentos e aos relatórios.",
+      "requirements": [
+        "Frequentar do 1º ao 3º ano do ensino médio.",
+        "A descrição informa idade entre 14 e 24 anos e não ter atuado como aprendiz no mesmo CBO.",
+        "O título e a descrição são de aprendizagem, embora a plataforma rotule a vaga como efetiva; confirme o contrato na candidatura."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Vale-refeição ou alimentação",
+        "Plano de saúde",
+        "Educação corporativa"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "cee-178406",
+      "title": "Estágio técnico — Administração e Recursos Humanos",
+      "company": "SEJU — Secretaria de Justiça e Cidadania",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178406",
+      "areas": [
+        "administracao",
+        "rh"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio supervisionado ao RH: arquivos, documentos, atualização de planilhas e registros do setor.",
+      "requirements": [
+        "Cursar Técnico em Administração, do 1º ao 3º ano."
+      ],
+      "salary": "R$ 7,77 por hora",
+      "schedule": "13h às 17h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-28",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "cee-178626",
+      "title": "Estágio — Administração e Logística patrimonial",
+      "company": "FUNSAÚDE — Secretaria da Saúde do Paraná",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178626",
+      "areas": [
+        "administracao",
+        "logistica"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio às aquisições, controles de materiais, inventários e movimentações patrimoniais, com acompanhamento dos processos administrativos.",
+      "requirements": [
+        "Cursar Administração, do 2º ao 8º período."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "12h às 18h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-23",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "cee-177903",
+      "title": "Estágio — Ciências Contábeis",
+      "company": "TECPAR — Instituto de Tecnologia do Paraná",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177903",
+      "areas": [
+        "financeiro"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio ao controle de títulos e vencimentos, registros de cobrança, baixas no sistema e organização de documentos.",
+      "requirements": [
+        "Cursar Ciências Contábeis; a fonte informa do 2º ao 11º período."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "8h às 14h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-23",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "cee-178755",
+      "title": "Estágio — Suporte e Redes de Computadores",
+      "company": "COHAPAR",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178755",
+      "areas": [
+        "tecnologia"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Aprendizado supervisionado em instalação de equipamentos e programas, atendimento inicial aos usuários e controle dos ativos de TI.",
+      "requirements": [
+        "Oferta cadastrada para Tecnologia em Redes de Computadores, do 1º ao 6º período.",
+        "A descrição também menciona graduações correlatas em informática; confirme a elegibilidade.",
+        "Noções de Office ou LibreOffice."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "8h às 12h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-12",
+      "expires_on": "2026-10-12",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "cee-178426",
+      "title": "Estágio — Publicidade e Comunicação",
+      "company": "CELEPAR",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178426",
+      "areas": [
+        "marketing"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio à organização de eventos, ao atendimento e ao planejamento de campanhas.",
+      "requirements": [
+        "Cursar Comunicação Social — Publicidade e Propaganda, do 3º ao 8º período."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "13h às 19h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-09",
+      "expires_on": "2026-10-09",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "cee-177882",
+      "title": "Estágio — Pedagogia",
+      "company": "SEDEF — Secretaria de Desenvolvimento Social e Família",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177882",
+      "areas": [
+        "educacao"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio à elaboração de documentos voltados à garantia de direitos de crianças e adolescentes.",
+      "requirements": [
+        "Cursar licenciatura em Pedagogia, do 2º ao 5º período."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "9h às 15h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-30",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio."
+    },
+    {
+      "id": "sicredi-servicos",
+      "title": "Estágio — Serviços Compartilhados",
+      "company": "Sicredi Integração PR/SC",
+      "original_url": "https://sicredi.gupy.io/jobs/12382343?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "financeiro"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio às operações da cooperativa, com conferência de documentos para abertura de contas, atualização cadastral e organização de registros.",
+      "requirements": [
+        "Cursar Administração, Ciências Contábeis, Economia ou área relacionada ao mercado financeiro.",
+        "Residir em Curitiba.",
+        "Office é um conhecimento desejável."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Vale-alimentação",
+        "Plano de saúde",
+        "Seguro de vida"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-30",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "fertipar-administrativo",
+      "title": "Estágio Administrativo — Compras",
+      "company": "Grupo Fertipar",
+      "original_url": "https://grupofertipar.gupy.io/jobs/12588807?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "logistica"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio a cotações, acompanhamento de pedidos, contratos, inventário, planilhas e indicadores administrativos.",
+      "requirements": [
+        "Cursar Administração, Gestão de Processos ou área correlata.",
+        "Excel básico ou intermediário, organização e comunicação.",
+        "Vivência administrativa ou em compras é diferencial, não requisito obrigatório."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Segunda a sexta, 9h às 16h, com 1 hora de intervalo",
+      "benefits": [
+        "Seguro de vida",
+        "Vale-alimentação",
+        "Vale-transporte",
+        "Refeição no local"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "mrv-engenharia",
+      "title": "Estágio — Engenharia Civil, Produção e Arquitetura",
+      "company": "MRV&CO",
+      "original_url": "https://programadeestagiomrveco.gupy.io/job/eyJqb2JJZCI6MTE5ODM4MTYsInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "areas": [
+        "industria"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Acompanhamento de obras e apoio supervisionado a levantamentos, projetos, relatórios, documentação e qualidade.",
+      "requirements": [
+        "Cursar Engenharia Civil, Arquitetura, Engenharia de Produção Civil ou de Produção.",
+        "Conhecimentos de Office e disponibilidade para 4 ou 6 horas diárias."
+      ],
+      "salary": "Bolsa: R$ 1.150,00 (4h) ou R$ 1.700,00 (6h)",
+      "schedule": "4 ou 6 horas por dia",
+      "benefits": [
+        "Lanche",
+        "Folga no aniversário",
+        "Capacitação"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "pilar-farmacia",
+      "title": "Estágio — Farmácia Hospitalar (ensino médio)",
+      "company": "Pilar Hospital — Hospital Care",
+      "original_url": "https://pilarhospital.gupy.io/jobs/9172371?jobBoardSource=gupy_portal",
+      "areas": [
+        "saude"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio à equipe da farmácia hospitalar na organização de materiais, separação de kits, controle de validade e reposição de estoque.",
+      "requirements": [
+        "Cursar ensino médio regular ou técnico.",
+        "Interesse em saúde, atenção aos detalhes e disposição para aprender.",
+        "Técnico em Farmácia e vivência anterior são diferenciais, não obrigatórios."
+      ],
+      "salary": "Bolsa de R$ 750,00",
+      "schedule": "Segunda a sexta, 13h às 19h",
+      "benefits": [
+        "Vale-transporte"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": "2026-10-30",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "positivo-pedagogia",
+      "title": "Estágio — Artes/Pedagogia (Anos Finais)",
+      "company": "Grupo Positivo",
+      "original_url": "https://positivo.gupy.io/jobs/11576904?jobBoardSource=gupy_public_page",
+      "areas": [
+        "educacao"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio aos professores e aos alunos na rotina escolar, nas atividades pedagógicas e na organização dos materiais de aprendizagem.",
+      "requirements": [
+        "Cursar Pedagogia ou Artes.",
+        "Conhecimento de inglês.",
+        "Experiência em colégios e certificação de inglês são diferenciais.",
+        "Unidade na Cidade Industrial de Curitiba."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "10h05 às 16h05",
+      "benefits": [
+        "Vale-transporte",
+        "Seguro de vida"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "destro-logistica",
+      "title": "Auxiliar de Logística — sem experiência",
+      "company": "Destro Macro",
+      "original_url": "https://vagas.destromacro.com.br/vagas/auxiliar-de-logistica",
+      "areas": [
+        "logistica"
+      ],
+      "contract_type": "clt",
+      "contract": "CLT",
+      "entry_level": true,
+      "description": "Recebimento, separação e movimentação de mercadorias, organização do estoque e apoio a inventários e carregamentos.",
+      "requirements": [
+        "Ensino fundamental completo.",
+        "Não exige experiência.",
+        "Há opções de turno diurno e noturno. Local: Tatuquara, Curitiba."
+      ],
+      "salary": "R$ 2.600,00 a R$ 2.700,00: média informada, incluindo salário e produtividade",
+      "schedule": "Turno diurno ou noturno; confirmar jornada",
+      "benefits": [
+        "Vale-transporte",
+        "Refeitório",
+        "Plano odontológico",
+        "Cesta básica por assiduidade"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Destro — Trabalhe conosco",
+      "access_note": "Descrição pública. A página da empresa orienta envio de currículo em PDF por e-mail ou WhatsApp."
+    },
+    {
+      "id": "apg-administrativo",
+      "title": "Auxiliar Administrativo — apoio escolar",
+      "company": "APG GOV",
+      "original_url": "https://apg-gov.gupy.io/jobs/10670487?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "comercial",
+        "educacao"
+      ],
+      "contract_type": "clt",
+      "contract": "CLT",
+      "entry_level": true,
+      "description": "Apoio às matrículas, conferência de documentos acadêmicos, organização de arquivos e recepção de alunos e visitantes.",
+      "requirements": [
+        "Ensino médio completo e conhecimentos de Office.",
+        "Trabalho em equipe; a lista de requisitos não exige experiência prévia.",
+        "Confira na fonte os documentos e as regras de contratação."
+      ],
+      "salary": "R$ 1.771,49",
+      "schedule": "40 horas semanais, de segunda a sexta",
+      "benefits": [
+        "Benefício de R$ 29,00 por dia, com desconto de 20% em folha, conforme a fonte"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2026-10-22",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy."
+    },
+    {
+      "id": "bp-infra-estagio",
+      "title": "Estagiário de T.I — Infraestrutura",
+      "company": "Bellinati Perez",
+      "source": "Gupy",
+      "original_url": "https://bellinatiperez.gupy.io/jobs/12467350",
+      "areas": [
+        "tecnologia"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio a chamados simples, atendimento a usuários e documentação de atividades de infraestrutura.",
+      "requirements": [
+        "Cursando técnico ou graduação em TI ou área correlata.",
+        "Conhecimentos básicos de computadores, Windows e Office."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Segunda a sexta, das 8h às 14h",
+      "benefits": [
+        "Vale-transporte",
+        "Folga de aniversário"
+      ],
+      "status": "published",
+      "checked_on": "2026-10-28",
+      "review_by": "2026-11-04",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Centro de Curitiba/PR · Presencial",
+      "access_note": "Anúncio público com candidatura disponível na consulta; cadastro na Gupy para se candidatar."
+    }
+  ],
+  "courses": [
+    {
+      "id": "fb-python",
+      "title": "Linguagem de Programação Python — Básico",
+      "original_url": "https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "tecnologia"
+      ],
+      "duration": "18 horas",
+      "description": "Introdução à lógica, variáveis, estruturas de decisão e funções, com exercícios de programação em Python.",
+      "requirements": [
+        "Nível iniciante; idade mínima de 16 anos.",
+        "Prazo de conclusão: 60 dias após a matrícula."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-excel",
+      "title": "Microsoft Excel 2016 — Básico",
+      "original_url": "https://www.ev.org.br/cursos/microsoft-excel-2016-basico",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "administracao",
+        "financeiro",
+        "logistica",
+        "rh"
+      ],
+      "duration": "15 horas",
+      "description": "Fundamentos de planilhas, fórmulas, tabelas e gráficos para organizar informações no trabalho.",
+      "requirements": [
+        "Idade mínima de 14 anos; sem conhecimento prévio exigido.",
+        "Prazo de conclusão: 60 dias após a matrícula."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-atendimento",
+      "title": "Atendimento ao Público",
+      "original_url": "https://www.ev.org.br/cursos/atendimento-ao-publico",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "comercial",
+        "administracao",
+        "saude"
+      ],
+      "duration": "10 horas",
+      "description": "Escuta e comunicação para atendimento presencial, por telefone ou pela internet. Útil também à recepção de clínicas.",
+      "requirements": [
+        "Idade mínima de 16 anos; sem pré-requisitos.",
+        "Prazo de conclusão: 60 dias.",
+        "Capacitação em atendimento; não habilita para atividades clínicas."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-contabilidade",
+      "title": "Contabilidade Empresarial",
+      "original_url": "https://www.ev.org.br/cursos/Contabilidade-Empresarial",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "financeiro"
+      ],
+      "duration": "10 horas",
+      "description": "Conceitos contábeis, balanço patrimonial e demonstrações de resultados para compreender os registros de uma empresa.",
+      "requirements": [
+        "Idade mínima de 16 anos; prazo de 60 dias.",
+        "A instituição classifica o curso como avançado, embora apresente noções básicas; comece por Excel se precisar de uma introdução mais leve."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-educacao",
+      "title": "Educação Inclusiva",
+      "original_url": "https://www.ev.org.br/cursos/educacao-inclusiva",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "educacao"
+      ],
+      "duration": "20 horas",
+      "description": "Fundamentos de inclusão e educação especial, com recursos e estratégias para apoiar a aprendizagem de diferentes estudantes.",
+      "requirements": [
+        "Idade mínima de 18 anos; sem pré-requisitos.",
+        "Prazo de conclusão: 60 dias.",
+        "Curso livre de aperfeiçoamento; não substitui licenciatura."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-ia-educadores",
+      "title": "Inteligência Artificial para Educadores",
+      "original_url": "https://www.ev.org.br/cursos/iaeduc",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "areas": [
+        "educacao"
+      ],
+      "duration": "4 horas",
+      "description": "Introdução às aplicações de IA no planejamento de aulas e na criação de atividades educacionais.",
+      "requirements": [
+        "Idade mínima de 16 anos; prazo de 60 dias.",
+        "Recomenda-se cursar previamente FluêncIA — Inteligência Artificial."
+      ],
+      "certificate": "Certificado de conclusão após aprovação na avaliação final, com aproveitamento mínimo de 70%.",
+      "certificate_source": "https://www.ev.org.br/cursos/iaeduc",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "evg-logistica",
+      "title": "Estratégias de Logística na Administração Pública",
+      "original_url": "https://www.escolavirtual.gov.br/curso/435/governoes",
+      "institution": "EV.G — Escola Virtual de Governo / Enap",
+      "source": "EV.G — Escola Virtual de Governo / Enap",
+      "areas": [
+        "logistica",
+        "administracao"
+      ],
+      "duration": "20 horas",
+      "description": "Noções de suprimentos, almoxarifado, estoque, distribuição e patrimônio, com exemplos da administração pública.",
+      "requirements": [
+        "Aberto a qualquer pessoa interessada.",
+        "Prazo de conclusão: 30 dias."
+      ],
+      "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+      "certificate_source": "https://www.escolavirtual.gov.br/curso/435/governoes",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrições contínuas; início imediato após cadastro.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "evg-pessoas",
+      "title": "Gestão de Pessoas",
+      "original_url": "https://www.escolavirtual.gov.br/curso/1338/",
+      "institution": "EV.G — Escola Virtual de Governo / Enap",
+      "source": "EV.G — Escola Virtual de Governo / Enap",
+      "areas": [
+        "rh"
+      ],
+      "duration": "20 horas",
+      "description": "Panorama dos processos de RH: entrada, desenvolvimento, acompanhamento, remuneração e permanência das pessoas nas organizações.",
+      "requirements": [
+        "Aberto a qualquer pessoa interessada; conteúdo do TRT da 2ª Região.",
+        "Prazo de conclusão: 30 dias."
+      ],
+      "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+      "certificate_source": "https://www.escolavirtual.gov.br/curso/1338/",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrições contínuas; início imediato após cadastro.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "evg-paciente",
+      "title": "Segurança do Paciente e Qualidade em Serviços de Saúde",
+      "original_url": "https://www.escolavirtual.gov.br/curso/236/governoes",
+      "institution": "EV.G — Escola Virtual de Governo / Enap",
+      "source": "EV.G — Escola Virtual de Governo / Enap",
+      "areas": [
+        "saude"
+      ],
+      "duration": "100 horas",
+      "description": "Conteúdo da Anvisa sobre cultura de segurança, identificação de pacientes, prevenção de incidentes e qualidade na assistência.",
+      "requirements": [
+        "Aberto a qualquer interessado, com conteúdo voltado a serviços de saúde.",
+        "Prazo de conclusão: 90 dias.",
+        "Curso livre; não substitui formação profissional nem autoriza procedimentos clínicos."
+      ],
+      "certificate": "Certificado gratuito da Enap após cumprir os critérios de aprovação do curso no ambiente de aprendizagem.",
+      "certificate_source": "https://www.escolavirtual.gov.br/curso/236/governoes",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrições contínuas; início imediato após cadastro.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "sebrae-marketing",
+      "title": "Marketing digital para sua empresa: primeiros passos",
+      "original_url": "https://loja.sebrae.com.br/marketing-digital-para-sua-empresa-primeiros-passos-1-372000031607",
+      "institution": "Sebrae",
+      "source": "Sebrae",
+      "areas": [
+        "marketing",
+        "comercial"
+      ],
+      "duration": "9 horas",
+      "description": "Fundamentos de marketing digital, públicos, canais, planejamento de conteúdo e comunicação para vendas.",
+      "requirements": [
+        "Destinado a pessoas físicas, candidatos a empreendedores e MEI.",
+        "Confira o prazo de conclusão na matrícula; a oferta atual tem 9 horas."
+      ],
+      "certificate": "Certificado digital de participação, emitido na área do aluno após concluir o curso.",
+      "certificate_source": "https://sebrae.com.br/sites/PortalSebrae/cursosonline/marketing-digital-para-sua-empresa-primeiros-passos%2C5497125576a4e710VgnVCM100000d701210aRCRD",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Inscrição online na instituição; confira as condições ao se matricular.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "senai-energia",
+      "title": "Desvendando a Geração, Transmissão e Distribuição de Energia",
+      "original_url": "https://www.sp.senai.br/curso/desvendando-a-geracao-transmissao-e-distribuicao-de-energia/109935",
+      "institution": "SENAI-SP — Educação Online",
+      "source": "SENAI-SP — Educação Online",
+      "areas": [
+        "industria"
+      ],
+      "duration": "20 horas",
+      "description": "Iniciação aos processos do setor elétrico, fontes de energia, redes, sustentabilidade e segurança.",
+      "requirements": [
+        "Escolha a oferta SENAI ONLINE na página do curso.",
+        "Prazo informado pelo SENAI Online: 21 dias após a inscrição.",
+        "Confira os requisitos de idade e escolaridade na matrícula. Curso introdutório; não equivale a habilitação técnica."
+      ],
+      "certificate": "Certificado gratuito no ambiente de aprendizagem após concluir as atividades com aproveitamento mínimo de 50%, conforme o FAQ do SENAI Online.",
+      "certificate_source": "https://www.sp.senai.br/unidade/online/perguntas-frequentes",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Curso e certificado gratuitos",
+      "availability": "Oferta online com inscrição na página; selecione SENAI ONLINE.",
+      "status": "published",
+      "checked_on": "2026-10-08",
+      "review_by": "2027-01-06",
+      "expires_on": null,
+      "access_note": "É necessário cadastro na própria instituição para estudar e emitir o certificado."
+    },
+    {
+      "id": "fb-hardware",
+      "title": "Fundamentos de TI: Hardware e Software",
+      "institution": "Fundação Bradesco — Escola Virtual",
+      "source": "Fundação Bradesco — Escola Virtual",
+      "original_url": "https://www.ev.org.br/cursos/fundamentos-de-ti-hardware-e-software",
+      "areas": [
+        "tecnologia"
+      ],
+      "duration": "7 horas",
+      "description": "Introdução a componentes de computadores, sistemas operacionais e segurança da informação, útil para quem inicia em suporte.",
+      "requirements": [
+        "Idade mínima de 14 anos; sem pré-requisitos de conhecimento.",
+        "Prazo para concluir: 60 dias após inscrição."
+      ],
+      "certificate": "Certificado digital para aprovados, conforme avaliação e condições da instituição.",
+      "certificate_source": "https://www.ev.org.br/cursos/fundamentos-de-ti-hardware-e-software",
+      "certificate_cost": "Gratuito",
+      "course_type": "livre",
+      "modality": "Online",
+      "free": true,
+      "price": "Gratuito",
+      "availability": "Matrícula online na instituição.",
+      "status": "published",
+      "checked_on": "2026-10-28",
+      "review_by": "2027-01-26",
+      "expires_on": null,
+      "access_note": "Exige cadastro na Escola Virtual. Confira os termos e requisitos antes de se inscrever."
+    }
+  ]
+}

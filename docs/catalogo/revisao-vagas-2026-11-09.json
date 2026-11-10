@@ -1,0 +1,209 @@
+{
+  "reviewed_at": "2026-11-09T23:47:08.142905-03:00",
+  "old_records": 17,
+  "old_open": 8,
+  "old_closed": 8,
+  "old_unavailable": 1,
+  "new_open": 5,
+  "published_total": 13,
+  "items": [
+    {
+      "id": "magnum-aprendiz",
+      "url": "https://magnumtires.gupy.io/job/eyJqb2JJZCI6MTI2MTE1NjksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "verified_at": "2026-11-09T23:41:26.877900-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-13.",
+      "expires_on": "2026-11-13"
+    },
+    {
+      "id": "pashal-aprendiz",
+      "url": "https://pashal.gupy.io/jobs/12165252?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:26.877804-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2027-02-01.",
+      "expires_on": "2027-02-01"
+    },
+    {
+      "id": "autoglass-aprendiz",
+      "url": "https://autoglassjovemaprendiz.gupy.io/jobs/12693816?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:26.877727-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-30.",
+      "expires_on": "2026-11-30"
+    },
+    {
+      "id": "cee-178406",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178406",
+      "verified_at": "2026-11-09T23:41:26.877158-03:00",
+      "http_status": 200,
+      "result": "unverified",
+      "evidence": "A consulta direta retornou “Vaga não encontrada”; ocultada sem presumir prorrogação nem data de encerramento.",
+      "expires_on": "2026-10-28"
+    },
+    {
+      "id": "cee-178626",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178626",
+      "verified_at": "2026-11-09T23:41:27.190402-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Período da oferta: 30/10/2026 a 29/11/2026; Curitiba/PR; formulário de candidatura disponível.",
+      "expires_on": "2026-11-29"
+    },
+    {
+      "id": "cee-177903",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177903",
+      "verified_at": "2026-11-09T23:41:27.327643-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: prazo oficial 2026-10-23.",
+      "expires_on": "2026-10-23"
+    },
+    {
+      "id": "cee-178755",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178755",
+      "verified_at": "2026-11-09T23:41:27.552831-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: prazo oficial 2026-10-30.",
+      "expires_on": "2026-10-30"
+    },
+    {
+      "id": "cee-178426",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178426",
+      "verified_at": "2026-11-09T23:41:27.675283-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: prazo oficial 2026-10-09.",
+      "expires_on": "2026-10-09"
+    },
+    {
+      "id": "cee-177882",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=177882",
+      "verified_at": "2026-11-09T23:41:27.969850-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: prazo oficial 2026-10-30.",
+      "expires_on": "2026-10-30"
+    },
+    {
+      "id": "sicredi-servicos",
+      "url": "https://sicredi.gupy.io/jobs/12382343?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:28.006722-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-19.",
+      "expires_on": "2026-11-19"
+    },
+    {
+      "id": "fertipar-administrativo",
+      "url": "https://grupofertipar.gupy.io/jobs/12588807?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:28.041224-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: aviso de candidaturas encerradas e prazo oficial 2026-10-26.",
+      "expires_on": "2026-10-26"
+    },
+    {
+      "id": "mrv-engenharia",
+      "url": "https://programadeestagiomrveco.gupy.io/job/eyJqb2JJZCI6MTE5ODM4MTYsInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "verified_at": "2026-11-09T23:41:28.143905-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: aviso de candidaturas encerradas e prazo oficial 2026-09-30.",
+      "expires_on": "2026-09-30"
+    },
+    {
+      "id": "pilar-farmacia",
+      "url": "https://pilarhospital.gupy.io/jobs/9172371?jobBoardSource=gupy_portal",
+      "verified_at": "2026-11-09T23:41:28.144457-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: aviso de candidaturas encerradas e prazo oficial 2026-10-30.",
+      "expires_on": "2026-10-30"
+    },
+    {
+      "id": "positivo-pedagogia",
+      "url": "https://positivo.gupy.io/jobs/11576904?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:28.865163-03:00",
+      "http_status": 200,
+      "result": "closed",
+      "evidence": "Oferta encerrada: aviso de candidaturas encerradas e prazo oficial 2026-09-10.",
+      "expires_on": "2026-09-10"
+    },
+    {
+      "id": "destro-logistica",
+      "url": "https://vagas.destromacro.com.br/vagas/auxiliar-de-logistica",
+      "verified_at": "2026-11-09T23:41:28.988585-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Página individual em Curitiba/PR, contrato CLT e recebimento de currículos disponível; sem experiência exigida.",
+      "expires_on": null
+    },
+    {
+      "id": "apg-administrativo",
+      "url": "https://apg-gov.gupy.io/jobs/10670487?jobBoardSource=gupy_public_page",
+      "verified_at": "2026-11-09T23:41:29.068875-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-30.",
+      "expires_on": "2026-11-30"
+    },
+    {
+      "id": "bp-infra-estagio",
+      "url": "https://bellinatiperez.gupy.io/jobs/12467350",
+      "verified_at": "2026-11-09T23:41:29.077141-03:00",
+      "http_status": 200,
+      "result": "open",
+      "evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento.",
+      "expires_on": null
+    },
+    {
+      "id": "destro-ajudante-motorista",
+      "url": "https://vagas.destromacro.com.br/vagas/ajudante-de-motorista",
+      "verified_at": "2026-11-09T23:44:41.357031-03:00",
+      "http_status": 200,
+      "result": "open_new",
+      "evidence": "Página individual de Curitiba, contrato e requisitos de entrada conferidos; recebimento de currículos disponível.",
+      "expires_on": null
+    },
+    {
+      "id": "sicredi-infra-12824570",
+      "url": "https://sicredi.gupy.io/jobs/12824570",
+      "verified_at": "2026-11-09T23:44:41.357537-03:00",
+      "http_status": 200,
+      "result": "open_new",
+      "evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "expires_on": "2026-12-11"
+    },
+    {
+      "id": "unicred-comercial-12842069",
+      "url": "https://unicredbr.gupy.io/jobs/12842069",
+      "verified_at": "2026-11-09T23:44:41.357210-03:00",
+      "http_status": 200,
+      "result": "open_new",
+      "evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "expires_on": "2027-01-04"
+    },
+    {
+      "id": "pilar-comunicacao-12788794",
+      "url": "https://pilarhospital.gupy.io/jobs/12788794",
+      "verified_at": "2026-11-09T23:44:41.356167-03:00",
+      "http_status": 200,
+      "result": "open_new",
+      "evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "expires_on": null
+    },
+    {
+      "id": "plaenge-produto-12770857",
+      "url": "https://grupoplaenge.gupy.io/jobs/12770857",
+      "verified_at": "2026-11-09T23:44:42.225716-03:00",
+      "http_status": 200,
+      "result": "open_new",
+      "evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "expires_on": "2026-12-07"
+    }
+  ]
+}
