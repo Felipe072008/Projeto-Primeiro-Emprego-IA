@@ -1,4 +1,4 @@
-"""Curated public opportunities with explicit provenance and interest matching."""
+"""Seleciona vagas e cursos revisados conforme as áreas de interesse do perfil."""
 import json
 import re
 import unicodedata
@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
-CAREER_OPTIONS = Path(__file__).resolve().parent / "static" / "occupations.json"
+CAREER_OPTIONS = Path(__file__).resolve().parent / "static" / "areas_profissionais.json"
 AREAS = {
     "tecnologia": ("Tecnologia", ("tecnologia", "informatica", "sistemas", "programacao", "desenvolvimento", "desenvolvedor", "software", "ti", "python", "dados", "computacao", "programador", "suporte tecnico")),
     "administracao": ("Administração", ("administracao", "administrativo", "administrativa", "escritorio", "secretariado", "gestao empresarial", "adm")),
@@ -53,6 +53,7 @@ def detect_areas(value):
     return {key for key, (_, aliases) in AREAS.items() if any(re.search(r"\b" + re.escape(alias) + r"\b", value) for alias in aliases)}
 
 
+# Datas vencidas ocultam ofertas para evitar apresentar oportunidades sem revisão.
 def load_catalog(kind, today=None):
     today = today or date.today()
     path = DATA_DIR / f"{kind}.json"

@@ -1,5 +1,4 @@
-# teste commit e branch
-"""PDF validation, extraction and a readable, single-column resume layout."""
+"""Valida PDFs enviados e monta o documento do currículo com layout consistente."""
 import io
 import re
 from pathlib import Path
@@ -77,6 +76,7 @@ def resume_contact_text(contact):
     return ('E-mail' if '@' in contact else 'Localização'), contact
 
 
+# Centraliza a formatação para que todas as versões tenham a mesma apresentação.
 def build_resume_pdf(data):
     import reportlab
     from reportlab.lib import colors

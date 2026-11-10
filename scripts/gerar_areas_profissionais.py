@@ -1,4 +1,4 @@
-"""Build the curated first-job choices used by the profile and catalog."""
+"""Gera as opções de áreas profissionais usadas no cadastro do perfil."""
 import json
 from pathlib import Path
 
@@ -25,7 +25,7 @@ def build():
         for key, label, role, aliases in AREAS:
             title = f"{prefix} — {label}" if contract == "estagio" else f"CLT — {role}"
             options.append({"code": f"{contract}-{key}", "title": title, "areas": [key], "contract_type": contract, "aliases": [label, *aliases]})
-    path = Path(__file__).resolve().parents[1] / "static" / "occupations.json"
+    path = Path(__file__).resolve().parents[1] / "static" / "areas_profissionais.json"
     path.write_text(json.dumps({"source": "Seleção de áreas de entrada em Curitiba; fontes e critérios em docs/pesquisa-oportunidades.md", "checked_on": "2026-10-08", "occupations": options}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"{len(options)} opções em {len(AREAS)} áreas.")
 

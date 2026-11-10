@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='redesign.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos_base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" />
   </head>
   <body>
     <div class="noise"></div>
@@ -250,7 +250,8 @@
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='profile.js') }}"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <!-- Os editores de perfil precisam estar definidos antes da inicialização da interface. -->
+    <script src="{{ url_for('static', filename='editor_perfil.js') }}"></script>
+    <script src="{{ url_for('static', filename='interface_site.js') }}"></script>
   </body>
 </html>
