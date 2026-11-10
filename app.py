@@ -439,7 +439,7 @@ def jobs():
 @app.get("/api/courses")
 @login_required
 def courses():
-    return jsonify(recommendations("courses", get_profile(current_user_id()), show_all=request.args.get("all") == "1", query=request.args.get("q", "")[:120], course_type=request.args.get("type", ""), free_only=request.args.get("free") == "1", today=now_sp().date()))
+    return jsonify(recommendations("courses", get_profile(current_user_id()), show_all=request.args.get("all") == "1", query=request.args.get("q", "")[:120], course_type=request.args.get("type", ""), free_only=request.args.get("free") == "1", certificate_free=request.args.get("certificate_free") == "1", today=now_sp().date()))
 
 
 @app.post("/api/advice")

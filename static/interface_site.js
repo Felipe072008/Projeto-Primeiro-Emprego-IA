@@ -287,28 +287,88 @@ function profileText(value, fallback = "Não informado") {
 
 const catalogRows = {jobs: [], courses: []};
 const catalogVersions = {jobs: 0, courses: 0};
-function catalogDate(value) { return value ? value.split("-").reverse().join("/") : "Não informada"; }
+function catalogDate(value) {
+  if (!value) return 'Não informada';
+  const day = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  return day ? `${day[3]}/${day[2]}/${day[1]}` : formatTime(value) || 'Não informada';
+}
+function catalogLink(url, label) {
+  // URLs da API nunca devem virar protocolos executáveis no navegador.
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'https:' && !parsed.username && !parsed.password) {
+      return `<a href="${escapeHtml(parsed.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>`;
+    }
+  } catch {}
+  return '<span class="muted">Link oficial não informado</span>';
+}
+function courseConditions(item) {
+  return [
+    ['Inscrição', ({open:'Inscrições abertas', closed:'Inscrições encerradas', unknown:'Inscrição não confirmada'})[item.enrollment_status] || 'Inscrição não confirmada'],
+    ['Acesso', ({free_full:'Conteúdo completo gratuito', paid:'Conteúdo pago', preview:'Somente prévia gratuita', trial:'Teste temporário', financial_aid:'Depende de auxílio financeiro'})[item.access_status] || 'Gratuidade integral não informada'],
+    ['Certificado', ({free:'Certificado gratuito', paid:'Certificado pago'})[item.certificate_status] || 'Custo do certificado não informado'],
+  ];
+}
+function itemVerification(item) {
+  // checked_on é a consulta manual antiga; tentativa de sincronização nunca verifica uma oferta.
+  return item.last_verified_at ? `Verificado em ${catalogDate(item.last_verified_at)}` :
+    item.checked_on ? `Consulta manual em ${catalogDate(item.checked_on)}` : 'Verificação não informada';
+}
+function catalogEmptyMessage(data, kind, filters) {
+  if (data.data_status === 'stale') return 'Os dados do catálogo estão desatualizados. As ofertas fora do prazo de revisão estão ocultas. Consulte também as fontes oficiais abaixo.';
+  if (data.result_status === 'no_data' || data.catalog_status === 'unavailable') return 'Ainda não há ofertas com revisão válida neste catálogo. Consulte também as fontes oficiais abaixo.';
+  return `${kind === 'courses' && filters.get('type') === 'tecnico' ? 'Não há curso técnico para estes filtros.' : 'Nenhum resultado corresponde aos filtros aplicados.'} ${filters.get('all') !== '1' ? 'Você pode explorar Todas as áreas. ' : ''}Use Limpar filtros para reiniciar a busca.`;
+}
+function renderCatalogSources(kind, data) {
+  const classification = {verified_sync:'Sincronização verificada', official_link:'Somente link oficial', pending:'Integração pendente'};
+  const syncStatus = {never:'Sem tentativa de atualização', success:'Último lote validado', error:'Falha na atualização', partial:'Resposta incompleta', blocked:'Integração bloqueada'};
+  const sources = data.sources || [];
+  const failed = sources.filter(source => ['error', 'partial'].includes(source.sync_status));
+  $(`#${kind}-status`).textContent = [
+    data.data_status === 'stale' ? 'Dados desatualizados: ofertas vencidas não são exibidas.' : '',
+    data.stale_count > 0 ? `${data.stale_count} registro(s) fora do prazo de revisão oculto(s).` : '',
+    failed.length ? `Atualização com falha ou incompleta: ${failed.map(source => source.name).join(', ')}. A tentativa não confirma as ofertas; os últimos dados válidos podem continuar disponíveis até o prazo de revisão.` : '',
+  ].filter(Boolean).join(' ');
+  $(`#${kind}-sources`).innerHTML = sources.length ? `<details class="catalog-source-status"><summary>Atualização das fontes</summary><p class="muted">A última tentativa pode falhar. Apenas um lote aceito altera a última sincronização bem-sucedida; a verificação de cada oferta aparece no cartão.</p><ul>${sources.map(source => `<li><strong>${escapeHtml(source.name)}</strong> · ${escapeHtml(classification[source.classification] || 'Integração pendente')}<p>${escapeHtml(syncStatus[source.sync_status] || 'Estado não informado')}.</p><p>Última tentativa: ${catalogDate(source.last_attempt_at)}.<br>Última sincronização bem-sucedida: ${source.last_success_at ? catalogDate(source.last_success_at) : 'Nenhuma registrada'}.</p></li>`).join('')}</ul></details>` : '';
+  const links = (data.external_links || []).filter(link => link.classification !== 'verified_sync');
+  $(`#${kind}-external`).innerHTML = links.length ? `<h2>Consulte também</h2><p class="muted">Links externos para consulta nas fontes oficiais. Não são ofertas verificadas e não entram na contagem do catálogo.</p><ul class="catalog-external-links">${links.map(link => `<li>${catalogLink(link.url, link.name)}<span>${escapeHtml(classification[link.classification] || 'Integração pendente')}</span></li>`).join('')}</ul>` : '';
+}
 async function loadCatalog(kind) {
   const version = ++catalogVersions[kind];
   const target = $(`#${kind}-list`);
+  catalogRows[kind] = [];
+  target.setAttribute('aria-busy', 'true');
   target.innerHTML = '<p role="status">Carregando oportunidades…</p>';
+  $(`#${kind}-context`).textContent = '';
+  $(`#${kind}-status`).textContent = '';
+  $(`#${kind}-sources`).innerHTML = '';
+  $(`#${kind}-external`).innerHTML = '';
   const filters = new URLSearchParams(new FormData($(`#${kind}-filters`)));
   try { sessionStorage.setItem('filters-'+kind, filters.toString()); } catch {}
   try {
     const data = await api(`/api/${kind}?${filters}`);
     if (version !== catalogVersions[kind]) return;
+    if (!data || !Array.isArray(data[kind])) throw new Error('Resposta do catálogo inválida.');
     catalogRows[kind] = data[kind];
-    $(`#${kind}-context`).textContent = `${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice}`;
+    $(`#${kind}-context`).textContent = `${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas?.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice || ''}`;
+    renderCatalogSources(kind, data);
     target.innerHTML = data[kind].length ? data[kind].map((item, index) => `
       <article class="job-card catalog-card">
-        <div class="job-card-main"><p class="job-source">${escapeHtml(item.company || item.institution)}${(item.company || item.institution) !== item.source ? ` · Fonte: ${escapeHtml(item.source)}` : ""}</p>
-        <span class="match-badge ${item.match}">${item.match === 'direct' ? 'Sua área' : item.match === 'related' ? 'Área correlata' : 'Para explorar'}</span>
-        <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.location || item.modality)}</p>
-        <p>${escapeHtml(item.description)}</p><p class="match-reason">${escapeHtml(item.match_reason)}</p>
-        <div class="job-meta"><span>${escapeHtml(kind === 'jobs' ? item.contract : item.duration)}</span><span>${escapeHtml(item.salary || item.price || 'Consultar condições')}</span>${kind === 'courses' ? '<span>Com certificado</span>' : ''}<span>Consultado em ${catalogDate(item.checked_on)}</span></div></div>
-        <button class="button button--outline" data-catalog="${kind}" data-index="${index}">Ver detalhes</button>
-      </article>`).join('') : `<div class="empty-card">${data.catalog_status === 'unavailable' ? (kind === 'jobs' ? 'Ainda não há vagas com revisão válida em Curitiba/PR. Os anúncios antigos permanecem ocultos até nova verificação. Consulte as fontes abaixo.' : 'O catálogo de cursos aguarda revisão. Consulte novamente mais tarde.') : (kind === 'courses' && filters.get('type') === 'tecnico' ? 'Não há curso técnico cadastrado para estes filtros.' : 'Nenhum resultado corresponde aos filtros aplicados.')} ${data.catalog_status !== 'unavailable' && filters.get('all') !== '1' ? 'Você pode explorar Todas as áreas.' : ''} Use Limpar filtros para reiniciar a busca.</div>`;
-  } catch (error) { if (version === catalogVersions[kind]) { $(`#${kind}-context`).textContent='Falha ao carregar. Seus filtros foram mantidos.'; target.innerHTML = `<div class="empty-card" role="alert">${escapeHtml(error.message)} Use Buscar para tentar novamente.</div>`; } }
+        <div class="job-card-main"><p class="job-source">${escapeHtml(item.company || item.institution || 'Não informado')} · Fonte: ${escapeHtml(item.source || 'Não informada')}</p>
+        <span class="match-badge ${['direct','related'].includes(item.match) ? item.match : 'explore'}">${item.match === 'direct' ? 'Sua área' : item.match === 'related' ? 'Área correlata' : 'Para explorar'}</span>
+        <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.location || item.modality || 'Não informado')}</p>
+        <p>${escapeHtml(item.description || '')}</p><p class="match-reason">${escapeHtml(item.match_reason || '')}</p>
+        <div class="job-meta"><span>${escapeHtml((kind === 'jobs' ? item.contract : item.duration) || 'Não informado')}</span><span>${escapeHtml((kind === 'jobs' ? item.salary : item.price) || 'Valor não informado')}</span>${kind === 'courses' ? courseConditions(item).map(([,value]) => `<span>${escapeHtml(value)}</span>`).join('') : `<span>${item.availability_status === 'open' ? 'Oferta aberta na última verificação' : 'Disponibilidade não confirmada'}</span>`}<span>${escapeHtml(itemVerification(item))}</span></div>
+        <p class="catalog-official-link">${catalogLink(item.original_url, kind === 'jobs' ? 'Ver vaga na fonte oficial' : 'Ver curso na fonte oficial')}</p></div>
+        <button class="button button--outline" data-catalog="${kind}" data-index="${index}" aria-label="Ver detalhes: ${escapeHtml(item.title)}">Ver detalhes</button>
+      </article>`).join('') : `<div class="empty-card">${catalogEmptyMessage(data, kind, filters)}</div>`;
+  } catch (error) {
+    if (version === catalogVersions[kind]) {
+      catalogRows[kind] = [];
+      $(`#${kind}-context`).textContent = 'Falha ao carregar. Seus filtros foram mantidos.';
+      target.innerHTML = `<div class="empty-card" role="alert">${escapeHtml(error.message)} Use Buscar para tentar novamente.</div>`;
+    }
+  } finally { if (version === catalogVersions[kind]) target.setAttribute('aria-busy', 'false'); }
 }
 async function loadAIStatus() {
   const target = $('#ai-availability');
@@ -325,8 +385,8 @@ function showCatalogDetail(kind, index) {
   $('#preview-modal').classList.remove('return-to-builder');
   $('[data-close-preview].modal-close').setAttribute('aria-label', 'Fechar');
   $('#preview-title').textContent = item.title;
-  const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule], ['Inscrições até', item.expires_on ? catalogDate(item.expires_on) : 'Prazo não informado na fonte']] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ['Custo', item.price], ['Certificado', item.certificate], ['Custo do certificado', item.certificate_cost], ['Turmas', item.availability]];
-  $('#resume-preview').innerHTML = `<article class="listing-detail"><p class="match-reason">${escapeHtml(item.match_reason)}</p><p>${escapeHtml(item.description)}</p><dl>${details.map(([label,value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value || 'Não informado na fonte')}</dd></div>`).join('')}</dl><h3>${kind === 'jobs' ? 'Requisitos e observações' : 'Requisitos e conteúdo'}</h3><ul>${(item.requirements || []).map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>${item.benefits?.length ? `<h3>Benefícios informados</h3><ul>${item.benefits.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>` : ''}<p class="muted">Fonte: ${escapeHtml(item.source)}. Consulta em ${catalogDate(item.checked_on)}. A disponibilidade pode mudar. ${escapeHtml(item.access_note || '')}</p><a class="button button--primary" href="${escapeHtml(item.original_url)}" target="_blank" rel="noopener noreferrer">${kind === 'jobs' ? 'Ver vaga na fonte' : 'Ver curso na instituição'} ↗</a></article>`;
+  const details = kind === 'jobs' ? [['Empresa / recrutamento', item.company], ['Local', item.location], ['Contrato', item.contract], ['Remuneração', item.salary], ['Horário', item.schedule], ['Inscrições até', item.expires_on ? catalogDate(item.expires_on) : 'Prazo não informado na fonte']] : [['Instituição', item.institution], ['Tipo', item.course_type === 'tecnico' ? 'Curso técnico' : 'Curso livre de capacitação'], ['Modalidade', item.modality], ['Duração', item.duration], ...courseConditions(item), ['Condições do certificado', item.certificate], ['Custo do certificado', item.certificate_cost], ['Turmas', item.enrollment_status === 'unknown' ? 'Inscrição não confirmada; confira na instituição.' : item.availability]];
+  $('#resume-preview').innerHTML = `<article class="listing-detail"><p class="match-reason">${escapeHtml(item.match_reason)}</p><p>${escapeHtml(item.description)}</p><dl>${details.map(([label,value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value || 'Não informado na fonte')}</dd></div>`).join('')}</dl><h3>${kind === 'jobs' ? 'Requisitos e observações' : 'Requisitos e conteúdo'}</h3><ul>${(item.requirements || []).map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>${item.benefits?.length ? `<h3>Benefícios informados</h3><ul>${item.benefits.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul>` : ''}<p class="muted">Fonte: ${escapeHtml(item.source)}. ${escapeHtml(itemVerification(item))}. A disponibilidade pode mudar. ${escapeHtml(item.access_note || '')}</p>${catalogLink(item.original_url, kind === 'jobs' ? 'Ver vaga na fonte oficial' : 'Ver curso na fonte oficial')}</article>`;
   openModal('#preview-modal');
 }
 

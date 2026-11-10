@@ -1,0 +1,226 @@
+{
+  "schema_version": 2,
+  "data_status": "stale",
+  "result_status": "no_data",
+  "stale_count": 17,
+  "sources": [
+    {
+      "id": "ciee_pr",
+      "name": "CIEE/PR",
+      "kind": "jobs",
+      "official_url": "https://autoweb.cieepr.org.br/Estudante/vagas-externo",
+      "classification": "official_link",
+      "reason": "Portal oficial confirmado; não foi confirmada API/feed autorizado para reutilizar e redistribuir vagas.",
+      "cost": "Consulta pública; custo de integração não confirmado.",
+      "permission": "Acesso ao portal não comprova autorização para coletar e republicar anúncios.",
+      "available_data": "Portal de vagas e programas de estágio/aprendizagem; candidatura e serviços usam cadastro.",
+      "evidence_urls": [
+        "https://www.cieepr.org.br/",
+        "https://autoweb.cieepr.org.br/Estudante/vagas-externo"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.028662-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Portal oficial confirmado; não foi confirmada API/feed autorizado para reutilizar e redistribuir vagas.",
+      "imported_count": 0
+    },
+    {
+      "id": "emprega_curitiba",
+      "name": "Emprega Curitiba",
+      "kind": "jobs",
+      "official_url": "https://emprega.curitiba.pr.gov.br/",
+      "classification": "official_link",
+      "reason": "Domínio confirmado pela Prefeitura; acesso de pesquisa retornou 403. Não foi encontrada integração autorizada para republicação.",
+      "cost": "Portal gratuito para população, conforme Prefeitura; integração não confirmada.",
+      "permission": "Não herda automaticamente a licença do Portal de Dados Abertos.",
+      "available_data": "Anúncios individuais e candidatura pelo portal; nenhum registro importado.",
+      "evidence_urls": [
+        "https://www.curitiba.pr.gov.br/noticias/confira-as-vagas-de-trabalho-disponiveis-no-site-emprega-curitiba/85486",
+        "https://emprega.curitiba.pr.gov.br/"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.032710-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Domínio confirmado pela Prefeitura; acesso de pesquisa retornou 403. Não foi encontrada integração autorizada para republicação.",
+      "imported_count": 0
+    },
+    {
+      "id": "infojobs",
+      "name": "InfoJobs Brasil",
+      "kind": "jobs",
+      "official_url": "https://www.infojobs.com.br/",
+      "classification": "official_link",
+      "reason": "Aviso legal restringe inclusão de anúncios em outros sites sem autorização prévia por escrito. Nenhuma autorização de integração obtida.",
+      "cost": "Nenhum contrato/API; custo de redistribuição não confirmado.",
+      "permission": "Somente link; não coletar nem redistribuir anúncios.",
+      "available_data": "Busca pública de vagas; nenhum feed autorizado recebido.",
+      "evidence_urls": [
+        "https://www.infojobs.com.br/legal/aviso-legal-para-candidatos__15727.aspx"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.037633-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Aviso legal restringe inclusão de anúncios em outros sites sem autorização prévia por escrito. Nenhuma autorização de integração obtida.",
+      "imported_count": 0
+    },
+    {
+      "id": "catho",
+      "name": "Catho",
+      "kind": "jobs",
+      "official_url": "https://www.catho.com.br/",
+      "classification": "official_link",
+      "reason": "Termos da API pública tratam de anunciar vagas e recrutar; não confirmam acesso livre a todo o catálogo para republicação.",
+      "cost": "Termos citam anúncio sem custo; isso não comprova gratuidade de uma API de agregação.",
+      "permission": "Integração depende de termos próprios; sem autorização para esta finalidade.",
+      "available_data": "Anúncios de vagas; nenhum feed de catálogo autorizado recebido.",
+      "evidence_urls": [
+        "https://assets.catho.com.br/consents-prod/terms/termos-de-uso-api-publica-v1.pdf"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.041655-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Termos da API pública tratam de anunciar vagas e recrutar; não confirmam acesso livre a todo o catálogo para republicação.",
+      "imported_count": 0
+    },
+    {
+      "id": "indeed",
+      "name": "Indeed Brasil",
+      "kind": "jobs",
+      "official_url": "https://br.indeed.com/",
+      "classification": "official_link",
+      "reason": "Termos impõem condições a APIs, armazenamento e redistribuição. Nenhum acesso de agregação autorizado confirmado.",
+      "cost": "Sem contratação; condições/custo de integração não confirmados.",
+      "permission": "Somente link oficial; não usar coleta automática para contornar as condições.",
+      "available_data": "Busca de anúncios; dados de integração não recebidos.",
+      "evidence_urls": [
+        "https://br.indeed.com/legal"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.045327-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Termos impõem condições a APIs, armazenamento e redistribuição. Nenhum acesso de agregação autorizado confirmado.",
+      "imported_count": 0
+    },
+    {
+      "id": "curitiba_estagios",
+      "name": "Prefeitura de Curitiba / IMAP — estágios",
+      "kind": "jobs",
+      "official_url": "https://imap.curitiba.pr.gov.br/portal-de-estagio.html",
+      "classification": "pending",
+      "reason": "Piloto separado do Emprega Curitiba. Documentação publicada é de 2015, não descreve ID ou URL individual; teste HTTPS do serviço falhou por certificado incompatível.",
+      "cost": "Dados abertos sem cobrança; nenhuma contratação.",
+      "permission": "Portal permite reúso com atribuição, hora de acesso e aviso de responsabilidade. Não usar credenciais da documentação nem HTTP sem antes validar o serviço atual.",
+      "available_data": "Documentação descreve órgão, área, turno, escolaridade, setor e endereço; sem ID/link individual documentado. XML do espelho é metadado do conjunto, não lista de vagas.",
+      "evidence_urls": [
+        "https://dadosabertos.curitiba.pr.gov.br/conjuntodado/detalhe?chave=26200d9a-eff9-434c-8858-36b8eb6ebea6",
+        "https://dadosabertos.curitiba.pr.gov.br/informacoes/regrasutilizacao/5",
+        "https://dadosabertos.c3sl.ufpr.br/curitiba/IMAPEstagios/"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.049312-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Piloto separado do Emprega Curitiba. Documentação publicada é de 2015, não descreve ID ou URL individual; teste HTTPS do serviço falhou por certificado incompatível.",
+      "imported_count": 0
+    },
+    {
+      "id": "meu_emprego",
+      "name": "Meu Emprego",
+      "kind": "jobs",
+      "official_url": null,
+      "classification": "pending",
+      "reason": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
+      "cost": "Não confirmado.",
+      "permission": "Não confirmada.",
+      "available_data": "Não confirmados.",
+      "evidence_urls": [],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "blocked",
+      "last_attempt_at": "2026-11-09T22:44:35.053914-03:00",
+      "last_success_at": null,
+      "error_code": "source_pending",
+      "message": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
+      "imported_count": 0
+    }
+  ],
+  "external_links": [
+    {
+      "source_id": "ciee_pr",
+      "name": "CIEE/PR",
+      "url": "https://autoweb.cieepr.org.br/Estudante/vagas-externo",
+      "classification": "official_link",
+      "note": "Portal oficial confirmado; não foi confirmada API/feed autorizado para reutilizar e redistribuir vagas."
+    },
+    {
+      "source_id": "emprega_curitiba",
+      "name": "Emprega Curitiba",
+      "url": "https://emprega.curitiba.pr.gov.br/",
+      "classification": "official_link",
+      "note": "Domínio confirmado pela Prefeitura; acesso de pesquisa retornou 403. Não foi encontrada integração autorizada para republicação."
+    },
+    {
+      "source_id": "infojobs",
+      "name": "InfoJobs Brasil",
+      "url": "https://www.infojobs.com.br/",
+      "classification": "official_link",
+      "note": "Aviso legal restringe inclusão de anúncios em outros sites sem autorização prévia por escrito. Nenhuma autorização de integração obtida."
+    },
+    {
+      "source_id": "catho",
+      "name": "Catho",
+      "url": "https://www.catho.com.br/",
+      "classification": "official_link",
+      "note": "Termos da API pública tratam de anunciar vagas e recrutar; não confirmam acesso livre a todo o catálogo para republicação."
+    },
+    {
+      "source_id": "indeed",
+      "name": "Indeed Brasil",
+      "url": "https://br.indeed.com/",
+      "classification": "official_link",
+      "note": "Termos impõem condições a APIs, armazenamento e redistribuição. Nenhum acesso de agregação autorizado confirmado."
+    },
+    {
+      "source_id": "curitiba_estagios",
+      "name": "Prefeitura de Curitiba / IMAP — estágios",
+      "url": "https://imap.curitiba.pr.gov.br/portal-de-estagio.html",
+      "classification": "pending",
+      "note": "Piloto separado do Emprega Curitiba. Documentação publicada é de 2015, não descreve ID ou URL individual; teste HTTPS do serviço falhou por certificado incompatível."
+    }
+  ],
+  "jobs": [],
+  "interest": "",
+  "recognized_areas": [],
+  "contract_type": null,
+  "contract_types": [],
+  "personalized": false,
+  "total": 0,
+  "catalog_total": 0,
+  "catalog_status": "unavailable",
+  "location": "Curitiba - PR",
+  "notice": "Datas refletem a última verificação válida, não uma tentativa de atualização. Confira disponibilidade e condições na fonte antes de se inscrever."
+}

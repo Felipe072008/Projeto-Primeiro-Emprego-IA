@@ -96,3 +96,14 @@ Os nomes descritivos estão em português, sem acentos para facilitar comandos e
 Para entender o fluxo, comece pelas rotas em `app.py`, siga para o módulo responsável pelo assunto e depois para `interface_site.js` e `editor_perfil.js`. A folha `estilos_interface.css` é carregada depois de `estilos_base.css` e complementa seus estilos. Os testes verificam rotas, validações, seções do perfil, layout dos PDFs e funções da interface.
 
 Os relatórios em `docs/` são registros históricos e podem mencionar os nomes antigos. Ao atualizar outra instalação, leve todos os arquivos renomeados e suas referências juntos; o comando de inicialização continua sendo `python app.py`.
+
+## Backend do catálogo: contrato e rotina de atualização
+
+As rotas de vagas e cursos têm metadados de fontes, estados de validade e filtro
+`certificate_free=1`. Consulte o [contrato para o Front End](docs/catalogo/CONTRATO_FRONTEND.md),
+a [avaliação das fontes](docs/catalogo/FONTES.md) e os [comandos e agendamento](docs/catalogo/OPERACAO.md).
+
+Nenhuma integração externa está habilitada: os bloqueios estão registrados por fonte.
+O motor foi testado com fixtures; isso não comprova sincronização real. A rotina está pronta
+para agendamento posterior, mas nenhuma tarefa local/online foi instalada nem foi feito deploy.
+O catálogo manual anterior mantém suas datas; sua disponibilidade não foi revalidada nesta etapa.
