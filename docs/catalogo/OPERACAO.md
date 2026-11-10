@@ -58,3 +58,13 @@ O motor exige `review_by` explícito e limita a revisão a um ciclo (1 dia para 
 Para isolamento completo inclusive durante o import de `app.py`, aponte `FIRST_JOB_DATABASE`, `FIRST_JOB_UPLOAD_DIR` e `FIRST_JOB_CATALOG_DATABASE` para diretórios temporários antes de executar. Os testes novos usam fixtures sintéticas e não fazem rede. Cobrem lote inicial, repetição, fechamento, lista vazia, erro/parcial, expiração, filtros e estados das rotas. A existência de fixtures aprovadas não autoriza nenhuma fonte externa.
 
 Não executar o script de geração de áreas durante a importação: ele não é um atualizador de ofertas.
+
+## GitHub Actions — diagnóstico preparado em 10/11/2026
+
+O workflow `.github/workflows/catalogo.yml` executa os testes do backend em Python 3.13 e uma consulta diagnóstica. Dispara quando o próprio workflow é enviado ao GitHub e permite execução manual após chegar à branch padrão (`main`). Na execução manual, selecione vagas ou cursos; para cursos, a opção EV.G testa a exportação oficial.
+
+O resultado JSON fica no artefato `diagnostico-catalogo-<run_id>`, retido por sete dias, inclusive quando a fonte falha. A falha produz execução vermelha, sem transformar uma tentativa em sincronização bem-sucedida. Bancos e uploads de testes usam diretórios temporários.
+
+A conta de destino confirmada pelo usuário é `PrimeiroEmpregoIA`. O WSGI visualizado aponta para `/home/PrimeiroEmpregoIA/Projeto-Primeiro-Emprego-IA`, e o domínio é `PrimeiroEmpregoIA.pythonanywhere.com`. O campo Source code do painel mostra outro caminho (`mysite`); conferir os arquivos efetivos antes de qualquer entrega.
+
+Esta etapa não transfere dados para a hospedagem. O registro de adaptadores está vazio e a exportação EV.G respondeu HTTP 200 com HTML da aplicação JavaScript. O agendamento diário/semanal depende de uma importação real autorizada e de entrega transacional validada. A criação de credencial e seu armazenamento em GitHub Secrets foram autorizados pelo usuário, mas ainda precisam ser executados.
