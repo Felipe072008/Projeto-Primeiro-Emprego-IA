@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      FIRST_JOB_DATABASE: ${{ runner.temp }}/usuarios-teste.db
-      FIRST_JOB_UPLOAD_DIR: ${{ runner.temp }}/uploads-teste
-      FIRST_JOB_CATALOG_DATABASE: ${{ runner.temp }}/catalogo-teste.db
+      FIRST_JOB_DATABASE: /tmp/firstjob-usuarios-teste.db
+      FIRST_JOB_UPLOAD_DIR: /tmp/firstjob-uploads-teste
+      FIRST_JOB_CATALOG_DATABASE: /tmp/firstjob-catalogo-teste.db
       CATALOG_KIND: ${{ inputs.kind || 'courses' }}
       PROBE_EVG: ${{ github.event_name == 'push' || inputs.probe_evg }}
     steps:
