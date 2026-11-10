@@ -314,10 +314,36 @@ function itemVerification(item) {
   return item.last_verified_at ? `Verificado em ${catalogDate(item.last_verified_at)}` :
     item.checked_on ? `Consulta manual em ${catalogDate(item.checked_on)}` : 'Verificação não informada';
 }
+function restoreCatalogFilters(kind) {
+  const form = $(`#${kind}-filters`);
+  try {
+    const saved = new URLSearchParams(sessionStorage.getItem('filters-'+kind) || '');
+    for (const [name, value] of saved) {
+      const field = form.elements.namedItem(name);
+      // Explorar todas as áreas exige uma escolha nesta visita, nunca restauração silenciosa.
+      if (field && name !== 'all') {
+        if (field.type === 'checkbox') field.checked = value === '1';
+        else field.value = value;
+      }
+    }
+  } catch {}
+  form.elements.namedItem('all').value = '0';
+}
+function resetCatalogAreaFilters() {
+  for (const kind of ['jobs', 'courses']) {
+    $(`#${kind}-filters`).elements.namedItem('all').value = '0';
+    ++catalogVersions[kind];
+    catalogRows[kind] = [];
+    $(`#${kind}-list`).innerHTML = '';
+    try { sessionStorage.setItem('filters-'+kind, new URLSearchParams(new FormData($(`#${kind}-filters`))).toString()); } catch {}
+  }
+}
 function catalogEmptyMessage(data, kind, filters) {
-  if (data.data_status === 'stale') return 'Os dados do catálogo estão desatualizados. As ofertas fora do prazo de revisão estão ocultas. Consulte também as fontes oficiais abaixo.';
-  if (data.result_status === 'no_data' || data.catalog_status === 'unavailable') return 'Ainda não há ofertas com revisão válida neste catálogo. Consulte também as fontes oficiais abaixo.';
-  return `${kind === 'courses' && filters.get('type') === 'tecnico' ? 'Não há curso técnico para estes filtros.' : 'Nenhum resultado corresponde aos filtros aplicados.'} ${filters.get('all') !== '1' ? 'Você pode explorar Todas as áreas. ' : ''}Use Limpar filtros para reiniciar a busca.`;
+  const noun = kind === 'jobs' ? 'vagas verificadas' : 'cursos com revisão válida';
+  if (data.result_status === 'no_data' || data.catalog_status === 'unavailable' || data.data_status === 'stale') {
+    return `O catálogo está sem ${noun} no momento. ${data.data_status === 'stale' ? 'Os dados estão desatualizados e as ofertas fora do prazo de revisão estão ocultas. ' : ''}Consulte também as fontes oficiais abaixo.`;
+  }
+  return `${kind === 'jobs' ? 'Nenhuma vaga corresponde aos filtros aplicados.' : filters.get('type') === 'tecnico' ? 'Não há curso técnico para estes filtros.' : 'Nenhum resultado corresponde aos filtros aplicados.'} ${filters.get('all') !== '1' ? 'Você pode explorar Todas as áreas. ' : ''}Use Limpar filtros para reiniciar a busca.`;
 }
 function renderCatalogSources(kind, data) {
   const classification = {verified_sync:'Sincronização verificada', official_link:'Somente link oficial', pending:'Integração pendente'};
@@ -350,7 +376,7 @@ async function loadCatalog(kind) {
     if (version !== catalogVersions[kind]) return;
     if (!data || !Array.isArray(data[kind])) throw new Error('Resposta do catálogo inválida.');
     catalogRows[kind] = data[kind];
-    $(`#${kind}-context`).textContent = `${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas?.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice || ''}`;
+    $(`#${kind}-context`).textContent = `${filters.get('all') === '1' ? 'Todas as áreas — filtro ativo. ' : 'Área salva no perfil. '}${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas?.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice || ''}`;
     renderCatalogSources(kind, data);
     target.innerHTML = data[kind].length ? data[kind].map((item, index) => `
       <article class="job-card catalog-card">
@@ -699,6 +725,7 @@ async function generateResume(event) {
 async function enterApplication(me) {
   me ||= await api("/api/me");
   state.me = me;
+  resetCatalogAreaFilters();
   switchView(true);
   accountDetails();
   populateProfileForm();
@@ -743,7 +770,7 @@ function bindEvents() {
   });
   ['jobs', 'courses'].forEach(kind => {
     const form=$(`#${kind}-filters`);
-    try { const saved=new URLSearchParams(sessionStorage.getItem('filters-'+kind)||''); for(const [name,value] of saved) { const field=form.elements.namedItem(name); if(field) { if(field.type==='checkbox') field.checked=value==='1'; else field.value=value; } } } catch {}
+    restoreCatalogFilters(kind);
     form.addEventListener('reset', () => { setTimeout(() => loadCatalog(kind), 0); });
     $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
     $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });

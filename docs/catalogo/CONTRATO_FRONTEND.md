@@ -4,7 +4,7 @@
 
 Somente backend. Nenhuma fonte externa tem sincronização verificada nesta etapa. O motor transacional e o comando de rotina estão implementados e testados com fixtures; os adaptadores de publicação reais permanecem bloqueados. A EV.G respondeu com uma página de manutenção, em vez do CSV. A rotina NÃO está instalada em um agendador online e NÃO atualiza com este computador desligado.
 
-O acervo manual anterior continua com os valores e prazos originais. Não foi revalidado por esta entrega. Uma inscrição antiga sem estado registrado retorna `unknown`; não apresentar isso como matrícula aberta confirmada. Não atribuir a data de avaliação de uma fonte à verificação de um anúncio.
+As vagas manuais foram revistas nas fontes em 09/11/2026; consulte [a revisão atual](REVISAO_ATUAL.md). O acervo manual de cursos mantém as datas originais e não foi revalidado externamente por esta revisão. Uma inscrição antiga sem estado registrado retorna `unknown`; não apresentar isso como matrícula aberta confirmada. Não atribuir a data de avaliação de uma fonte à verificação de um anúncio.
 
 ## Rotas e filtros
 

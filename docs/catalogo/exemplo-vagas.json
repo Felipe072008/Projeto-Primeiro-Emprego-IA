@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "data_status": "stale",
-  "result_status": "no_data",
-  "stale_count": 17,
+  "data_status": "fresh",
+  "result_status": "results",
+  "stale_count": 0,
   "sources": [
     {
       "id": "ciee_pr",
@@ -147,24 +147,95 @@
       "imported_count": 0
     },
     {
-      "id": "meu_emprego",
-      "name": "Meu Emprego",
+      "id": "gupy",
+      "name": "Gupy",
       "kind": "jobs",
-      "official_url": null,
-      "classification": "pending",
-      "reason": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
-      "cost": "Não confirmado.",
-      "permission": "Não confirmada.",
-      "available_data": "Não confirmados.",
-      "evidence_urls": [],
+      "official_url": "https://portal.gupy.io/vagas",
+      "classification": "official_link",
+      "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "cost": "Consulta pública; nenhum serviço de integração contratado.",
+      "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+      "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+      "evidence_urls": [
+        "https://portal.gupy.io/vagas"
+      ],
       "assessed_on": "2026-11-09",
       "schedule_timezone": "America/Sao_Paulo",
       "suggested_schedule": "daily 06:00",
-      "sync_status": "blocked",
-      "last_attempt_at": "2026-11-09T22:44:35.053914-03:00",
+      "sync_status": "never",
+      "last_attempt_at": null,
       "last_success_at": null,
-      "error_code": "source_pending",
-      "message": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
+      "error_code": null,
+      "message": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "imported_count": 0
+    },
+    {
+      "id": "central_estagios_pr",
+      "name": "Central de Estágios do Paraná",
+      "kind": "jobs",
+      "official_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_busca_vagas.jsp",
+      "classification": "official_link",
+      "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "cost": "Consulta pública; nenhum serviço de integração contratado.",
+      "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+      "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+      "evidence_urls": [
+        "https://www.ceestagios.pr.gov.br/cee/jsp/frm_busca_vagas.jsp"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "never",
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "error_code": null,
+      "message": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "imported_count": 0
+    },
+    {
+      "id": "destro",
+      "name": "Destro — Trabalhe conosco",
+      "kind": "jobs",
+      "official_url": "https://vagas.destromacro.com.br/",
+      "classification": "official_link",
+      "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "cost": "Consulta pública; nenhum serviço de integração contratado.",
+      "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+      "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+      "evidence_urls": [
+        "https://vagas.destromacro.com.br/"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "never",
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "error_code": null,
+      "message": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "imported_count": 0
+    },
+    {
+      "id": "aprendiz_curitiba",
+      "name": "Programa Aprendiz — Prefeitura de Curitiba",
+      "kind": "jobs",
+      "official_url": "https://aprendiz.curitiba.pr.gov.br/",
+      "classification": "official_link",
+      "reason": "Portal oficial do programa de aprendizagem; acesso às oportunidades pelo e-Cidadão. Sem feed autorizado confirmado.",
+      "cost": "Consulta ao portal público; nenhuma contratação.",
+      "permission": "Somente link oficial; não presume licença de redistribuição.",
+      "available_data": "Informações do programa e acesso de candidatos pelo e-Cidadão; não é anúncio individual.",
+      "evidence_urls": [
+        "https://aprendiz.curitiba.pr.gov.br/"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "daily 06:00",
+      "sync_status": "never",
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "error_code": null,
+      "message": "Portal oficial do programa de aprendizagem; acesso às oportunidades pelo e-Cidadão. Sem feed autorizado confirmado.",
       "imported_count": 0
     }
   ],
@@ -210,17 +281,692 @@
       "url": "https://imap.curitiba.pr.gov.br/portal-de-estagio.html",
       "classification": "pending",
       "note": "Piloto separado do Emprega Curitiba. Documentação publicada é de 2015, não descreve ID ou URL individual; teste HTTPS do serviço falhou por certificado incompatível."
+    },
+    {
+      "source_id": "gupy",
+      "name": "Gupy",
+      "url": "https://portal.gupy.io/vagas",
+      "classification": "official_link",
+      "note": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada."
+    },
+    {
+      "source_id": "central_estagios_pr",
+      "name": "Central de Estágios do Paraná",
+      "url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_busca_vagas.jsp",
+      "classification": "official_link",
+      "note": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada."
+    },
+    {
+      "source_id": "destro",
+      "name": "Destro — Trabalhe conosco",
+      "url": "https://vagas.destromacro.com.br/",
+      "classification": "official_link",
+      "note": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada."
+    },
+    {
+      "source_id": "aprendiz_curitiba",
+      "name": "Programa Aprendiz — Prefeitura de Curitiba",
+      "url": "https://aprendiz.curitiba.pr.gov.br/",
+      "classification": "official_link",
+      "note": "Portal oficial do programa de aprendizagem; acesso às oportunidades pelo e-Cidadão. Sem feed autorizado confirmado."
     }
   ],
-  "jobs": [],
+  "jobs": [
+    {
+      "id": "destro-ajudante-motorista",
+      "title": "Ajudante de Motorista — sem experiência",
+      "company": "Destro Macro",
+      "source": "Destro — Trabalhe conosco",
+      "original_url": "https://vagas.destromacro.com.br/vagas/ajudante-de-motorista",
+      "areas": [
+        "logistica"
+      ],
+      "contract_type": "clt",
+      "contract": "CLT",
+      "entry_level": true,
+      "description": "Apoio ao motorista no carregamento, nas entregas e na conferência de documentos e mercadorias.",
+      "requirements": [
+        "Ensino fundamental completo.",
+        "Disponibilidade para viajar.",
+        "Não exige experiência."
+      ],
+      "salary": "R$ 2.400,00 a R$ 2.500,00: remuneração média, incluindo salário e comissão, conforme a fonte.",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Refeitório",
+        "Seguro de vida",
+        "Plano odontológico"
+      ],
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "expires_on": null,
+      "access_note": "Resumo editorial conferido na página oficial. Consulte todos os requisitos e candidate-se na fonte; cadastro pode ser necessário.",
+      "status": "published",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "last_verified_at": "2026-11-09T23:44:41.357031-03:00",
+      "last_review_attempt_at": "2026-11-09T23:44:41.357031-03:00",
+      "availability_evidence": "Página individual de Curitiba, contrato e requisitos de entrada conferidos; recebimento de currículos disponível.",
+      "availability_evidence_url": "https://vagas.destromacro.com.br/vagas/ajudante-de-motorista",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "destro",
+      "source_item_id": "destro-ajudante-motorista",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Logística"
+      ]
+    },
+    {
+      "id": "apg-administrativo",
+      "title": "Auxiliar Administrativo — apoio escolar",
+      "company": "APG GOV",
+      "original_url": "https://apg-gov.gupy.io/jobs/10670487?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "comercial",
+        "educacao"
+      ],
+      "contract_type": "clt",
+      "contract": "CLT",
+      "entry_level": true,
+      "description": "Apoio às matrículas, conferência de documentos acadêmicos, organização de arquivos e recepção de alunos e visitantes.",
+      "requirements": [
+        "Ensino médio completo e conhecimentos de Office.",
+        "Trabalho em equipe; a lista de requisitos não exige experiência prévia.",
+        "Confira na fonte os documentos e as regras de contratação."
+      ],
+      "salary": "R$ 1.771,49",
+      "schedule": "40 horas semanais, de segunda a sexta",
+      "benefits": [
+        "Benefício de R$ 29,00 por dia, com desconto de 20% em folha, conforme a fonte"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2026-11-30",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:29.068875-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:29.068875-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-30.",
+      "availability_evidence_url": "https://apg-gov.gupy.io/jobs/10670487?jobBoardSource=gupy_public_page",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "apg-administrativo",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração",
+        "Comércio e atendimento",
+        "Educação e Pedagogia"
+      ]
+    },
+    {
+      "id": "destro-logistica",
+      "title": "Auxiliar de Logística — sem experiência",
+      "company": "Destro Macro",
+      "original_url": "https://vagas.destromacro.com.br/vagas/auxiliar-de-logistica",
+      "areas": [
+        "logistica"
+      ],
+      "contract_type": "clt",
+      "contract": "CLT",
+      "entry_level": true,
+      "description": "Recebimento, separação e movimentação de mercadorias, organização do estoque e apoio a inventários e carregamentos.",
+      "requirements": [
+        "Ensino fundamental completo.",
+        "Não exige experiência.",
+        "Há opções de turno diurno e noturno. Local: Tatuquara, Curitiba."
+      ],
+      "salary": "R$ 2.600,00 a R$ 2.700,00: média informada, incluindo salário e produtividade",
+      "schedule": "Turno diurno ou noturno; confirmar jornada",
+      "benefits": [
+        "Vale-transporte",
+        "Refeitório",
+        "Plano odontológico",
+        "Cesta básica por assiduidade"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Destro — Trabalhe conosco",
+      "access_note": "Descrição pública. A página da empresa orienta envio de currículo em PDF por e-mail ou WhatsApp.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:28.988585-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:28.988585-03:00",
+      "availability_evidence": "Página individual em Curitiba/PR, contrato CLT e recebimento de currículos disponível; sem experiência exigida.",
+      "availability_evidence_url": "https://vagas.destromacro.com.br/vagas/auxiliar-de-logistica",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "destro",
+      "source_item_id": "destro-logistica",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Logística"
+      ]
+    },
+    {
+      "id": "bp-infra-estagio",
+      "title": "Estagiário de T.I — Infraestrutura",
+      "company": "Bellinati Perez",
+      "source": "Gupy",
+      "original_url": "https://bellinatiperez.gupy.io/jobs/12467350",
+      "areas": [
+        "tecnologia"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio a chamados simples, atendimento a usuários e documentação de atividades de infraestrutura.",
+      "requirements": [
+        "Cursando técnico ou graduação em TI ou área correlata.",
+        "Conhecimentos básicos de computadores, Windows e Office."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Segunda a sexta, das 8h às 14h",
+      "benefits": [
+        "Vale-transporte",
+        "Folga de aniversário"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": null,
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Centro de Curitiba/PR · Presencial",
+      "access_note": "Anúncio público com candidatura disponível na consulta; cadastro na Gupy para se candidatar.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:29.077141-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:29.077141-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento.",
+      "availability_evidence_url": "https://bellinatiperez.gupy.io/jobs/12467350",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "bp-infra-estagio",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Tecnologia"
+      ]
+    },
+    {
+      "id": "unicred-comercial-12842069",
+      "title": "Estágio Comercial — Agência Origens",
+      "company": "Unicred",
+      "source": "Gupy",
+      "original_url": "https://unicredbr.gupy.io/jobs/12842069",
+      "areas": [
+        "administracao",
+        "financeiro",
+        "comercial"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Aprendizado em rotinas comerciais e administrativas de uma agência de cooperativa de crédito.",
+      "requirements": [
+        "Cursar Administração, Contabilidade, Economia ou área correlata.",
+        "Comunicação verbal e escrita e Pacote Office.",
+        "Experiência administrativa/atendimento e certificação Anbima são diferenciais, não requisitos obrigatórios."
+      ],
+      "salary": "Bolsa de R$ 1.811,67",
+      "schedule": "10h às 16h30, com 30 minutos de intervalo; 6 horas de estágio.",
+      "benefits": [
+        "Vale-refeição de R$ 685,95",
+        "Auxílio-transporte de R$ 200,00"
+      ],
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "expires_on": "2027-01-04",
+      "access_note": "Resumo editorial conferido na página oficial. Consulte todos os requisitos e candidate-se na fonte; cadastro pode ser necessário.",
+      "status": "published",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "last_verified_at": "2026-11-09T23:44:41.357210-03:00",
+      "last_review_attempt_at": "2026-11-09T23:44:41.357210-03:00",
+      "availability_evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "availability_evidence_url": "https://unicredbr.gupy.io/jobs/12842069",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "unicred-comercial-12842069",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração",
+        "Finanças e contabilidade",
+        "Comércio e atendimento"
+      ]
+    },
+    {
+      "id": "cee-178626",
+      "title": "Estágio — Administração e Logística patrimonial",
+      "company": "FUNSAÚDE — Secretaria da Saúde do Paraná",
+      "original_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178626",
+      "areas": [
+        "administracao",
+        "logistica"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio às aquisições, controles de materiais, inventários e movimentações patrimoniais, com acompanhamento dos processos administrativos.",
+      "requirements": [
+        "Cursar Administração, do 2º ao 8º período."
+      ],
+      "salary": "R$ 10,00 por hora",
+      "schedule": "12h às 18h",
+      "benefits": [],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2026-11-29",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Central de Estágios do Paraná",
+      "access_note": "Descrição pública. Para concorrer, a CEE solicita cadastro atualizado, CPF e senha na própria plataforma. Confira também a orientação de entrevista no anúncio.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:27.190402-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:27.190402-03:00",
+      "availability_evidence": "Período da oferta: 30/10/2026 a 29/11/2026; Curitiba/PR; formulário de candidatura disponível.",
+      "availability_evidence_url": "https://www.ceestagios.pr.gov.br/cee/jsp/frm_cons_detalhe_vaga.jsp?codoferta=178626",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "central_estagios_pr",
+      "source_item_id": "cee-178626",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração",
+        "Logística"
+      ]
+    },
+    {
+      "id": "pilar-comunicacao-12788794",
+      "title": "Estágio — Comunicação Interna",
+      "company": "Pilar Hospital — Hospital Care",
+      "source": "Gupy",
+      "original_url": "https://pilarhospital.gupy.io/jobs/12788794",
+      "areas": [
+        "marketing",
+        "rh"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio à comunicação interna e às ações voltadas aos colaboradores do hospital.",
+      "requirements": [
+        "Graduação em andamento em Comunicação, Publicidade, Psicologia, RH ou área correlata.",
+        "Disponibilidade para atuar no Pilar Hospital em Curitiba/PR.",
+        "Office e Canva são diferenciais."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "6 horas diárias, manhã e tarde, de segunda a sexta.",
+      "benefits": [
+        "Vale-transporte",
+        "Pluxee Cuida"
+      ],
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "expires_on": null,
+      "access_note": "Resumo editorial conferido na página oficial. Consulte todos os requisitos e candidate-se na fonte; cadastro pode ser necessário.",
+      "status": "published",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "last_verified_at": "2026-11-09T23:44:41.356167-03:00",
+      "last_review_attempt_at": "2026-11-09T23:44:41.356167-03:00",
+      "availability_evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "availability_evidence_url": "https://pilarhospital.gupy.io/jobs/12788794",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "pilar-comunicacao-12788794",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Marketing e Comunicação",
+        "Recursos humanos"
+      ]
+    },
+    {
+      "id": "plaenge-produto-12770857",
+      "title": "Estágio — Desenvolvimento de Produto (Arquitetura)",
+      "company": "Grupo Plaenge",
+      "source": "Gupy",
+      "original_url": "https://grupoplaenge.gupy.io/jobs/12770857",
+      "areas": [
+        "industria"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio a estudos e pesquisas para desenvolvimento de empreendimentos imobiliários, com acompanhamento dos projetos.",
+      "requirements": [
+        "Cursar Arquitetura e Urbanismo a partir do 7º período, no turno da noite.",
+        "Conhecimentos em AutoCAD, Revit ou modelagem, Excel e PowerPoint intermediários.",
+        "Experiência anterior pode ser diferencial."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [],
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "expires_on": "2026-12-07",
+      "access_note": "Resumo editorial conferido na página oficial. Consulte todos os requisitos e candidate-se na fonte; cadastro pode ser necessário.",
+      "status": "published",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "last_verified_at": "2026-11-09T23:44:42.225716-03:00",
+      "last_review_attempt_at": "2026-11-09T23:44:42.225716-03:00",
+      "availability_evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "availability_evidence_url": "https://grupoplaenge.gupy.io/jobs/12770857",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "plaenge-produto-12770857",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Indústria e Engenharia"
+      ]
+    },
+    {
+      "id": "sicredi-infra-12824570",
+      "title": "Estágio — Infraestrutura e TI",
+      "company": "Sicredi Integração PR/SC",
+      "source": "Gupy",
+      "original_url": "https://sicredi.gupy.io/jobs/12824570",
+      "areas": [
+        "tecnologia"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio ao suporte interno, à configuração de equipamentos e à organização dos recursos de tecnologia da cooperativa.",
+      "requirements": [
+        "Cursar graduação em Tecnologia da Informação ou área afim.",
+        "Residir em Curitiba/PR.",
+        "Boa comunicação e facilidade com tecnologia."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Vale-alimentação",
+        "Seguro de vida",
+        "Plano de saúde"
+      ],
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "expires_on": "2026-12-11",
+      "access_note": "Resumo editorial conferido na página oficial. Consulte todos os requisitos e candidate-se na fonte; cadastro pode ser necessário.",
+      "status": "published",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "last_verified_at": "2026-11-09T23:44:41.357537-03:00",
+      "last_review_attempt_at": "2026-11-09T23:44:41.357537-03:00",
+      "availability_evidence": "Página individual de estágio em Curitiba com candidatura disponível e requisitos de estudante conferidos.",
+      "availability_evidence_url": "https://sicredi.gupy.io/jobs/12824570",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "sicredi-infra-12824570",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Tecnologia"
+      ]
+    },
+    {
+      "id": "sicredi-servicos",
+      "title": "Estágio — Serviços Compartilhados",
+      "company": "Sicredi Integração PR/SC",
+      "original_url": "https://sicredi.gupy.io/jobs/12382343?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "financeiro"
+      ],
+      "contract_type": "estagio",
+      "contract": "Estágio",
+      "entry_level": true,
+      "description": "Apoio às operações da cooperativa, com conferência de documentos para abertura de contas, atualização cadastral e organização de registros.",
+      "requirements": [
+        "Cursar Administração, Ciências Contábeis, Economia ou área relacionada ao mercado financeiro.",
+        "Residir em Curitiba.",
+        "Office é um conhecimento desejável."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Vale-alimentação",
+        "Plano de saúde",
+        "Seguro de vida"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2026-11-19",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:28.006722-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:28.006722-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-19.",
+      "availability_evidence_url": "https://sicredi.gupy.io/jobs/12382343?jobBoardSource=gupy_public_page",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "sicredi-servicos",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração",
+        "Finanças e contabilidade"
+      ]
+    },
+    {
+      "id": "magnum-aprendiz",
+      "title": "Jovem Aprendiz — apoio administrativo",
+      "company": "Magnum Tires",
+      "original_url": "https://magnumtires.gupy.io/job/eyJqb2JJZCI6MTI2MTE1NjksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "areas": [
+        "administracao"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Aprendizado em organização de arquivos, atualização de planilhas e sistemas e apoio à comunicação interna.",
+      "requirements": [
+        "A fonte pede idade de 18 a 22 anos e ensino médio completo.",
+        "Não ter participado anteriormente como aprendiz, conforme o anúncio.",
+        "Conhecimentos em Google Workspace; informática é um diferencial."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "4 horas por dia",
+      "benefits": [
+        "Vale-transporte",
+        "Educação corporativa",
+        "Cesta de Natal"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2026-11-13",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:26.877900-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:26.877900-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-13.",
+      "availability_evidence_url": "https://magnumtires.gupy.io/job/eyJqb2JJZCI6MTI2MTE1NjksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "magnum-aprendiz",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração"
+      ]
+    },
+    {
+      "id": "autoglass-aprendiz",
+      "title": "Jovem Aprendiz — atendimento e administração",
+      "company": "Grupo Autoglass",
+      "original_url": "https://autoglassjovemaprendiz.gupy.io/jobs/12693816?jobBoardSource=gupy_public_page",
+      "areas": [
+        "comercial",
+        "administracao"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Formação teórica e prática com apoio ao atendimento, aos vendedores, à organização de documentos e aos relatórios.",
+      "requirements": [
+        "Frequentar do 1º ao 3º ano do ensino médio.",
+        "A descrição informa idade entre 14 e 24 anos e não ter atuado como aprendiz no mesmo CBO.",
+        "O título e a descrição são de aprendizagem, embora a plataforma rotule a vaga como efetiva; confirme o contrato na candidatura."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Vale-refeição ou alimentação",
+        "Plano de saúde",
+        "Educação corporativa"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2026-11-30",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:26.877727-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:26.877727-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2026-11-30.",
+      "availability_evidence_url": "https://autoglassjovemaprendiz.gupy.io/jobs/12693816?jobBoardSource=gupy_public_page",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "autoglass-aprendiz",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Comércio e atendimento",
+        "Administração"
+      ]
+    },
+    {
+      "id": "pashal-aprendiz",
+      "title": "Jovem Aprendiz — rotinas administrativas",
+      "company": "Pashal",
+      "original_url": "https://pashal.gupy.io/jobs/12165252?jobBoardSource=gupy_public_page",
+      "areas": [
+        "administracao",
+        "rh",
+        "logistica",
+        "comercial"
+      ],
+      "contract_type": "aprendiz",
+      "contract": "Jovem Aprendiz",
+      "entry_level": true,
+      "description": "Apoio aos setores de RH, departamento pessoal, logística e comercial, com atendimento, documentos e planilhas.",
+      "requirements": [
+        "Ensino médio completo.",
+        "Confira a faixa etária e a jornada diretamente com a empresa; não informadas no texto consultado."
+      ],
+      "salary": "Não informado na fonte",
+      "schedule": "Não informado na fonte",
+      "benefits": [
+        "Vale-transporte",
+        "Seguro de vida"
+      ],
+      "status": "published",
+      "checked_on": "2026-11-09",
+      "review_by": "2026-11-10",
+      "expires_on": "2027-02-01",
+      "city": "Curitiba",
+      "state": "PR",
+      "location": "Curitiba - PR · Presencial",
+      "source": "Gupy",
+      "access_note": "Descrição pública. A candidatura exige cadastro e acesso na Gupy.",
+      "availability_status": "open",
+      "verification_method": "manual",
+      "last_verified_at": "2026-11-09T23:41:26.877804-03:00",
+      "last_review_attempt_at": "2026-11-09T23:41:26.877804-03:00",
+      "availability_evidence": "Anúncio individual de Curitiba com candidatura disponível, sem aviso de encerramento. Prazo informado nos dados estruturados da fonte: 2027-02-01.",
+      "availability_evidence_url": "https://pashal.gupy.io/jobs/12165252?jobBoardSource=gupy_public_page",
+      "requirements_evidence": "Requisitos conferidos na página individual oficial.",
+      "closed_at": null,
+      "source_id": "gupy",
+      "source_item_id": "pashal-aprendiz",
+      "match": "explore",
+      "match_reason": "Explore esta oportunidade e confira os requisitos.",
+      "area_labels": [
+        "Administração",
+        "Recursos humanos",
+        "Logística",
+        "Comércio e atendimento"
+      ]
+    }
+  ],
   "interest": "",
   "recognized_areas": [],
   "contract_type": null,
   "contract_types": [],
   "personalized": false,
-  "total": 0,
-  "catalog_total": 0,
-  "catalog_status": "unavailable",
+  "total": 13,
+  "catalog_total": 13,
+  "catalog_status": "available",
   "location": "Curitiba - PR",
   "notice": "Datas refletem a última verificação válida, não uma tentativa de atualização. Confira disponibilidade e condições na fonte antes de se inscrever."
 }

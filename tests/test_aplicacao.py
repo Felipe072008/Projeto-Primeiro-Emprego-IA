@@ -13,8 +13,22 @@ from pypdf import PdfWriter
 from documentos_curriculo import build_resume_pdf, inspect_pdf, InvalidPDF
 
 
+def historical_catalog(test):
+    """Os cenários de outubro usam o acervo arquivado, sem reativar ofertas no catálogo atual."""
+    archive = Path(__file__).resolve().parents[1] / 'data/historico/catalogo-antes-revisao-2026-11-09.json'
+    records = json.loads(archive.read_text(encoding='utf-8'))
+    folder = tempfile.TemporaryDirectory()
+    test.addCleanup(folder.cleanup)
+    for kind in ('jobs', 'courses'):
+        Path(folder.name, kind + '.json').write_text(json.dumps(records[kind]), encoding='utf-8')
+    test.catalog_patch = patch.object(catalogo_oportunidades, 'DATA_DIR', Path(folder.name))
+    test.catalog_patch.start()
+    test.addCleanup(test.catalog_patch.stop)
+
+
 class SiteTests(unittest.TestCase):
     def setUp(self):
+        historical_catalog(self)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         directory = Path(self.temp.name)
@@ -118,6 +132,9 @@ class SiteTests(unittest.TestCase):
 
 
 class CatalogTests(unittest.TestCase):
+    def setUp(self):
+        historical_catalog(self)
+
     def test_live_catalog_matching(self):
         today=date(2026,10,8)
         result=catalogo_oportunidades.recommendations('jobs',{'desired_area':'Tecnologia'},today=today)

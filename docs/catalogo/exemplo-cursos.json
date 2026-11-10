@@ -24,7 +24,7 @@
       "schedule_timezone": "America/Sao_Paulo",
       "suggested_schedule": "monday 06:30",
       "sync_status": "error",
-      "last_attempt_at": "2026-11-09T22:44:10.417197-03:00",
+      "last_attempt_at": "2026-11-09T23:52:58.578893-03:00",
       "last_success_at": null,
       "error_code": "unexpected_format",
       "message": "A EV.G retornou HTML, não CSV; pode estar em manutenção.",
@@ -124,6 +124,52 @@
       "error_code": "source_pending",
       "message": "Licença de uso é pessoal; não foi confirmada autorização para este catálogo. Prévia, teste e auxílio não comprovam conteúdo integral gratuito.",
       "imported_count": 0
+    },
+    {
+      "id": "fundacao_bradesco",
+      "name": "Fundação Bradesco — Escola Virtual",
+      "kind": "courses",
+      "official_url": "https://www.ev.org.br/",
+      "classification": "official_link",
+      "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "cost": "Consulta pública; nenhum serviço de integração contratado.",
+      "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+      "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+      "evidence_urls": [
+        "https://www.ev.org.br/"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "monday 06:30",
+      "sync_status": "never",
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "error_code": null,
+      "message": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "imported_count": 0
+    },
+    {
+      "id": "senai_sp",
+      "name": "SENAI-SP — Educação Online",
+      "kind": "courses",
+      "official_url": "https://www.sp.senai.br/unidade/online",
+      "classification": "official_link",
+      "reason": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "cost": "Consulta pública; nenhum serviço de integração contratado.",
+      "permission": "Somente link oficial. Não foi confirmada autorização de coleta e redistribuição.",
+      "available_data": "Consulta das ofertas no portal oficial; disponibilidade deve ser conferida na fonte.",
+      "evidence_urls": [
+        "https://www.sp.senai.br/unidade/online"
+      ],
+      "assessed_on": "2026-11-09",
+      "schedule_timezone": "America/Sao_Paulo",
+      "suggested_schedule": "monday 06:30",
+      "sync_status": "never",
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "error_code": null,
+      "message": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada.",
+      "imported_count": 0
     }
   ],
   "external_links": [
@@ -161,6 +207,20 @@
       "url": "https://www.coursera.org/",
       "classification": "official_link",
       "note": "Licença de uso é pessoal; não foi confirmada autorização para este catálogo. Prévia, teste e auxílio não comprovam conteúdo integral gratuito."
+    },
+    {
+      "source_id": "fundacao_bradesco",
+      "name": "Fundação Bradesco — Escola Virtual",
+      "url": "https://www.ev.org.br/",
+      "classification": "official_link",
+      "note": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada."
+    },
+    {
+      "source_id": "senai_sp",
+      "name": "SENAI-SP — Educação Online",
+      "url": "https://www.sp.senai.br/unidade/online",
+      "classification": "official_link",
+      "note": "Fonte do acervo manual anterior; portal oficial confirmado. Sem sincronização ou permissão de redistribuição verificada."
     }
   ],
   "courses": [

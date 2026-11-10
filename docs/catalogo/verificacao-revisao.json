@@ -1,0 +1,44 @@
+{
+  "verified_at": "2026-11-09T23:53:39.635724-03:00",
+  "python_tests": {
+    "count": 52,
+    "result": "passed"
+  },
+  "jobs_api": {
+    "path": "/api/jobs?all=1",
+    "status": 200,
+    "total": 13
+  },
+  "courses_api": {
+    "saved_area": "Administração",
+    "recognized_areas": [
+      "Administração"
+    ],
+    "status": 200,
+    "total": 3,
+    "after_area_change": {
+      "saved_area": "Tecnologia",
+      "recognized_areas": [
+        "Tecnologia"
+      ],
+      "total": 2
+    }
+  },
+  "automation": {
+    "account": "felipecorreia",
+    "tasks": "empty",
+    "tasks_evidence": "Confirmação direta do usuário nesta conversa.",
+    "authenticated_panel_inspected": false,
+    "scheduled_execution_verified": false,
+    "last_evg_attempt": {
+      "source_id": "evg",
+      "last_attempt_at": "2026-11-09T23:52:58.578893-03:00",
+      "last_success_at": null,
+      "sync_status": "error",
+      "error_code": "unexpected_format",
+      "message": "A EV.G retornou HTML, não CSV; pode estar em manutenção.",
+      "imported_count": 0
+    },
+    "real_imported_batches": 0
+  }
+}

@@ -211,6 +211,7 @@ async function saveProfile(event) {
     const result=await api(`/api/profile/${section}`,{method:'PATCH',body:data});
     state.me.profile=result.profile;
     state.me.completion=result.completion;
+    if (section === 'goals') resetCatalogAreaFilters();
     closeModal('#profile-modal');
     profileEditor=null;
     renderProfileSummary();
