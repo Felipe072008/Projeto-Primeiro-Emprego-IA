@@ -1,6 +1,4 @@
 """Importação atômica por fonte, sem executar tarefas dentro do servidor Flask."""
-import csv
-import io
 import json
 import math
 import os
@@ -8,15 +6,12 @@ import sqlite3
 from contextlib import closing
 from datetime import datetime, time, timedelta
 from pathlib import Path
-from urllib.request import Request, build_opener, HTTPRedirectHandler
 from zoneinfo import ZoneInfo
 
 from fontes_catalogo import sources, source_by_id
 
 BRAZIL_TZ = ZoneInfo('America/Sao_Paulo')
 DEFAULT_DB = Path(__file__).resolve().parent / 'data' / 'catalogo_sync.db'
-EVG_CSV = 'https://www.escolavirtual.gov.br/catalogo/exportar/csv'
-MAX_BYTES = 8 * 1024 * 1024
 # Nenhum adaptador pode publicar antes da confirmação de licença, esquema e evidências.
 ADAPTERS = {}
 
@@ -172,35 +167,7 @@ def apply_snapshot(db, source, snapshot, now):
     return len(rows)
 
 
-class NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        raise ImportFailure('unexpected_redirect', 'O endereço oficial redirecionou; confira a fonte antes de continuar.')
-
-
-def probe_evg():
-    """Diagnóstico do arquivo oficial; não transforma cabeçalhos desconhecidos em cursos."""
-    request = Request(EVG_CSV, headers={'User-Agent': 'PrimeiroEmpregoIA/1.0 catalog-check', 'Accept': 'text/csv'})
-    with build_opener(NoRedirect).open(request, timeout=20) as response:
-        content = response.read(MAX_BYTES + 1)
-        if response.status != 200 or len(content) > MAX_BYTES:
-            raise ImportFailure('invalid_response', 'Arquivo incompleto ou acima do limite de 8 MB.')
-        if 'html' in response.headers.get('Content-Type', '').lower() or content.lstrip().startswith(b'<'):
-            raise ImportFailure('unexpected_format', 'A EV.G retornou HTML, não CSV; pode estar em manutenção.')
-        if response.headers.get('Content-Length') and len(content) != int(response.headers['Content-Length']):
-            raise ImportFailure('truncated_response', 'Download incompleto; dados anteriores preservados.')
-    text = content.decode('utf-8-sig')
-    try:
-        dialect = csv.Sniffer().sniff(text[:8192], delimiters=';,|\t')
-        header = next(csv.reader(io.StringIO(text), dialect))
-        if len(header) < 2:
-            raise ValueError('missing columns')
-    except (csv.Error, ValueError, StopIteration) as exc:
-        raise ImportFailure('unexpected_format', 'CSV sem cabeçalho reconhecível.') from exc
-    raise ImportFailure('schema_pending', 'CSV recebido; esquema e condições por oferta ainda exigem validação. '
-                        'Nenhum curso foi importado.', 'blocked')
-
-
-def update_source(source_id, *, due=False, now=None, probe=False):
+def update_source(source_id, *, due=False, now=None):
     now = (now or datetime.now(BRAZIL_TZ)).astimezone(BRAZIL_TZ)
     source = source_by_id(source_id)
     with closing(connect()) as db, db:
@@ -213,8 +180,6 @@ def update_source(source_id, *, due=False, now=None, probe=False):
         count = previous['imported_count'] if previous else 0
         db.execute('SAVEPOINT source_update')
         try:
-            if probe and source_id == 'evg':
-                probe_evg()
             if source['classification'] != 'verified_sync' or source_id not in ADAPTERS:
                 raise ImportFailure('source_pending', source['reason'], 'blocked')
             snapshot = ADAPTERS[source_id]()
@@ -234,6 +199,6 @@ def update_source(source_id, *, due=False, now=None, probe=False):
         return dict(db.execute('SELECT * FROM catalog_runs WHERE source_id=?', (source_id,)).fetchone())
 
 
-def update_catalog(kind='all', *, source_id=None, due=False, probe=False, now=None):
+def update_catalog(kind='all', *, source_id=None, due=False, now=None):
     selected = [source_by_id(source_id)] if source_id else sources(None if kind == 'all' else kind)
-    return [update_source(source['id'], due=due, probe=probe, now=now) for source in selected]
+    return [update_source(source['id'], due=due, now=now) for source in selected]

@@ -63,9 +63,11 @@ class RevisedCatalogTests(unittest.TestCase):
     def test_previous_sources_remain_and_meu_emprego_is_not_configured(self):
         registered={s['id'] for s in sources()}
         self.assertTrue({'gupy','central_estagios_pr','destro','fundacao_bradesco','senai_sp',
-                         'ciee_pr','infojobs','catho','indeed','evg','aprenda_mais','sebrae',
+                         'ciee_pr','infojobs','catho','indeed','aprenda_mais','sebrae',
                          'prime_cursos','coursera'} <= registered)
         self.assertNotIn('meu_emprego',registered)
+        self.assertNotIn('evg', registered)
+        self.assertFalse(any(r['id'].startswith('evg-') for r in catalog.load_catalog('courses', TODAY)))
         data=catalog.recommendations('jobs',{},show_all=True,today=TODAY)
         self.assertNotIn('meu_emprego',{s['id'] for s in data['sources']})
         self.assertEqual(data['catalog_status'],'available')

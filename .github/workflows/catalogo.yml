@@ -14,10 +14,6 @@ on:
         options:
           - courses
           - jobs
-      probe_evg:
-        description: Testar o arquivo oficial da EV.G
-        default: true
-        type: boolean
 
 permissions:
   contents: read
@@ -35,7 +31,6 @@ jobs:
       FIRST_JOB_UPLOAD_DIR: /tmp/firstjob-uploads-teste
       FIRST_JOB_CATALOG_DATABASE: /tmp/firstjob-catalogo-teste.db
       CATALOG_KIND: ${{ inputs.kind || 'courses' }}
-      PROBE_EVG: ${{ github.event_name == 'push' || inputs.probe_evg }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -45,16 +40,13 @@ jobs:
         run: python -m pip install -r requirements.txt
       - name: Testar o backend
         run: python -m unittest discover -s tests -v
-      - name: Consultar fontes e registrar resultado
+      - name: Diagnosticar configuração das fontes
+        shell: bash
         env:
           FIRST_JOB_CATALOG_DATABASE: ${{ runner.temp }}/catalogo-diagnostico.db
         run: |
           mkdir -p relatorio-catalogo
-          if [ "$CATALOG_KIND" = courses ] && [ "$PROBE_EVG" = true ]; then
-            python scripts/atualizar_catalogo.py --source evg --probe > relatorio-catalogo/resultado.json
-          else
-            python scripts/atualizar_catalogo.py --kind "$CATALOG_KIND" > relatorio-catalogo/resultado.json
-          fi
+          python scripts/atualizar_catalogo.py --kind "$CATALOG_KIND" --diagnose | tee relatorio-catalogo/resultado.json
       - name: Disponibilizar diagnóstico
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

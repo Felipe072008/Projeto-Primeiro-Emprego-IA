@@ -1,6 +1,5 @@
 """Contratos e falhas com dados sintéticos: nenhum teste confirma uma fonte real."""
 import copy
-import io
 import json
 import os
 import tempfile
@@ -163,14 +162,20 @@ class SyncTests(unittest.TestCase):
         self.run_source(snapshot(empty_confirmed=True), now=NOW+timedelta(hours=1))
         self.assertEqual(catalog.load_catalog('courses', NOW.date()), [])
 
-    def test_evg_maintenance_cannot_be_success(self):
-        response = io.BytesIO(b'<!DOCTYPE html><title>Manutencao</title>')
-        response.status = 200
-        response.headers = {'Content-Type': 'text/html'}
-        with patch.object(sync, 'build_opener') as opener, self.assertRaises(sync.ImportFailure) as caught:
-            opener.return_value.open.return_value = response
-            sync.probe_evg()
-        self.assertEqual(caught.exception.code, 'unexpected_format')
+    def test_configuration_diagnostic_does_not_import(self):
+        from scripts.atualizar_catalogo import main
+        import contextlib
+        import io
+        output = io.StringIO()
+        with patch('sys.argv', ['atualizar_catalogo.py', '--kind', 'courses', '--diagnose']), \
+                patch('scripts.atualizar_catalogo.update_catalog') as update, \
+                contextlib.redirect_stdout(output):
+            self.assertEqual(main(), 0)
+        update.assert_not_called()
+        report = json.loads(output.getvalue())
+        self.assertFalse(report['import_performed'])
+        self.assertTrue(report['sources'])
+        self.assertNotIn('evg', {s['source_id'] for s in report['sources']})
 
     def test_concurrent_due_only_imports_once(self):
         with patch.dict(sync.ADAPTERS, {'fixture': lambda: snapshot(course())}, clear=True):

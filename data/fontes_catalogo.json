@@ -1,25 +1,5 @@
 [
   {
-    "id": "evg",
-    "name": "EV.G / Enap",
-    "kind": "courses",
-    "official_url": "https://www.escolavirtual.gov.br/catalogo",
-    "classification": "pending",
-    "reason": "CSV público encontrado, mas o teste retornou HTML de manutenção. Esquema, completude, condições por oferta e alcance da autorização de reúso do CSV ainda não validados.",
-    "cost": "Download público sem cobrança observada; nenhuma API contratada.",
-    "permission": "Catálogo oferece CSV; Enap declara reúso das bases publicadas em dados.gov.br. Falta vincular a licença ao arquivo e validar o esquema real.",
-    "available_data": "Página mostra título, conteudista e carga horária; nenhum CSV de cursos válido recebido.",
-    "evidence_urls": [
-      "https://www.escolavirtual.gov.br/catalogo",
-      "https://www.escolavirtual.gov.br/catalogo/exportar/csv",
-      "https://enap.gov.br/acesso-a-informacao/dados-abertos/",
-      "https://www.enap.gov.br/acesso-a-informacao/termo-de-uso-e-aviso-de-privacidade-enap/"
-    ],
-    "assessed_on": "2026-11-09",
-    "schedule_timezone": "America/Sao_Paulo",
-    "suggested_schedule": "monday 06:30"
-  },
-  {
     "id": "ciee_pr",
     "name": "CIEE/PR",
     "kind": "jobs",

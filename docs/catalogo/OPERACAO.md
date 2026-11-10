@@ -10,13 +10,13 @@ O usuário informou a conta PythonAnywhere `felipecorreia` e confirmou a aba Tas
 
 ```powershell
 Set-Location C:\Users\felip\Documents\primeiro-emprego-ia
-.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --source evg --probe
+.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind courses --diagnose
 .\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind jobs
 .\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind courses
 .\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --due
 ```
 
-`--probe` consulta apenas o CSV público conhecido da EV.G, com timeout, limite de tamanho, TLS normal e sem seguir redirecionamentos. HTML/manutenção não é CSV. Mesmo que receba CSV, não publica sem validar o esquema e as condições por oferta: retorna `schema_pending`. Não interpreta nomes de colunas hipotéticos como dados reais.
+`--diagnose` lista as fontes configuradas e informa se cada uma possui adaptador habilitado. Não acessa fontes externas nem grava o banco. Uma inspeção válida retorna código 0 e `import_performed: false`; as importações efetivas continuam retornando erro quando bloqueadas ou malsucedidas.
 
 Sem `--due`, força uma tentativa (teste/recuperação). Com `--due`, tenta no máximo uma vez por ciclo em Brasília, contando tentativas falhas/bloqueadas; para recuperar antes do próximo ciclo, execute sem essa opção. `--source` seleciona uma fonte. A execução com fontes bloqueadas retorna código **1**, com motivo em JSON; sucesso ou ciclos já tentados retornam **0**. Falhas internas de armazenamento resultam em erro do comando, sem simular sucesso.
 
@@ -61,7 +61,7 @@ Não executar o script de geração de áreas durante a importação: ele não �
 
 ## GitHub Actions — diagnóstico preparado em 10/11/2026
 
-O workflow `.github/workflows/catalogo.yml` executa os testes do backend em Python 3.13 e uma consulta diagnóstica. Dispara quando o próprio workflow é enviado ao GitHub e permite execução manual após chegar à branch padrão (`main`). Na execução manual, selecione vagas ou cursos; para cursos, a opção EV.G testa a exportação oficial.
+O workflow `.github/workflows/catalogo.yml` executa os testes do backend em Python 3.13 e um diagnóstico da configuração. Dispara quando o próprio workflow é enviado ao GitHub e permite execução manual após chegar à branch padrão (`main`). Na execução manual, selecione vagas ou cursos; o relatório informa as fontes disponíveis para esse tipo.
 
 O resultado JSON fica no artefato `diagnostico-catalogo-<run_id>`, retido por sete dias, inclusive quando a fonte falha. A falha produz execução vermelha, sem transformar uma tentativa em sincronização bem-sucedida. Bancos e uploads de testes usam diretórios temporários.
 
@@ -70,3 +70,5 @@ A conta de destino confirmada pelo usuário é `PrimeiroEmpregoIA`. O WSGI visua
 Esta etapa não transfere dados para a hospedagem. O registro de adaptadores está vazio e a exportação EV.G respondeu HTTP 200 com HTML da aplicação JavaScript. O agendamento diário/semanal depende de uma importação real autorizada e de entrega transacional validada. A criação de credencial e seu armazenamento em GitHub Secrets foram autorizados pelo usuário, mas ainda precisam ser executados.
 
 Execução comprovada em 10/11/2026: https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/42908028381 . Os 52 testes passaram no executor Linux com Python 3.13. A etapa de consulta EV.G terminou com código 1; o artefato de diagnóstico foi publicado. Isso comprova a execução no GitHub, mas não uma importação ou atualização do site. A primeira versão do workflow foi rejeitada por contexto indisponível no ambiente do job; corrigida antes desta execução.
+
+Em 10/11/2026, por solicitação do usuário, a EV.G foi retirada das fontes e seus três cursos foram removidos do catálogo atual. As outras fontes e os arquivos históricos foram preservados. O diagnóstico do Actions passou a inspecionar a configuração, mantendo as falhas reais de testes/importação como erro. O sucesso desse diagnóstico não significa sincronização ativa.
