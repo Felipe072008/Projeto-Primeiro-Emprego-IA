@@ -5,13 +5,13 @@ from pathlib import Path
 from unittest.mock import patch
 
 import app as site
-import catalog
-from resume_documents import inspect_pdf
-import test_app
+import catalogo_oportunidades
+from documentos_curriculo import inspect_pdf
+import test_aplicacao
 
 
 class ProfileSectionsTests(unittest.TestCase):
-    setUp = test_app.SiteTests.setUp
+    setUp = test_aplicacao.SiteTests.setUp
 
     def save(self, section, **changes):
         data = self.client.get('/api/me').json['profile']['sections'][section]
@@ -76,7 +76,7 @@ class ProfileSectionsTests(unittest.TestCase):
         for value in ('Empresa informada','Instituição informada','Previsão: 2028','Curso real','Projeto escolar','Excel','Inglês'):
             self.assertIn(value,text)
         self.assertLess(text.index('Estagiário'),text.index('Aprendiz de suporte'))
-        with patch('resume_analysis.ai_status',return_value={'available':False}):
+        with patch('analise_curriculo.ai_status',return_value={'available':False}):
             report=self.client.post(f"/api/resumes/{created.json['id']}/analyze")
         self.assertEqual(report.status_code,200)
         self.assertEqual(report.json['engine'],'document_checks')
@@ -114,11 +114,11 @@ class ProfileSectionsTests(unittest.TestCase):
     def test_secondary_interests_and_explicit_contract_preferences(self):
         self.save('goals',desired_area='Estágio — Tecnologia da Informação',secondary_areas=['CLT — Auxiliar de logística ou estoque'],contracts=['clt'])
         profile=self.client.get('/api/me').json['profile']
-        jobs=catalog.recommendations('jobs',profile,today=date(2026,10,8))['jobs']
+        jobs=catalogo_oportunidades.recommendations('jobs',profile,today=date(2026,10,8))['jobs']
         self.assertTrue(jobs)
         self.assertTrue(all(item['contract_type']=='clt' for item in jobs))
         self.assertTrue(any(item['id']=='destro-logistica' and item['match']=='direct' for item in jobs))
-        courses=catalog.recommendations('courses',profile,today=date(2026,10,8))['courses']
+        courses=catalogo_oportunidades.recommendations('courses',profile,today=date(2026,10,8))['courses']
         self.assertTrue(any('tecnologia' in item['areas'] and item['match']=='direct' for item in courses))
         self.assertTrue(any('logistica' in item['areas'] and item['match']=='direct' for item in courses))
 

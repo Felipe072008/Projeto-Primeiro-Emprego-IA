@@ -7,10 +7,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import app as site
-import catalog
-import resume_analysis
+import catalogo_oportunidades
+import analise_curriculo
 from pypdf import PdfWriter
-from resume_documents import build_resume_pdf, inspect_pdf, InvalidPDF
+from documentos_curriculo import build_resume_pdf, inspect_pdf, InvalidPDF
 
 
 class SiteTests(unittest.TestCase):
@@ -110,7 +110,7 @@ class SiteTests(unittest.TestCase):
 
     def test_analysis_unavailable_is_honest(self):
         created=self.client.post('/api/resumes/upload',data={'file':(io.BytesIO(self.pdf()),'cv.pdf')})
-        with patch('resume_analysis.ai_status',return_value={'available':False}):
+        with patch('analise_curriculo.ai_status',return_value={'available':False}):
             report=self.client.post(f"/api/resumes/{created.json['id']}/analyze").json
         self.assertEqual(report['engine'],'document_checks')
         self.assertIsNone(report['contextual'])
@@ -120,77 +120,77 @@ class SiteTests(unittest.TestCase):
 class CatalogTests(unittest.TestCase):
     def test_live_catalog_matching(self):
         today=date(2026,10,8)
-        result=catalog.recommendations('jobs',{'desired_area':'Tecnologia'},today=today)
+        result=catalogo_oportunidades.recommendations('jobs',{'desired_area':'Tecnologia'},today=today)
         self.assertTrue(any(j['match']=='direct' for j in result['jobs']))
         self.assertTrue(any(j['match']=='related' for j in result['jobs']))
         self.assertTrue(all(j['city']=='Curitiba' and j['state']=='PR' for j in result['jobs']))
-        self.assertEqual(catalog.recommendations('jobs',{'desired_area':'Astronomia'},today=today)['total'],0)
-        self.assertGreater(catalog.recommendations('jobs',{'desired_area':'Astronomia'},show_all=True,today=today)['total'],0)
-        self.assertEqual(catalog.load_catalog('jobs',date(2027,1,1)),[])
-        free=catalog.recommendations('courses',{},free_only=True,today=today)['courses']
+        self.assertEqual(catalogo_oportunidades.recommendations('jobs',{'desired_area':'Astronomia'},today=today)['total'],0)
+        self.assertGreater(catalogo_oportunidades.recommendations('jobs',{'desired_area':'Astronomia'},show_all=True,today=today)['total'],0)
+        self.assertEqual(catalogo_oportunidades.load_catalog('jobs',date(2027,1,1)),[])
+        free=catalogo_oportunidades.recommendations('courses',{},free_only=True,today=today)['courses']
         self.assertTrue(free and all(c['free'] for c in free))
-        courses=catalog.recommendations('courses',{},course_type='livre',today=today)['courses']
+        courses=catalogo_oportunidades.recommendations('courses',{},course_type='livre',today=today)['courses']
         self.assertTrue(courses and all(c['course_type']=='livre' for c in courses))
-        self.assertEqual(catalog.recommendations('courses',{},course_type='tecnico',today=today)['courses'],[])
+        self.assertEqual(catalogo_oportunidades.recommendations('courses',{},course_type='tecnico',today=today)['courses'],[])
 
     def test_every_profile_choice_has_direct_certified_course(self):
-        options=json.loads(catalog.CAREER_OPTIONS.read_text(encoding='utf-8'))['occupations']
+        options=json.loads(catalogo_oportunidades.CAREER_OPTIONS.read_text(encoding='utf-8'))['occupations']
         self.assertEqual(len(options),24)
         self.assertEqual(len({option['title'] for option in options}),24)
-        self.assertEqual(set().union(*(set(option['areas']) for option in options)),set(catalog.AREAS))
+        self.assertEqual(set().union(*(set(option['areas']) for option in options)),set(catalogo_oportunidades.AREAS))
         for option in options:
             with self.subTest(option=option['title']):
-                self.assertEqual(catalog.detect_areas(option['title']),set(option['areas']))
-                courses=catalog.recommendations('courses',{'desired_area':option['title']},today=date(2026,10,28))['courses']
+                self.assertEqual(catalogo_oportunidades.detect_areas(option['title']),set(option['areas']))
+                courses=catalogo_oportunidades.recommendations('courses',{'desired_area':option['title']},today=date(2026,10,28))['courses']
                 self.assertTrue(any(course['match']=='direct' and course['certificate'] and course['certificate_source'].startswith('https://') for course in courses))
 
     def test_job_contract_and_area_are_both_respected(self):
         for interest, contract in [('Jovem Aprendiz — todas as áreas de entrada','aprendiz'),('Estágio — Administração','estagio'),('CLT — Auxiliar de logística ou estoque','clt')]:
             with self.subTest(interest=interest):
-                rows=catalog.recommendations('jobs',{'desired_area':interest},today=date(2026,10,8))['jobs']
+                rows=catalogo_oportunidades.recommendations('jobs',{'desired_area':interest},today=date(2026,10,8))['jobs']
                 self.assertTrue(rows)
                 self.assertTrue(all(row['contract_type']==contract for row in rows))
                 self.assertTrue(all(row['match'] in {'direct','related'} for row in rows))
-        all_jobs=catalog.recommendations('jobs',{'desired_area':'Estágio — Administração'},show_all=True,today=date(2026,10,8))['jobs']
+        all_jobs=catalogo_oportunidades.recommendations('jobs',{'desired_area':'Estágio — Administração'},show_all=True,today=date(2026,10,8))['jobs']
         self.assertEqual({row['contract_type'] for row in all_jobs},{'estagio','aprendiz','clt'})
-        self.assertEqual(catalog.detect_areas('CLT — Recepcionista de clínica'),{'saude'})
-        self.assertEqual(catalog.detect_areas('Assistente administrativo'),{'administracao'})
+        self.assertEqual(catalogo_oportunidades.detect_areas('CLT — Recepcionista de clínica'),{'saude'})
+        self.assertEqual(catalogo_oportunidades.detect_areas('Assistente administrativo'),{'administracao'})
 
     def test_curated_jobs_cover_areas_and_hide_after_deadline(self):
-        rows=catalog.load_catalog('jobs',date(2026,10,8))
-        self.assertEqual(set().union(*(set(row['areas']) for row in rows)),set(catalog.AREAS))
+        rows=catalogo_oportunidades.load_catalog('jobs',date(2026,10,8))
+        self.assertEqual(set().union(*(set(row['areas']) for row in rows)),set(catalogo_oportunidades.AREAS))
         self.assertGreater(sum(row['contract_type'] in {'estagio','aprendiz'} for row in rows),len(rows)/2)
         self.assertTrue(all(row['entry_level'] for row in rows))
         self.assertEqual(len({row['original_url'] for row in rows}),len(rows))
-        self.assertIn('cee-178426',{row['id'] for row in catalog.load_catalog('jobs',date(2026,10,9))})
-        self.assertNotIn('cee-178426',{row['id'] for row in catalog.load_catalog('jobs',date(2026,10,10))})
+        self.assertIn('cee-178426',{row['id'] for row in catalogo_oportunidades.load_catalog('jobs',date(2026,10,9))})
+        self.assertNotIn('cee-178426',{row['id'] for row in catalogo_oportunidades.load_catalog('jobs',date(2026,10,10))})
 
     def test_rejects_nonindividual_wrong_city_and_stale(self):
         records=json.loads(Path('data/jobs.json').read_text(encoding='utf-8'))
         fixtures=[dict(records[0],original_url='https://example.com/'),dict(records[0],city='São Paulo'),dict(records[0],review_by='2026-09-01'),dict(records[0],status='closed'),dict(records[0],entry_level=False),dict(records[0],contract_type='senior'),dict(records[0],expires_on='2026-10-07')]
         with tempfile.TemporaryDirectory() as tmp:
             Path(tmp,'jobs.json').write_text(json.dumps(fixtures),encoding='utf-8')
-            with patch.object(catalog,'DATA_DIR',Path(tmp)):
-                self.assertEqual(catalog.load_catalog('jobs',date(2026,10,8)),[])
+            with patch.object(catalogo_oportunidades,'DATA_DIR',Path(tmp)):
+                self.assertEqual(catalogo_oportunidades.load_catalog('jobs',date(2026,10,8)),[])
 
     def test_course_without_certificate_is_not_listed(self):
         row=json.loads(Path('data/courses.json').read_text(encoding='utf-8'))[0]
         with tempfile.TemporaryDirectory() as tmp:
             Path(tmp,'courses.json').write_text(json.dumps([dict(row,certificate='')]),encoding='utf-8')
-            with patch.object(catalog,'DATA_DIR',Path(tmp)):
-                self.assertEqual(catalog.load_catalog('courses',date(2026,10,8)),[])
+            with patch.object(catalogo_oportunidades,'DATA_DIR',Path(tmp)):
+                self.assertEqual(catalogo_oportunidades.load_catalog('courses',date(2026,10,8)),[])
 
 
 class AITests(unittest.TestCase):
     def test_valid_response_and_fabricated_rewrite_filter(self):
         text='Desenvolvi um projeto escolar com Python em 2025.'
         model={'summary':'Revisar a descrição do projeto.', 'strengths':[{'title':'Projeto','evidence':text,'explanation':'Há uma experiência concreta.'}], 'improvements':[{'priority':'alta','title':'Contexto','evidence':'Falta instituição.','suggestion':'Informe a escola real.'},{'priority':'media','title':'Objetivo','evidence':'Objetivo ausente.','suggestion':'Informe o cargo desejado.'}], 'rewrites':[{'original':text,'suggested':'Desenvolvi 50 projetos e aumentei vendas em 90%.','reason':'Métricas'}], 'next_steps':['Conferir datas.','Detalhar ferramentas.']}
-        with patch('resume_analysis.ai_status',return_value={'available':True,'model':'test'}), patch('resume_analysis._request',return_value={'done':True,'response':json.dumps(model)}):
-            result=resume_analysis.analyze(text,{}, {'pages':1},[])
+        with patch('analise_curriculo.ai_status',return_value={'available':True,'model':'test'}), patch('analise_curriculo._request',return_value={'done':True,'response':json.dumps(model)}):
+            result=analise_curriculo.analyze(text,{}, {'pages':1},[])
         self.assertEqual(result['engine'],'ollama_local')
         self.assertEqual(result['contextual']['rewrites'],[])
-        with patch('resume_analysis.ai_status',return_value={'available':True,'model':'test'}), patch('resume_analysis._request',return_value={'done':True,'response':'broken'}):
-            self.assertEqual(resume_analysis.analyze(text,{}, {'pages':1},[])['engine'],'document_checks')
+        with patch('analise_curriculo.ai_status',return_value={'available':True,'model':'test'}), patch('analise_curriculo._request',return_value={'done':True,'response':'broken'}):
+            self.assertEqual(analise_curriculo.analyze(text,{}, {'pages':1},[])['engine'],'document_checks')
 
 
 if __name__=='__main__': unittest.main()

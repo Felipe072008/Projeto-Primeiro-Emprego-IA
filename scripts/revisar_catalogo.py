@@ -1,4 +1,4 @@
-"""Show catalog records that require manual source review."""
+"""Lista oportunidades que precisam de conferência manual na fonte original."""
 import json
 from datetime import date, timedelta
 from pathlib import Path

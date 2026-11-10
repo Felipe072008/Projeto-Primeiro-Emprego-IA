@@ -3,17 +3,17 @@ import json
 from datetime import date
 from unittest.mock import patch
 import unittest
-import test_app
+import test_aplicacao
 import app as site
-import catalog
-from profile_data import contact_errors, hydrate_profile
-from resume_documents import inspect_pdf, MAX_PDF_BYTES
-from resume_analysis import local_checks
+import catalogo_oportunidades
+from dados_perfil import contact_errors, hydrate_profile
+from documentos_curriculo import inspect_pdf, MAX_PDF_BYTES
+from analise_curriculo import local_checks
 
 
 class AuditTests(unittest.TestCase):
-    setUp = test_app.SiteTests.setUp
-    pdf = test_app.SiteTests.pdf
+    setUp = test_aplicacao.SiteTests.setUp
+    pdf = test_aplicacao.SiteTests.pdf
 
     def test_contact_validation_and_legacy_progress(self):
         for age in ('999','-1','abc','','0','121','²'):
@@ -81,12 +81,12 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(self.client.get('/api/resumes').json['resumes'],[])
 
     def test_catalog_expiry_empty_and_support_relevance(self):
-        rows=catalog.recommendations('jobs',{},show_all=True,today=date(2026,10,28))
+        rows=catalogo_oportunidades.recommendations('jobs',{},show_all=True,today=date(2026,10,28))
         self.assertEqual(rows['total'],1)
         self.assertEqual(rows['jobs'][0]['id'],'bp-infra-estagio')
-        empty=catalog.recommendations('jobs',{},show_all=True,today=date(2030,1,1))
+        empty=catalogo_oportunidades.recommendations('jobs',{},show_all=True,today=date(2030,1,1))
         self.assertEqual(empty['catalog_status'],'unavailable')
-        courses=catalog.recommendations('courses',{'desired_area':'CLT — Suporte de TI júnior'},today=date(2026,10,28))['courses']
+        courses=catalogo_oportunidades.recommendations('courses',{'desired_area':'CLT — Suporte de TI júnior'},today=date(2026,10,28))['courses']
         self.assertTrue(courses)
         self.assertTrue(all('hardware' in c['title'].lower() for c in courses))
         report=local_checks('Texto de exemplo',{}, {'pages':1},[])

@@ -1,3 +1,4 @@
+// Editores por seção do perfil; usa os auxiliares compartilhados da interface do site.
 const profileSections = {
   contact: {title: 'Dados pessoais e contato', hint: 'Seus contatos e sua localização.'},
   goals: {title: 'Pretensões profissionais', hint: 'Escolha sua direção e os tipos de oportunidade que deseja.'},
@@ -157,6 +158,7 @@ function renderProfileEditor() {
   $('[name="skill_name"]',form)?.setAttribute('list','skill-suggestions');
   $('[name="language"]',form)?.setAttribute('list','language-suggestions');
 }
+// O rascunho permite cancelar a edição sem alterar o perfil salvo.
 function openProfileEditor(section='contact', index='') {
   if(!state.me?.profile?.sections) return;
   if(!profileSections[section]) section='contact';
@@ -191,6 +193,7 @@ function showProfileErrors(errors) {
     if(input?.setAttribute) {input.setAttribute('aria-invalid','true');input.setAttribute('aria-describedby',label.id);if(!focused){input.focus();focused=true;}}
   }
 }
+// Envia apenas a seção editada para preservar os demais blocos do perfil.
 async function saveProfile(event) {
   event.preventDefault();
   if(profileEditor.pending) return;

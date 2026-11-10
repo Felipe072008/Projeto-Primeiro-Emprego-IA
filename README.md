@@ -17,11 +17,11 @@ Abra <http://127.0.0.1:5000>. A aplicação usa SQLite e cria o banco localmente
 ## Vagas e cursos
 
 - Seleção conferida em **08/10/2026**: 16 anúncios individuais de Curitiba/PR (3 de aprendizagem, 11 de estágio e 2 CLT de entrada) e 11 cursos online gratuitos com certificado, cobrindo as dez áreas do perfil. Consulte a [pesquisa, fontes e matriz de cobertura](docs/pesquisa-oportunidades.md).
-- **Área profissional desejada** oferece 24 escolhas focadas em início de carreira. `scripts/build_career_options.py` gera `static/occupations.json`. As vagas consideram área e tipo de contrato; cursos consideram a área, independentemente do contrato. Perfis antigos em texto livre continuam reconhecidos pelos termos conhecidos, sem sobrescrever o que o usuário informou.
+- **Área profissional desejada** oferece 24 escolhas focadas em início de carreira. `scripts/gerar_areas_profissionais.py` gera `static/areas_profissionais.json`. As vagas consideram área e tipo de contrato; cursos consideram a área, independentemente do contrato. Perfis antigos em texto livre continuam reconhecidos pelos termos conhecidos, sem sobrescrever o que o usuário informou.
 - As páginas exibem correspondência direta, áreas correlatas e a opção de explorar todas as áreas e contratos. A busca usa título, instituição/empresa e resumo. Selecionar uma área não garante que haja vaga ativa para cada contrato nem que o candidato preencha os requisitos.
 - Cada cartão abre detalhes internos e link à fonte. Cursos mostram as condições e o custo do certificado. Candidaturas na Gupy e na Central de Estágios exigem cadastro na fonte; os resumos não exigem login nessas plataformas. As instituições de ensino também pedem cadastro para matrícula.
 - Vagas ficam ocultas após `expires_on` ou `review_by`, o que ocorrer primeiro. A revisão geral desta seleção vence em **22/10/2026**, mas há anúncios com prazo anterior (por exemplo, CELEPAR em **09/10/2026**). Cursos têm revisão até **06/01/2027**. Antes de renovar datas, abra a fonte e confira disponibilidade, requisitos e condições. O catálogo é manual: pesquisar portais atualizados diariamente não equivale a sincronização automática diária.
-- Para ver anúncios vencidos ou próximos de revisão: `.\.venv\Scripts\python.exe scripts\review_catalog.py`. Registros de vagas exigem `entry_level: true` e `contract_type` (`aprendiz`, `estagio` ou `clt`), além de URL HTTPS individual, Curitiba/PR, fonte, resumo, requisitos, áreas e datas. Cursos exigem informação de `certificate`, com `certificate_source` e `certificate_cost` documentando a certificação. Não publique bancos de talentos como vagas abertas.
+- Para ver anúncios vencidos ou próximos de revisão: `.\.venv\Scripts\python.exe scripts\review_catalogo_oportunidades.py`. Registros de vagas exigem `entry_level: true` e `contract_type` (`aprendiz`, `estagio` ou `clt`), além de URL HTTPS individual, Curitiba/PR, fonte, resumo, requisitos, áreas e datas. Cursos exigem informação de `certificate`, com `certificate_source` e `certificate_cost` documentando a certificação. Não publique bancos de talentos como vagas abertas.
 
 ## Cadastro do perfil por blocos
 
@@ -52,9 +52,9 @@ O texto extraído do PDF é enviado apenas ao serviço Ollama local em `127.0.0.
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
-node --check static\app.js
-node --check static\profile.js
-node tests\check_frontend.cjs
+node --check static\interface_site.js
+node --check static\editor_perfil.js
+node tests\verificar_interface.cjs
 ```
 
 ## Antes de publicar
@@ -63,3 +63,36 @@ Configure `SECRET_KEY`, HTTPS, servidor de produção e proteção adequada dos 
 # Auditoria de 28/10/2026
 
 Esta cópia contém correções de validação, acessibilidade, catálogos, navegação e versões de currículo. Consulte [o relatório de implementação](docs/auditoria-2026-10-28/RELATORIO.md) para evidências, migração compatível, execução, implantação e reversão. Nada foi publicado automaticamente.
+
+## Mapa dos arquivos
+
+Os nomes descritivos estão em português, sem acentos para facilitar comandos e imports.
+
+| Nome anterior | Nome atual |
+|---|---|
+| `catalog.py` | `catalogo_oportunidades.py` |
+| `profile_data.py` | `dados_perfil.py` |
+| `resume_analysis.py` | `analise_curriculo.py` |
+| `resume_documents.py` | `documentos_curriculo.py` |
+| `static/app.js` | `static/interface_site.js` |
+| `static/profile.js` | `static/editor_perfil.js` |
+| `static/styles.css` | `static/estilos_base.css` |
+| `static/redesign.css` | `static/estilos_interface.css` |
+| `static/locations.json` | `static/cidades_estados.json` |
+| `static/occupations.json` | `static/areas_profissionais.json` |
+| `templates/index.html` | `templates/pagina_principal.html` |
+| `scripts/build_career_options.py` | `scripts/gerar_areas_profissionais.py` |
+| `scripts/review_catalog.py` | `scripts/revisar_catalogo.py` |
+| `tests/test_app.py` | `tests/test_aplicacao.py` |
+| `tests/test_audit.py` | `tests/test_seguranca_regressoes.py` |
+| `tests/test_profile_sections.py` | `tests/test_secoes_perfil.py` |
+| `tests/test_resume_layout.py` | `tests/test_layout_curriculo.py` |
+| `tests/check_frontend.cjs` | `tests/verificar_interface.cjs` |
+
+`app.py` continua sendo o ponto de entrada do servidor. `requirements.txt` lista as dependências; `templates/` guarda o HTML e `static/` os recursos servidos ao navegador. Os nomes dessas pastas seguem a convenção do Flask.
+
+`data/jobs.json` contém vagas e `data/courses.json` contém cursos; seus nomes correspondem aos tipos usados pela API. `uploads/` guarda os PDFs enviados: os identificadores nos nomes evitam colisões e são referenciados pelo banco. Não renomeie esses PDFs manualmente. `.gitkeep` mantém a pasta vazia no Git.
+
+Para entender o fluxo, comece pelas rotas em `app.py`, siga para o módulo responsável pelo assunto e depois para `interface_site.js` e `editor_perfil.js`. A folha `estilos_interface.css` é carregada depois de `estilos_base.css` e complementa seus estilos. Os testes verificam rotas, validações, seções do perfil, layout dos PDFs e funções da interface.
+
+Os relatórios em `docs/` são registros históricos e podem mencionar os nomes antigos. Ao atualizar outra instalação, leve todos os arquivos renomeados e suas referências juntos; o comando de inicialização continua sendo `python app.py`.

@@ -1,4 +1,4 @@
-#teste bra
+"""Ponto de entrada Flask: autenticação, perfil, catálogo e rotas dos currículos."""
 import json
 import os
 import re
@@ -17,10 +17,10 @@ from flask import Flask, jsonify, render_template, request, send_file, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from catalog import recommendations
-from resume_documents import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
-from resume_analysis import analyze, ai_status
-from profile_data import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section, contact_errors, missing_fields
+from catalogo_oportunidades import recommendations
+from documentos_curriculo import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
+from analise_curriculo import analyze, ai_status
+from dados_perfil import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section, contact_errors, missing_fields
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -55,6 +55,7 @@ def timestamp() -> str:
     return now_sp().isoformat()
 
 
+# A conexão encerra a transação e é fechada mesmo quando ocorre uma falha.
 @contextmanager
 def db_connection():
     connection = sqlite3.connect(DATABASE)
@@ -67,6 +68,7 @@ def db_connection():
         connection.close()
 
 
+# Cria estruturas ausentes sem apagar os perfis e currículos já cadastrados.
 def init_db():
     with db_connection() as connection:
         connection.executescript(
@@ -186,6 +188,7 @@ def login_required(view):
     return wrapped
 
 
+# Reúne os dados revisados para gerar uma versão independente do perfil atual.
 def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> dict:
     """Creates a resume only with values supplied by the person using the platform."""
     supplied = supplied or {}
@@ -255,7 +258,7 @@ def profile_advice(profile: dict) -> dict:
 
 @app.get("/")
 def home():
-    return render_template("index.html")
+    return render_template("pagina_principal.html")
 
 
 @app.before_request
@@ -510,6 +513,7 @@ def generate_resume():
     return jsonify({"message": "Currículo criado com suas informações.", "id": cursor.lastrowid, "resume": data}), 201
 
 
+# Restringe o acesso ao dono do currículo, inclusive nas rotas de download.
 def owned_resume(resume_id: int):
     with db_connection() as connection:
         row = connection.execute(

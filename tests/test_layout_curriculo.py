@@ -3,7 +3,7 @@ import io
 import unittest
 
 from pypdf import PdfReader
-from resume_documents import build_resume_pdf, resume_section_paragraphs
+from documentos_curriculo import build_resume_pdf, resume_section_paragraphs
 
 
 SAMPLE = {

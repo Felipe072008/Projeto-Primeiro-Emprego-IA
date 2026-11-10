@@ -1,4 +1,4 @@
-/* teste commit e bra */
+// Controla navegação, consultas à API e ações do currículo na página principal.
 const state = { me: null, aiAvailable: false };
 const optionCache = { locations: null, occupations: null };
 const openOptionLists = new WeakMap();
@@ -135,9 +135,10 @@ function normalizeOptionText(value) {
   return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
 
+// Compartilha a consulta entre os campos para evitar baixar o mesmo catálogo várias vezes.
 function loadOptionData(kind) {
   if (!optionCache[kind]) {
-    const path = kind === "locations" ? "/static/locations.json" : "/static/occupations.json";
+    const path = kind === "locations" ? "/static/cidades_estados.json" : "/static/areas_profissionais.json";
     optionCache[kind] = api(path).then((data) => {
       if (kind === "locations") {
         const stateNames = new Map(data.states.map((item) => [item.uf, item.name]));
@@ -433,6 +434,7 @@ function syncMobileMenu() {
   $('#mobile-menu').setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
 }
 
+// Informações adicionais começam vazias e só recebem o que a pessoa decidir escrever.
 function populateBuilder() {
   const form = $("#resume-builder-form");
   const profile = state.me.profile || {};
@@ -575,6 +577,7 @@ function renderAnalysis(data) {
     <h3>Relação com a área desejada</h3><p>${escapeHtml(data.alignment.desired_area || 'Área ainda não informada no perfil.')}</p><p><b>Conhecimentos encontrados:</b> ${escapeHtml(data.alignment.skills_found.join(', ') || 'Nenhum dos termos monitorados.')}</p><p><b>Termos das vagas para revisar ou estudar:</b> ${escapeHtml(data.alignment.terms_to_review.join(', ') || 'Nenhum termo adicional identificado nas vagas disponíveis.')}</p><ul>${data.alignment.jobs.map(j => `<li><a href="${escapeHtml(j.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(j.title)} ↗</a></li>`).join('')}</ul><p class="muted">${escapeHtml(data.alignment.note)}</p><p class="muted">${escapeHtml(data.limitations)}</p></article>`;
 }
 
+// Edita os dados da versão salva, preservando seu histórico independente do perfil.
 async function editResumeVersion(id) {
   const saved=await api(`/api/resumes/${id}`);
   const content=saved.content;

@@ -1,4 +1,4 @@
-"""Section validation and truthful text views for existing profile consumers."""
+"""Valida cada seção do perfil e preserva os textos de cadastros antigos."""
 import json
 import re
 import unicodedata
@@ -14,7 +14,7 @@ EDUCATION_OPTIONS = (
 SECTIONS = ('contact', 'goals', 'experiences', 'education', 'courses', 'skills', 'languages', 'projects', 'availability')
 LIST_FIELDS = {'experiences': 'professional_experience', 'courses': 'courses', 'skills': 'skills', 'languages': 'languages', 'projects': 'academic_experience'}
 REQUIRED = {'phone': 'Telefone', 'age': 'Idade', 'city': 'Cidade', 'state': 'Estado', 'desired_area': 'Área profissional', 'education': 'Escolaridade', 'skills': 'Habilidades', 'languages': 'Idiomas'}
-CAREERS = Path(__file__).resolve().parent / 'static' / 'occupations.json'
+CAREERS = Path(__file__).resolve().parent / 'static' / 'areas_profissionais.json'
 DDDS = set('11 12 13 14 15 16 17 18 19 21 22 24 27 28 31 32 33 34 35 37 38 41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69 71 73 74 75 77 79 81 82 83 84 85 86 87 88 89 91 92 93 94 95 96 97 98 99'.split())
 
 
@@ -57,7 +57,7 @@ def defaults(profile):
 
 
 def modern_goals(goals):
-    from catalog import AREAS, career_selection
+    from catalogo_oportunidades import AREAS, career_selection
     goals = dict(goals)
     old = career_selection(goals['desired_area'])
     goals.setdefault('target_role', goals['desired_area'].split(' — ', 1)[-1] if old else '')
@@ -99,7 +99,7 @@ def validate_section(section, data, previous):
         result = {field: text(data, field, required=True, limit=120) for field in allowed}
         errors.update(contact_errors(result))
     elif section == 'goals':
-        from catalog import AREAS
+        from catalogo_oportunidades import AREAS
         career_titles = {item['title'] for item in json.loads(CAREERS.read_text(encoding='utf-8'))['occupations']}
         career_titles.update(v[0] for v in AREAS.values())
         result = {field: text(data, field, required=field == 'desired_area', limit=160 if field != 'objective' else 2000) for field in ('desired_area', 'objective', 'salary')}
@@ -229,6 +229,7 @@ def record_text(section, item):
     return '\n'.join(filter(None,[item['title'],item['context'],' a '.join(filter(None,[display_date(item['start']),display_date(item['end'])])),item['description']]))
 
 
+# Textos antigos continuam disponíveis; não são convertidos em experiências inventadas.
 def hydrate_profile(raw, stored):
     profile = dict(raw)
     sections = defaults(raw)

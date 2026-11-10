@@ -19,8 +19,8 @@ const vm = require('node:vm');
     window: {scrollTo() {}, matchMedia: () => ({matches:true})},
     calls,
   });
-  const source = fs.readFileSync(path.join(__dirname, '../static/app.js'), 'utf8');
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '../static/profile.js'), 'utf8'), context);
+  const source = fs.readFileSync(path.join(__dirname, '../static/interface_site.js'), 'utf8');
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../static/editor_perfil.js'), 'utf8'), context);
   vm.runInContext(source.replace(/boot\(\);\s*$/, ''), context);
   const resumeMarkup = context.resumeSectionHtml({title:'Cursos e certificações',content:'<Curso> · Escola\nDescrição\n\nOutro curso · Outra escola'});
   assert.ok(resumeMarkup.includes('<strong>&lt;Curso&gt;</strong> · Escola'));
@@ -35,7 +35,7 @@ const vm = require('node:vm');
     assert.equal(context.formatProfilePhone(raw), formatted);
     assert.equal(context.formatProfilePhone(formatted), formatted);
   }
-  const indexHtml = fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8');
+  const indexHtml = fs.readFileSync(path.join(__dirname, '../templates/pagina_principal.html'), 'utf8');
   assert.deepEqual(Array.from(indexHtml.matchAll(/class="nav-link(?: active)?" data-route="([^"]+)"/g), match=>match[1]), ['dashboard','profile','jobs','courses','resume']);
   let modalClosed = false;
   const pendingModal = {

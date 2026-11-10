@@ -1,4 +1,4 @@
-"""Free local document checks, with optional contextual analysis through Ollama."""
+"""Revisa a estrutura do currículo e, quando disponível, consulta a IA local."""
 import json
 import os
 import re
@@ -6,7 +6,7 @@ from urllib.error import URLError
 from urllib.parse import urlparse
 from urllib.request import ProxyHandler, Request, build_opener
 
-from catalog import normalized
+from catalogo_oportunidades import normalized
 
 SECTIONS = {
     "Objetivo ou resumo": r"\b(objetivo|resumo|perfil profissional)\b",
@@ -118,6 +118,7 @@ SCHEMA = _object({
 })
 
 
+# A resposta do modelo precisa ser validada antes de virar orientação para a pessoa.
 def validate_contextual(data, text):
     if not isinstance(data, dict) or set(data) != set(SCHEMA["properties"]):
         raise ValueError("Resposta de análise incompleta.")
