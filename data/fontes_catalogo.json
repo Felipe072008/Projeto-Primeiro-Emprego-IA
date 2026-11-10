@@ -1,0 +1,214 @@
+[
+  {
+    "id": "evg",
+    "name": "EV.G / Enap",
+    "kind": "courses",
+    "official_url": "https://www.escolavirtual.gov.br/catalogo",
+    "classification": "pending",
+    "reason": "CSV público encontrado, mas o teste retornou HTML de manutenção. Esquema, completude, condições por oferta e alcance da autorização de reúso do CSV ainda não validados.",
+    "cost": "Download público sem cobrança observada; nenhuma API contratada.",
+    "permission": "Catálogo oferece CSV; Enap declara reúso das bases publicadas em dados.gov.br. Falta vincular a licença ao arquivo e validar o esquema real.",
+    "available_data": "Página mostra título, conteudista e carga horária; nenhum CSV de cursos válido recebido.",
+    "evidence_urls": [
+      "https://www.escolavirtual.gov.br/catalogo",
+      "https://www.escolavirtual.gov.br/catalogo/exportar/csv",
+      "https://enap.gov.br/acesso-a-informacao/dados-abertos/",
+      "https://www.enap.gov.br/acesso-a-informacao/termo-de-uso-e-aviso-de-privacidade-enap/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "ciee_pr",
+    "name": "CIEE/PR",
+    "kind": "jobs",
+    "official_url": "https://autoweb.cieepr.org.br/Estudante/vagas-externo",
+    "classification": "official_link",
+    "reason": "Portal oficial confirmado; não foi confirmada API/feed autorizado para reutilizar e redistribuir vagas.",
+    "cost": "Consulta pública; custo de integração não confirmado.",
+    "permission": "Acesso ao portal não comprova autorização para coletar e republicar anúncios.",
+    "available_data": "Portal de vagas e programas de estágio/aprendizagem; candidatura e serviços usam cadastro.",
+    "evidence_urls": [
+      "https://www.cieepr.org.br/",
+      "https://autoweb.cieepr.org.br/Estudante/vagas-externo"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "emprega_curitiba",
+    "name": "Emprega Curitiba",
+    "kind": "jobs",
+    "official_url": "https://emprega.curitiba.pr.gov.br/",
+    "classification": "official_link",
+    "reason": "Domínio confirmado pela Prefeitura; acesso de pesquisa retornou 403. Não foi encontrada integração autorizada para republicação.",
+    "cost": "Portal gratuito para população, conforme Prefeitura; integração não confirmada.",
+    "permission": "Não herda automaticamente a licença do Portal de Dados Abertos.",
+    "available_data": "Anúncios individuais e candidatura pelo portal; nenhum registro importado.",
+    "evidence_urls": [
+      "https://www.curitiba.pr.gov.br/noticias/confira-as-vagas-de-trabalho-disponiveis-no-site-emprega-curitiba/85486",
+      "https://emprega.curitiba.pr.gov.br/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "infojobs",
+    "name": "InfoJobs Brasil",
+    "kind": "jobs",
+    "official_url": "https://www.infojobs.com.br/",
+    "classification": "official_link",
+    "reason": "Aviso legal restringe inclusão de anúncios em outros sites sem autorização prévia por escrito. Nenhuma autorização de integração obtida.",
+    "cost": "Nenhum contrato/API; custo de redistribuição não confirmado.",
+    "permission": "Somente link; não coletar nem redistribuir anúncios.",
+    "available_data": "Busca pública de vagas; nenhum feed autorizado recebido.",
+    "evidence_urls": [
+      "https://www.infojobs.com.br/legal/aviso-legal-para-candidatos__15727.aspx"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "catho",
+    "name": "Catho",
+    "kind": "jobs",
+    "official_url": "https://www.catho.com.br/",
+    "classification": "official_link",
+    "reason": "Termos da API pública tratam de anunciar vagas e recrutar; não confirmam acesso livre a todo o catálogo para republicação.",
+    "cost": "Termos citam anúncio sem custo; isso não comprova gratuidade de uma API de agregação.",
+    "permission": "Integração depende de termos próprios; sem autorização para esta finalidade.",
+    "available_data": "Anúncios de vagas; nenhum feed de catálogo autorizado recebido.",
+    "evidence_urls": [
+      "https://assets.catho.com.br/consents-prod/terms/termos-de-uso-api-publica-v1.pdf"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "indeed",
+    "name": "Indeed Brasil",
+    "kind": "jobs",
+    "official_url": "https://br.indeed.com/",
+    "classification": "official_link",
+    "reason": "Termos impõem condições a APIs, armazenamento e redistribuição. Nenhum acesso de agregação autorizado confirmado.",
+    "cost": "Sem contratação; condições/custo de integração não confirmados.",
+    "permission": "Somente link oficial; não usar coleta automática para contornar as condições.",
+    "available_data": "Busca de anúncios; dados de integração não recebidos.",
+    "evidence_urls": [
+      "https://br.indeed.com/legal"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "curitiba_estagios",
+    "name": "Prefeitura de Curitiba / IMAP — estágios",
+    "kind": "jobs",
+    "official_url": "https://imap.curitiba.pr.gov.br/portal-de-estagio.html",
+    "classification": "pending",
+    "reason": "Piloto separado do Emprega Curitiba. Documentação publicada é de 2015, não descreve ID ou URL individual; teste HTTPS do serviço falhou por certificado incompatível.",
+    "cost": "Dados abertos sem cobrança; nenhuma contratação.",
+    "permission": "Portal permite reúso com atribuição, hora de acesso e aviso de responsabilidade. Não usar credenciais da documentação nem HTTP sem antes validar o serviço atual.",
+    "available_data": "Documentação descreve órgão, área, turno, escolaridade, setor e endereço; sem ID/link individual documentado. XML do espelho é metadado do conjunto, não lista de vagas.",
+    "evidence_urls": [
+      "https://dadosabertos.curitiba.pr.gov.br/conjuntodado/detalhe?chave=26200d9a-eff9-434c-8858-36b8eb6ebea6",
+      "https://dadosabertos.curitiba.pr.gov.br/informacoes/regrasutilizacao/5",
+      "https://dadosabertos.c3sl.ufpr.br/curitiba/IMAPEstagios/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "meu_emprego",
+    "name": "Meu Emprego",
+    "kind": "jobs",
+    "official_url": null,
+    "classification": "pending",
+    "reason": "Nome ambíguo; domínio oficial não confirmado. Nenhum endereço presumido.",
+    "cost": "Não confirmado.",
+    "permission": "Não confirmada.",
+    "available_data": "Não confirmados.",
+    "evidence_urls": [],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "aprenda_mais",
+    "name": "Aprenda Mais / MEC",
+    "kind": "courses",
+    "official_url": "https://aprendamais.mec.gov.br/",
+    "classification": "official_link",
+    "reason": "Portal oficial confirmado; não foi confirmado feed/API de catálogo com licença de redistribuição e dados por oferta.",
+    "cost": "Portal anuncia cursos abertos gratuitos com certificação; nenhum serviço contratado.",
+    "permission": "Não presumir autorização de republicação a partir do acesso público ao Moodle.",
+    "available_data": "Turmas, áreas, títulos e páginas de cursos; matrícula e prazo devem ser conferidos por turma.",
+    "evidence_urls": [
+      "https://aprendamais.mec.gov.br/",
+      "https://aprendamais.mec.gov.br/mod/page/view.php?id=134111"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "sebrae",
+    "name": "Sebrae",
+    "kind": "courses",
+    "official_url": "https://loja.sebrae.com.br/cursos/cursos-online",
+    "classification": "official_link",
+    "reason": "Catálogo oficial confirmado; não foi confirmada integração gratuita autorizada para redistribuição.",
+    "cost": "Há ofertas gratuitas; cada oferta exige conferir preço e certificado. Custo de integração não confirmado.",
+    "permission": "Sem permissão confirmada para coleta e redistribuição; somente link.",
+    "available_data": "Título, carga horária e preço em ofertas; não generalizar condições de um curso aos demais.",
+    "evidence_urls": [
+      "https://sebrae.com.br/sites/PortalSebrae/cursosonline",
+      "https://loja.sebrae.com.br/gest-o-financeira-1-372000026927"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "prime_cursos",
+    "name": "Prime Cursos",
+    "kind": "courses",
+    "official_url": "https://www.primecursos.com.br/",
+    "classification": "official_link",
+    "reason": "Conteúdo gratuito e certificado cobrado são distinguidos no portal. Não foi confirmado feed autorizado de redistribuição.",
+    "cost": "Conteúdo anunciado como gratuito; certificado pago. Nenhuma API contratada.",
+    "permission": "Contrato educacional não é autorização de agregação de catálogo.",
+    "available_data": "Áreas, cursos e condições educacionais; verificar cada oferta antes de publicar.",
+    "evidence_urls": [
+      "https://www.primecursos.com.br/",
+      "https://www.primecursos.com.br/contrato-de-prestacao-de-servicos/"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  },
+  {
+    "id": "coursera",
+    "name": "Coursera",
+    "kind": "courses",
+    "official_url": "https://www.coursera.org/",
+    "classification": "official_link",
+    "reason": "Licença de uso é pessoal; não foi confirmada autorização para este catálogo. Prévia, teste e auxílio não comprovam conteúdo integral gratuito.",
+    "cost": "Condições variáveis por oferta; nenhuma API/assinatura contratada.",
+    "permission": "Não confundir cadastro gratuito com licença de redistribuição ou curso integral gratuito.",
+    "available_data": "Ofertas e condições no portal; nenhum registro sincronizado.",
+    "evidence_urls": [
+      "https://www.coursera.org/about/terms"
+    ],
+    "assessed_on": "2026-11-09",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "monday 06:30"
+  }
+]

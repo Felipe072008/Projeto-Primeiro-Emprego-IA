@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" />
   </head>
   <body>
-    <div class="noise"></div>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
 
     <main id="auth-view" class="auth-view">
@@ -165,9 +164,12 @@
               <div><p class="eyebrow">Oportunidades</p><h1>Vagas com destino certo.</h1><p class="lead">Cada oportunidade exibida direciona para a página original onde foi publicada.</p></div>
               <span class="verified-pill">Curitiba · PR</span>
             </div>
-            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button><button class="button button--outline" type="reset">Limpar filtros</button></form><p class="muted">Cobertura atual: Curitiba/PR. A busca não altera sua cidade no perfil.</p><p class="muted">Outras buscas externas (não são vagas verificadas): <a href="https://portal.gupy.io/" target="_blank" rel="noopener noreferrer">Gupy</a> · <a href="https://www.cieepr.org.br/" target="_blank" rel="noopener noreferrer">CIEE/PR</a></p>
+            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button><button class="button button--outline" type="reset">Limpar filtros</button></form><p class="muted">Cobertura atual: Curitiba/PR. A busca não altera sua cidade no perfil.</p>
             <p id="jobs-context" class="muted" aria-live="polite"></p>
-            <div id="jobs-list" class="jobs-list"></div>
+            <p id="jobs-status" class="catalog-status" role="status"></p>
+            <div id="jobs-list" class="jobs-list" aria-busy="false"></div>
+            <div id="jobs-sources"></div>
+            <section id="jobs-external" class="catalog-external" aria-label="Consulte também"></section>
           </section>
 
           <section class="page" id="page-resume" data-page="resume">
@@ -200,9 +202,12 @@
             <div class="course-hero">
               <p class="eyebrow eyebrow--light">Cursos e capacitação</p><h1>Desenvolva suas habilidades.</h1><p>Encontre instituições confiáveis e desenvolva competências que o mercado procura.</p><span class="course-hero-star">✦</span>
             </div>
-            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Somente gratuitos</label><button class="button button--primary">Buscar cursos</button><button class="button button--outline" type="reset">Limpar filtros</button></form>
+            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Conteúdo completo gratuito</label><label class="check-label"><input type="checkbox" name="certificate_free" value="1" /> Certificado gratuito</label><button class="button button--primary">Buscar cursos</button><button class="button button--outline" type="reset">Limpar filtros</button></form>
             <p id="courses-context" class="muted" aria-live="polite"></p>
-            <div id="courses-list" class="jobs-list"></div>
+            <p id="courses-status" class="catalog-status" role="status"></p>
+            <div id="courses-list" class="jobs-list" aria-busy="false"></div>
+            <div id="courses-sources"></div>
+            <section id="courses-external" class="catalog-external" aria-label="Consulte também"></section>
 
           </section>
         </div>
