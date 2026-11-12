@@ -1,15 +1,20 @@
-name: Diagnóstico do catálogo
+name: Sincronizar catálogo
 
 on:
   push:
+    branches: [main]
     paths:
       - .github/workflows/catalogo.yml
+  schedule:
+    - cron: '17 9 * * *'
+    # Verificação inicial do agendador; remover após observar uma execução schedule.
+    - cron: '47 * * * *'
   workflow_dispatch:
     inputs:
       kind:
         description: Catálogo a verificar
         required: true
-        default: courses
+        default: jobs
         type: choice
         options:
           - courses
@@ -47,11 +52,18 @@ jobs:
         run: |
           mkdir -p relatorio-catalogo
           python scripts/atualizar_catalogo.py --kind "$CATALOG_KIND" --diagnose | tee relatorio-catalogo/resultado.json
+      - name: Coletar Jooble e entregar ao PythonAnywhere
+        shell: bash
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.kind == 'jobs' }}
+        env:
+          JOOBLE_API_KEY: ${{ secrets.JOOBLE_API_KEY }}
+          CATALOG_SYNC_TOKEN: ${{ secrets.CATALOG_SYNC_TOKEN }}
+        run: python scripts/entregar_jooble.py | tee relatorio-catalogo/entrega.json
       - name: Disponibilizar diagnóstico
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: diagnostico-catalogo-${{ github.run_id }}
-          path: relatorio-catalogo/resultado.json
+          name: catalogo-${{ github.run_id }}
+          path: relatorio-catalogo/*.json
           if-no-files-found: warn
           retention-days: 7

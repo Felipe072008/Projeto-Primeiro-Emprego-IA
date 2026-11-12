@@ -162,6 +162,13 @@ class SyncTests(unittest.TestCase):
         self.run_source(snapshot(empty_confirmed=True), now=NOW+timedelta(hours=1))
         self.assertEqual(catalog.load_catalog('courses', NOW.date()), [])
 
+    def test_sample_keeps_absent_items(self):
+        self.run_source(snapshot(course('1'), course('2')))
+        self.run_source(snapshot(course('1'), close_missing=False))
+        rows, _ = sync.read_state('courses')
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(all(row['status'] == 'published' for row in rows))
+
     def test_configuration_diagnostic_does_not_import(self):
         from scripts.atualizar_catalogo import main
         import contextlib

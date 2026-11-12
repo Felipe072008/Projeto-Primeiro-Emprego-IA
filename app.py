@@ -288,6 +288,22 @@ def meta():
     return jsonify({"date": date_label(), "timezone": "America/Sao_Paulo"})
 
 
+@app.post('/api/catalogo/sync')
+def receive_catalog():
+    token = os.environ.get('CATALOG_SYNC_TOKEN', '')
+    supplied = request.headers.get('Authorization', '')
+    if not token or not secrets.compare_digest(supplied.encode(), ('Bearer ' + token).encode()):
+        return jsonify(error='Entrega não autorizada.'), 401
+    if request.content_length is None or request.content_length > 1_000_000:
+        return jsonify(error='Tamanho da entrega inválido.'), 413
+    from sincronizacao_catalogo import receive_jooble, ImportFailure
+    try:
+        result = receive_jooble(request.get_json(silent=True))
+    except ImportFailure as exc:
+        return jsonify(error=exc.code, message=str(exc)), 400
+    return jsonify(result)
+
+
 @app.post("/api/auth/register")
 def register():
     data = request.get_json(silent=True) or {}

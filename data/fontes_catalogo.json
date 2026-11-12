@@ -277,5 +277,22 @@
     "assessed_on": "2026-11-09",
     "schedule_timezone": "America/Sao_Paulo",
     "suggested_schedule": "daily 06:00"
+  },
+  {
+    "id": "jooble",
+    "name": "Jooble Brasil",
+    "kind": "jobs",
+    "official_url": "https://br.jooble.org/api/about",
+    "classification": "verified_sync",
+    "reason": "API brasileira testada. Consulta amostral, sem encerramento por ausência.",
+    "cost": "Plano informado de 100 consultas diárias.",
+    "permission": "Portal da API permite publicar respostas no próprio site.",
+    "available_data": "Título, localização, trecho, empresa quando informada e link Jooble.",
+    "evidence_urls": [
+      "https://br.jooble.org/api/about"
+    ],
+    "assessed_on": "2026-11-12",
+    "schedule_timezone": "America/Sao_Paulo",
+    "suggested_schedule": "daily 06:00"
   }
 ]

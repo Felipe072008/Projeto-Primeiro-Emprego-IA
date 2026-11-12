@@ -13,7 +13,8 @@ from fontes_catalogo import sources, source_by_id
 BRAZIL_TZ = ZoneInfo('America/Sao_Paulo')
 DEFAULT_DB = Path(__file__).resolve().parent / 'data' / 'catalogo_sync.db'
 # Nenhum adaptador pode publicar antes da confirmação de licença, esquema e evidências.
-ADAPTERS = {}
+from adaptador_jooble import fetch_jobs
+ADAPTERS = {'jooble': fetch_jobs}
 
 
 class ImportFailure(ValueError):
@@ -154,7 +155,7 @@ def apply_snapshot(db, source, snapshot, now):
         'SELECT item_id,payload FROM catalog_items WHERE source_id=?', (source['id'],))}
     current = {r['source_item_id'] for r in rows}
     for item_id, row in old.items():
-        if item_id not in current and row.get('status') == 'published':
+        if snapshot.get('close_missing', True) and item_id not in current and row.get('status') == 'published':
             row.update(status='closed', availability_status='closed', closed_at=now.isoformat())
             if source['kind'] == 'courses':
                 row['enrollment_status'] = 'closed'
@@ -184,7 +185,8 @@ def update_source(source_id, *, due=False, now=None):
                 raise ImportFailure('source_pending', source['reason'], 'blocked')
             snapshot = ADAPTERS[source_id]()
             count = apply_snapshot(db, source, snapshot, now)
-            last_success, status, code, message = now.isoformat(), 'success', None, 'Lista completa validada.'
+            last_success, status, code = now.isoformat(), 'success', None
+            message = 'Lote validado; ausências preservadas.' if snapshot.get('close_missing') is False else 'Lista completa validada.'
         except Exception as exc:
             db.execute('ROLLBACK TO source_update')
             status = exc.status if isinstance(exc, ImportFailure) else 'error'
@@ -202,3 +204,35 @@ def update_source(source_id, *, due=False, now=None):
 def update_catalog(kind='all', *, source_id=None, due=False, now=None):
     selected = [source_by_id(source_id)] if source_id else sources(None if kind == 'all' else kind)
     return [update_source(source['id'], due=due, now=now) for source in selected]
+
+
+def receive_jooble(payload, now=None):
+    """Revalida a entrega e grava lote e recibo na mesma transação."""
+    now = now or datetime.now(BRAZIL_TZ)
+    try:
+        collected = datetime.fromisoformat(payload['collected_at'])
+        snapshot = payload['snapshot']
+        if collected.tzinfo is None or not 0 <= (now - collected).total_seconds() <= 900:
+            raise ValueError()
+        if snapshot.get('close_missing') is not False or len(snapshot['items']) > 100:
+            raise ValueError()
+        for row in snapshot['items']:
+            if row['original_url'] != 'https://br.jooble.org/jdp/' + row['source_item_id']:
+                raise ValueError()
+    except (KeyError, TypeError, ValueError, AttributeError):
+        raise ImportFailure('invalid_delivery', 'Entrega inválida ou fora da janela de 15 minutos.') from None
+    source = source_by_id('jooble')
+    with closing(connect()) as db, db:
+        db.execute('BEGIN IMMEDIATE')
+        previous = db.execute('SELECT * FROM catalog_runs WHERE source_id=?', ('jooble',)).fetchone()
+        if previous and previous['last_success_at'] and collected <= datetime.fromisoformat(previous['last_success_at']):
+            return {'sync_status': 'skipped', 'imported_count': previous['imported_count'],
+                    'collected_at': previous['last_success_at']}
+        count = apply_snapshot(db, source, snapshot, collected)
+        db.execute('INSERT INTO catalog_runs VALUES (?,?,?,?,?,?,?) ON CONFLICT(source_id) DO UPDATE SET '
+                   'last_attempt_at=excluded.last_attempt_at,last_success_at=excluded.last_success_at,'
+                   'sync_status=excluded.sync_status,error_code=NULL,message=excluded.message,'
+                   'imported_count=excluded.imported_count',
+                   ('jooble', now.isoformat(), collected.isoformat(), 'success', None,
+                    'Lote recebido do GitHub Actions; ausências preservadas.', count))
+    return {'sync_status': 'success', 'imported_count': count, 'collected_at': collected.isoformat()}
