@@ -1,4 +1,6 @@
-# Verificação da entrega
+# Verificação histórica da entrega de 09/11/2026
+
+**Atualização de 12/11/2026:** a integração Jooble e o receptor autenticado já foram instalados no PythonAnywhere. O GitHub Actions aprovou 57 testes e confirmou a entrega real de uma vaga. A EV.G foi removida. Evidências, agenda e limitações atuais estão em [OPERACAO.md](OPERACAO.md). As constatações abaixo descrevem somente a etapa anterior.
 
 Executada em 2026-11-09T22:46:44.371549-03:00, no repositório `C:\Users\felip\Documents\primeiro-emprego-ia`.
 

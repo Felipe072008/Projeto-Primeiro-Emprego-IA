@@ -2,7 +2,9 @@
 
 ## Situação desta entrega
 
-Somente backend. Nenhuma fonte externa tem sincronização verificada nesta etapa. O motor transacional e o comando de rotina estão implementados e testados com fixtures; os adaptadores de publicação reais permanecem bloqueados. A EV.G respondeu com uma página de manutenção, em vez do CSV. A rotina NÃO está instalada em um agendador online e NÃO atualiza com este computador desligado.
+Atualizado em 12/11/2026: Jooble Brasil integrada, com coleta no GitHub Actions e entrega validada ao PythonAnywhere. A rotina independe do notebook. Evidências e agenda estão em [OPERACAO.md](OPERACAO.md). A EV.G foi removida; os demais cursos permanecem sem importação automática. O contrato de leitura abaixo continua na versão 2.
+
+`POST /api/catalogo/sync` é uma rota interna de integração, autenticada por segredo exclusivo. Não deve ser chamada pelo frontend nem ter sua credencial incluída no JavaScript.
 
 As vagas manuais foram revistas nas fontes em 09/11/2026; consulte [a revisão atual](REVISAO_ATUAL.md). O acervo manual de cursos mantém as datas originais e não foi revalidado externamente por esta revisão. Uma inscrição antiga sem estado registrado retorna `unknown`; não apresentar isso como matrícula aberta confirmada. Não atribuir a data de avaliação de uma fonte à verificação de um anúncio.
 

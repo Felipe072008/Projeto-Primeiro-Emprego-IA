@@ -103,10 +103,10 @@ As rotas de vagas e cursos têm metadados de fontes, estados de validade e filtr
 `certificate_free=1`. Consulte o [contrato para o Front End](docs/catalogo/CONTRATO_FRONTEND.md),
 a [avaliação das fontes](docs/catalogo/FONTES.md) e os [comandos e agendamento](docs/catalogo/OPERACAO.md).
 
-Nenhuma integração externa está habilitada: os bloqueios estão registrados por fonte.
-O motor foi testado com fixtures; isso não comprova sincronização real. A rotina está pronta
-para agendamento posterior, mas nenhuma tarefa local/online foi instalada nem foi feito deploy.
-O catálogo manual anterior mantém suas datas; sua disponibilidade não foi revalidada nesta etapa.
+Em 12/11/2026, a Jooble Brasil foi integrada e a entrega real de vagas ao PythonAnywhere foi
+confirmada pelo GitHub Actions e pelo banco remoto. O workflow da `main` contém agenda diária
+às 06h17 de Brasília e execução manual; consulte as evidências em OPERACAO.md.
+Cursos continuam sem importação automática. O catálogo manual mantém suas datas e a EV.G foi removida.
 
 ## Revisão atual de vagas e confirmação de cursos
 
@@ -115,5 +115,5 @@ Em 09/11/2026, foram conferidas as 17 vagas antigas nas páginas oficiais: 8 con
 totalizando 13 vagas publicadas em Curitiba; o acervo anterior foi preservado no histórico.
 Consulte a [revisão por anúncio e o teste de Administração](docs/catalogo/REVISAO_ATUAL.md).
 As datas de inscrição foram extraídas das fontes; a revisão diária não é uma prorrogação da oferta.
-Meu Emprego foi retirado da configuração. A conta PythonAnywhere informada é `felipecorreia`;
-o usuário confirmou a aba Tasks vazia. A automação segue não configurada/não comprovada.
+Meu Emprego foi retirado da configuração. A conta de hospedagem confirmada e usada na instalação
+é `PrimeiroEmpregoIA`; a rotina executa no GitHub Actions, sem depender da aba Tasks nem do notebook.
