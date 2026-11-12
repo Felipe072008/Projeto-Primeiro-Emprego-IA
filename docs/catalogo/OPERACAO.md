@@ -1,74 +1,57 @@
-# Atualização manual e agendamento
+# Operação do catálogo — 12/11/2026
 
-## Estado atual
+## Fluxo instalado
 
-Não há adaptador externo habilitado nem agendamento instalado. Nenhuma oferta nova foi importada. Esta entrega prepara o armazenamento, validação, transação, estados e ponto de entrada da rotina; não resolve os bloqueios de dados/licença documentados em [FONTES.md](FONTES.md).
+GitHub Actions consulta a API Jooble Brasil, filtra e valida o lote, envia por HTTPS para `/api/catalogo/sync` e exige recibo com a mesma data e quantidade. O Flask revalida e grava itens e recibo em uma única transação SQLite. O site lê `data/catalogo_sync.db` no próprio PythonAnywhere.
 
-O usuário informou a conta PythonAnywhere `felipecorreia` e confirmou a aba Tasks vazia. O painel não pôde ser inspecionado diretamente nesta sessão; nenhuma execução agendada foi comprovada. Não foi feito deploy. Nenhuma tarefa foi criada no Windows: os passos abaixo são para instalação futura. Um agendamento no notebook depende de ele estar ligado e disponível. Nada garante execução com o computador desligado.
+Conta: `PrimeiroEmpregoIA`. Projeto efetivamente importado pelo WSGI: `/home/PrimeiroEmpregoIA/Projeto-Primeiro-Emprego-IA`. Domínio: `https://PrimeiroEmpregoIA.pythonanywhere.com`.
 
-## Comandos no repositório
+O notebook pode ficar desligado. A rotina não depende de tarefas pagas no PythonAnywhere. O código não publica alterações futuras do site automaticamente: este workflow atualiza os dados do catálogo.
 
-```powershell
-Set-Location C:\Users\felip\Documents\primeiro-emprego-ia
-.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind courses --diagnose
-.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind jobs
-.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --kind courses
-.\.venv\Scripts\python.exe scripts\atualizar_catalogo.py --due
-```
+## Segredos
 
-`--diagnose` lista as fontes configuradas e informa se cada uma possui adaptador habilitado. Não acessa fontes externas nem grava o banco. Uma inspeção válida retorna código 0 e `import_performed: false`; as importações efetivas continuam retornando erro quando bloqueadas ou malsucedidas.
+- `JOOBLE_API_KEY`: GitHub Actions Secrets; usada apenas na consulta ao Jooble.
+- `CATALOG_SYNC_TOKEN`: GitHub Actions Secrets e `/home/PrimeiroEmpregoIA/.catalog-sync.json`, fora do repositório no servidor. O WSGI carrega essa configuração.
+- O token da API PythonAnywhere foi usado para instalação e conferência. Não é necessário ao workflow e não foi enviado ao GitHub.
 
-Sem `--due`, força uma tentativa (teste/recuperação). Com `--due`, tenta no máximo uma vez por ciclo em Brasília, contando tentativas falhas/bloqueadas; para recuperar antes do próximo ciclo, execute sem essa opção. `--source` seleciona uma fonte. A execução com fontes bloqueadas retorna código **1**, com motivo em JSON; sucesso ou ciclos já tentados retornam **0**. Falhas internas de armazenamento resultam em erro do comando, sem simular sucesso.
+Nenhuma chave entra no código, relatório ou artefato do Actions. Para trocar o segredo de entrega, atualizar o arquivo privado e o secret homônimo, depois recarregar o webapp.
 
-Cadência sugerida: vagas **diariamente às 06h**, cursos **segunda-feira às 06h30**, em `America/Sao_Paulo`. O comando calcula o último ciclo vencido nessa zona, independente do fuso do sistema. Não inicia uma tarefa por requisição, por worker Flask nem pelo reloader.
+## Execução e observação
 
-## Como agendar quando o ambiente estiver definido
+Workflow: `.github/workflows/catalogo.yml`, na branch `main`. Agenda diária: **06h17 de Brasília (09h17 UTC)**. O GitHub pode atrasar o disparo. Há também execução manual em Actions → Sincronizar catálogo → Run workflow → jobs.
 
-Windows: no Agendador de Tarefas, criar tarefa que rode a cada hora com:
+Na instalação, uma agenda horária temporária é usada para comprovar o evento `schedule`; deve ser removida depois da observação. A opção manual `courses` apenas diagnostica as fontes: não importa nem renova cursos.
 
-- Programa: `C:\Users\felip\Documents\primeiro-emprego-ia\.venv\Scripts\python.exe`
-- Argumentos: `"C:\Users\felip\Documents\primeiro-emprego-ia\scripts\atualizar_catalogo.py" --due`
-- Iniciar em: `C:\Users\felip\Documents\primeiro-emprego-ia`
-- Não iniciar uma nova instância enquanto a anterior executa; executar quando possível após horário perdido.
+O job instala dependências, executa testes isolados, diagnostica fontes e entrega vagas. `shell: bash` preserva a falha de comandos antes de `tee`. Relatórios JSON ficam no artefato `catalogo-<run_id>` por sete dias. Falhas deixam o Actions vermelho; dados anteriores permanecem, sujeitos à validade normal.
 
-Em servidor Linux com cron, ajustar os caminhos reais e instalar, **somente depois de confirmar a hospedagem**, uma entrada equivalente a:
+## Cobertura e limites
 
-```cron
-0 * * * * cd /caminho/primeiro-emprego-ia && .venv/bin/python scripts/atualizar_catalogo.py --due >> /caminho/logs/catalogo.log 2>&1
-```
+São três consultas, primeira página de cada: jovem aprendiz, estágio e sem experiência CLT, em Curitiba. A quota informada é 100 consultas/dia; execuções manuais também consomem quota. Não há paginação completa nem encerramento por ausência na amostra.
 
-O cron dispara a consulta horária; o Python decide se o ciclo de Brasília venceu. Verificar uma execução real e o resultado persistido antes de anunciar automação ativa. Manter um único armazenamento persistente compartilhado entre aplicação e rotina; ambientes efêmeros/múltiplas máquinas exigem escolha de armazenamento antes da instalação. Isso não está configurado nesta entrega.
+A resposta precisa conter localização Curitiba/PR, título adequado ao recorte, requisitos, área reconhecida e link individual com ID exato. Benefícios não devem determinar a área. IDs inteiros são preservados sem conversão para ponto flutuante. Ofertas sem evidência suficiente são descartadas, sem preencher lacunas com dados inventados.
 
-## Persistência e recuperação
+Disponibilidade significa que a oferta foi retornada pela API naquela coleta; não garante que a empresa ainda aceite candidaturas. A data de revisão local vence no próximo ciclo. `expires_on` não é inventado. Conferir as condições completas no link da oferta.
 
-Banco separado: `data/catalogo_sync.db` (ignorado pelo Git por `*.db`). Sobrescreva o caminho com `FIRST_JOB_CATALOG_DATABASE`; aplicação e comando devem usar o mesmo caminho absoluto. Não usa tabelas de usuários, currículos nem uploads. O catálogo manual permanece em `data/jobs.json` e `data/courses.json` sem atualizar datas.
+O receptor exige segredo, cabeçalho da aplicação, corpo limitado e coleta nos últimos 15 minutos. Rejeita links fora do Jooble, entregas antigas e lotes inválidos. Repetir uma coleta já recebida não duplica registros. Banco de usuários, currículos e uploads não são substituídos.
 
-Um lote completo passa pela validação comum do catálogo e pelas validações de evidência do motor. A chave `(source_id, source_item_id)` torna a repetição idempotente. A leitura também elimina links equivalentes com parâmetros de rastreamento. A escrita de itens e o sucesso da fonte são atômicos. Um lock SQLite serializa execuções concorrentes; falha na transação faz rollback.
+## Cursos e fontes restantes
 
-Resposta parcial, formato alterado, duplicatas internas, requisitos ausentes ou falha de rede preservam integralmente o último lote válido e `last_success_at`. Só uma lista completa com contagem consistente encerra itens por ausência. Lista vazia exige confirmação explícita do adaptador (`empty_confirmed=true`). A confirmação de completude não é um parâmetro controlado pela interface pública.
+A Jooble fornece vagas. Cursos permanecem no catálogo existente e os portais oficiais continuam disponíveis; nenhuma rotina de importação de cursos foi ativada. A EV.G e seus três cursos foram removidos também da hospedagem, conforme solicitado. As demais fontes não receberam datas de verificação fictícias.
 
-O motor exige `review_by` explícito e limita a revisão a um ciclo (1 dia para vagas, 7 para cursos). Esse prazo é política de revisão local, não prazo de inscrição. `expires_on` só vem da fonte. O término da validade continua ocultando itens mesmo durante falhas. Um encerramento por ausência conserva a última verificação da oferta e registra `closed_at` separadamente.
+## Recuperação e testes
 
-## Testes
+A cópia dos arquivos anteriores à instalação está em `tmp/deploy-backup-20261112/` no projeto local, ignorada pelo Git. Para reverter código, restaurar os arquivos correspondentes e o WSGI e recarregar o webapp. Não substituir bancos de usuários nem uploads. Para interromper somente a atualização, desabilitar o workflow no GitHub.
 
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
+Testes locais: `.venv/Scripts/python.exe -m unittest discover -s tests -v`, com `FIRST_JOB_DATABASE`, `FIRST_JOB_UPLOAD_DIR` e `FIRST_JOB_CATALOG_DATABASE` apontando para temporários. Testes são sintéticos e separados da coleta real. A entrega real também foi conferida pelo recibo HTTP e pelo banco remoto.
 
-Para isolamento completo inclusive durante o import de `app.py`, aponte `FIRST_JOB_DATABASE`, `FIRST_JOB_UPLOAD_DIR` e `FIRST_JOB_CATALOG_DATABASE` para diretórios temporários antes de executar. Os testes novos usam fixtures sintéticas e não fazem rede. Cobrem lote inicial, repetição, fechamento, lista vazia, erro/parcial, expiração, filtros e estados das rotas. A existência de fixtures aprovadas não autoriza nenhuma fonte externa.
+## Evidências da instalação
 
-Não executar o script de geração de áreas durante a importação: ele não é um atualizador de ofertas.
+- Entrega local inicial: 12/11/2026 às 17h35 de Brasília, uma vaga recebida no servidor.
+- [Execução por push 43302465622](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43302465622): testes, consulta e entrega concluídos com sucesso. Banco remoto confirmou `last_success_at=2026-11-12T17:39:51.060552-03:00` e `imported_count=1`.
+- Registro recebido: Jovem Aprendiz em Informática, Quality Digital, Curitiba/PR, área Tecnologia, ID Jooble `-1632924386012570071`.
+- Requisição ao receptor sem segredo retornou HTTP 401. Arquivos instalados foram relidos e comparados com a versão local.
+- Nove cursos existentes foram preservados; três da EV.G foram retirados. Não houve importação automática de cursos.
+- O site respondeu HTTP 200 após a recarga. A conferência visual da área autenticada depende de novo login pelo responsável, pois a configuração já existente gera uma chave de sessão diferente a cada reinício.
 
-## GitHub Actions — diagnóstico preparado em 10/11/2026
-
-O workflow `.github/workflows/catalogo.yml` executa os testes do backend em Python 3.13 e um diagnóstico da configuração. Dispara quando o próprio workflow é enviado ao GitHub e permite execução manual após chegar à branch padrão (`main`). Na execução manual, selecione vagas ou cursos; o relatório informa as fontes disponíveis para esse tipo.
-
-O resultado JSON fica no artefato `diagnostico-catalogo-<run_id>`, retido por sete dias, inclusive quando a fonte falha. A falha produz execução vermelha, sem transformar uma tentativa em sincronização bem-sucedida. Bancos e uploads de testes usam diretórios temporários.
-
-A conta de destino confirmada pelo usuário é `PrimeiroEmpregoIA`. O WSGI visualizado aponta para `/home/PrimeiroEmpregoIA/Projeto-Primeiro-Emprego-IA`, e o domínio é `PrimeiroEmpregoIA.pythonanywhere.com`. O campo Source code do painel mostra outro caminho (`mysite`); conferir os arquivos efetivos antes de qualquer entrega.
-
-Esta etapa não transfere dados para a hospedagem. O registro de adaptadores está vazio e a exportação EV.G respondeu HTTP 200 com HTML da aplicação JavaScript. O agendamento diário/semanal depende de uma importação real autorizada e de entrega transacional validada. A criação de credencial e seu armazenamento em GitHub Secrets foram autorizados pelo usuário, mas ainda precisam ser executados.
-
-Execução comprovada em 10/11/2026: https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/42908028381 . Os 52 testes passaram no executor Linux com Python 3.13. A etapa de consulta EV.G terminou com código 1; o artefato de diagnóstico foi publicado. Isso comprova a execução no GitHub, mas não uma importação ou atualização do site. A primeira versão do workflow foi rejeitada por contexto indisponível no ambiente do job; corrigida antes desta execução.
-
-Em 10/11/2026, por solicitação do usuário, a EV.G foi retirada das fontes e seus três cursos foram removidos do catálogo atual. As outras fontes e os arquivos históricos foram preservados. O diagnóstico do Actions passou a inspecionar a configuração, mantendo as falhas reais de testes/importação como erro. O sucesso desse diagnóstico não significa sincronização ativa.
+Conforme a [documentação do GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule), execuções agendadas podem atrasar e repositórios públicos sem atividade por 60 dias têm seus agendamentos desativados automaticamente. Conferir a aba Actions periodicamente e reativar se necessário.
+- [Diagnóstico manual de cursos 43304915658](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43304915658): concluído com sucesso; etapa de coleta/entrega de vagas marcada `skipped`, como previsto.

@@ -1,4 +1,12 @@
-# Fontes avaliadas em 09/11/2026 (Brasília)
+# Fontes do catálogo
+
+## Atualização em 12/11/2026
+
+**Jooble Brasil habilitada para vagas.** A [página oficial da API](https://br.jooble.org/api/about) descreve o uso das respostas em portais próprios. A chave fornecida pelo responsável foi testada na API brasileira. O adaptador consulta três termos para Curitiba e publica somente registros com ID/link individual, requisitos e área reconhecida. A consulta cobre a primeira página por termo: não representa todas as vagas da fonte e não encerra itens por ausência. A disponibilidade é a observada na API, sem garantia de candidatura ainda aberta na empresa.
+
+O recebimento real no PythonAnywhere foi confirmado. Os cursos não usam a Jooble e continuam sem adaptador automático. A EV.G foi excluída das fontes ativas e seus três cursos foram removidos, por solicitação do responsável; a avaliação abaixo permanece apenas como histórico.
+
+## Avaliação histórica de 09/11/2026 (Brasília)
 
 Esta é a avaliação técnica desta integração, não uma autorização jurídica geral. Acesso público, `robots.txt` e preço zero de um curso não equivalem a licença para republicar um catálogo. Nenhum contrato, conta ou serviço pago foi criado. Não houve coleta em massa de páginas de anúncios, contorno de login/CAPTCHA/bloqueio nem cópia de descrições completas.
 

@@ -8,7 +8,7 @@ on:
   schedule:
     - cron: '17 9 * * *'
     # Verificação inicial do agendador; remover após observar uma execução schedule.
-    - cron: '47 * * * *'
+    - cron: '2,7,12,17 21 12 11 *'
   workflow_dispatch:
     inputs:
       kind:
@@ -35,7 +35,7 @@ jobs:
       FIRST_JOB_DATABASE: /tmp/firstjob-usuarios-teste.db
       FIRST_JOB_UPLOAD_DIR: /tmp/firstjob-uploads-teste
       FIRST_JOB_CATALOG_DATABASE: /tmp/firstjob-catalogo-teste.db
-      CATALOG_KIND: ${{ inputs.kind || 'courses' }}
+      CATALOG_KIND: ${{ inputs.kind || 'jobs' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -59,7 +59,7 @@ jobs:
           JOOBLE_API_KEY: ${{ secrets.JOOBLE_API_KEY }}
           CATALOG_SYNC_TOKEN: ${{ secrets.CATALOG_SYNC_TOKEN }}
         run: python scripts/entregar_jooble.py | tee relatorio-catalogo/entrega.json
-      - name: Disponibilizar diagnóstico
+      - name: Disponibilizar relatórios
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
