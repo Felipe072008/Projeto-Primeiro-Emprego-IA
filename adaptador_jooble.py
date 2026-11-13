@@ -23,27 +23,31 @@ def fetch_jobs():
     now = datetime.now(ZoneInfo('America/Sao_Paulo'))
     accepted = {}
     for query in ('jovem aprendiz', 'estágio', 'sem experiência CLT'):
-        request = Request('https://br.jooble.org/api/' + key,
-                          data=json.dumps({'keywords': query, 'location': 'Curitiba', 'radius': '0', 'page': 1}).encode(),
-                          headers={'Content-Type': 'application/json'}, method='POST')
-        try:
-            with build_opener(NoRedirect).open(request, timeout=25) as response:
-                content = response.read(2_000_001)
-                if len(content) > 2_000_000:
-                    raise ImportFailure('response_too_large', 'Resposta Jooble excedeu o limite.')
-                data = json.loads(content)
-        except HTTPError as exc:
-            raise ImportFailure('jooble_http_error', f'Jooble respondeu HTTP {exc.code}.') from None
-        except (URLError, TimeoutError, ValueError):
-            raise ImportFailure('jooble_response_error', 'Falha de rede ou resposta inválida do Jooble.') from None
-        if not isinstance(data, dict) or not isinstance(data.get('jobs'), list):
-            raise ImportFailure('invalid_schema', 'Formato Jooble inesperado.')
-        for item in data['jobs']:
-            row = convert_job(item, now, detect_areas, normalized)
-            if row:
-                accepted[row['source_item_id']] = row
-    # shortcut: primeira página por consulta; ampliar paginação ao avaliar cobertura e quota.
-    return {'items': list(accepted.values()), 'total': len(accepted), 'complete': True,
+        for page in range(1, 5):
+            request = Request('https://br.jooble.org/api/' + key,
+                              data=json.dumps({'keywords': query, 'location': 'Curitiba', 'radius': '0', 'page': page}).encode(),
+                              headers={'Content-Type': 'application/json'}, method='POST')
+            try:
+                with build_opener(NoRedirect).open(request, timeout=25) as response:
+                    content = response.read(2_000_001)
+                    if len(content) > 2_000_000:
+                        raise ImportFailure('response_too_large', 'Resposta Jooble excedeu o limite.')
+                    data = json.loads(content)
+            except HTTPError as exc:
+                raise ImportFailure('jooble_http_error', f'Jooble respondeu HTTP {exc.code}.') from None
+            except (URLError, TimeoutError, ValueError):
+                raise ImportFailure('jooble_response_error', 'Falha de rede ou resposta inválida do Jooble.') from None
+            if not isinstance(data, dict) or not isinstance(data.get('jobs'), list):
+                raise ImportFailure('invalid_schema', 'Formato Jooble inesperado.')
+            if not data['jobs']:
+                break
+            for item in data['jobs']:
+                row = convert_job(item, now, detect_areas, normalized)
+                if row:
+                    accepted[row['source_item_id']] = row
+    # shortcut: até 4 páginas por consulta e 100 registros; ampliar após reavaliar quota e cobertura.
+    rows = list(accepted.values())[:100]
+    return {'items': rows, 'total': len(rows), 'complete': True,
             'close_missing': False, 'empty_confirmed': True}
 
 
@@ -70,9 +74,9 @@ def convert_job(item, now, detect_areas, normalized):
     else:
         return None
     # Benefícios como vale-transporte não são evidência da área profissional.
-    duties = re.split(r'beneficios|vale[- ]transporte|oferecemos', normalized(snippet))[0]
+    duties = re.split(r'beneficios|vale[- ]transporte|oferecemos|\bempresa\s*:|\bramo\s*:|\bformacao academica\s*:', normalized(snippet))[0]
     areas = sorted(detect_areas(title) or detect_areas(duties))
-    requirements = re.search(r'(?:ensino (?:medio|fundamental|superior)(?: completo| incompleto| cursando)?|cursando[^.;\n]{1,100}|nao e necessario ter conhecimento previo)', text)
+    requirements = re.search(r'(?:ensino (?:medio|fundamental|superior)(?: completo| incompleto| cursando)?|cursando[^.;\n]{1,100}|nao e necessario ter conhecimento previo)', normalized(snippet).split('cargo:')[0])
     link = item.get('link', '')
     if not areas or not requirements or not re.fullmatch(r'https://br\.jooble\.org/jdp/-?\d+', link):
         return None
@@ -81,6 +85,8 @@ def convert_job(item, now, detect_areas, normalized):
     return {'source_item_id': str(item['id']), 'title': title, 'original_url': link,
             'description': snippet, 'company': item.get('company') or 'Empresa não informada',
             'areas': areas, 'city': 'Curitiba', 'state': 'PR', 'entry_level': True,
+            'location': 'Curitiba - PR',
+            'contract': {'aprendiz': 'Jovem Aprendiz', 'estagio': 'Estágio', 'clt': 'CLT'}[contract],
             'contract_type': contract, 'requirements': [requirements.group(0)],
             'requirements_evidence': requirements.group(0), 'is_individual': True,
             'availability_status': 'open', 'availability_evidence': 'Oferta retornada pela API Jooble Brasil.',

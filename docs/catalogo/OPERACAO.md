@@ -1,4 +1,4 @@
-# Operação do catálogo — 12/11/2026
+# Operação do catálogo — 13/11/2026
 
 ## Fluxo instalado
 
@@ -20,15 +20,15 @@ Nenhuma chave entra no código, relatório ou artefato do Actions. Para trocar o
 
 Workflow: `.github/workflows/catalogo.yml`, na branch `main`. Agenda diária: **06h17 de Brasília (09h17 UTC)**. O GitHub pode atrasar o disparo. Há também execução manual em Actions → Sincronizar catálogo → Run workflow → jobs.
 
-Na instalação, uma agenda horária temporária é usada para comprovar o evento `schedule`; deve ser removida depois da observação. A opção manual `courses` apenas diagnostica as fontes: não importa nem renova cursos.
+O evento `schedule` foi comprovado em execuções concluídas com sucesso em 13/11/2026. Os horários temporários de teste foram removidos. A opção manual `courses` apenas diagnostica as fontes: não importa nem renova cursos.
 
 O job instala dependências, executa testes isolados, diagnostica fontes e entrega vagas. `shell: bash` preserva a falha de comandos antes de `tee`. Relatórios JSON ficam no artefato `catalogo-<run_id>` por sete dias. Falhas deixam o Actions vermelho; dados anteriores permanecem, sujeitos à validade normal.
 
 ## Cobertura e limites
 
-São três consultas, primeira página de cada: jovem aprendiz, estágio e sem experiência CLT, em Curitiba. A quota informada é 100 consultas/dia; execuções manuais também consomem quota. Não há paginação completa nem encerramento por ausência na amostra.
+São três buscas, com até quatro páginas de cada: jovem aprendiz, estágio e sem experiência CLT, em Curitiba. A coleta para ao receber uma página vazia e faz no máximo 12 chamadas por rodada; a entrega limita-se a 100 registros únicos. A quota informada é 100 consultas/dia; execuções manuais também consomem quota. Não há paginação completa nem encerramento por ausência na amostra.
 
-A resposta precisa conter localização Curitiba/PR, título adequado ao recorte, requisitos, área reconhecida e link individual com ID exato. Benefícios não devem determinar a área. IDs inteiros são preservados sem conversão para ponto flutuante. Ofertas sem evidência suficiente são descartadas, sem preencher lacunas com dados inventados.
+A resposta precisa conter localização Curitiba/PR, título adequado ao recorte, requisitos, área reconhecida e link individual com ID exato. Benefícios e o ramo da agência recrutadora não determinam a área. O título sozinho não comprova requisitos. Local e contrato confirmados também são enviados nos campos utilizados pelos cartões do frontend. IDs inteiros são preservados sem conversão para ponto flutuante. Ofertas sem evidência suficiente são descartadas, sem preencher lacunas com dados inventados.
 
 Disponibilidade significa que a oferta foi retornada pela API naquela coleta; não garante que a empresa ainda aceite candidaturas. A data de revisão local vence no próximo ciclo. `expires_on` não é inventado. Conferir as condições completas no link da oferta.
 
@@ -55,3 +55,13 @@ Testes locais: `.venv/Scripts/python.exe -m unittest discover -s tests -v`, com 
 
 Conforme a [documentação do GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule), execuções agendadas podem atrasar e repositórios públicos sem atividade por 60 dias têm seus agendamentos desativados automaticamente. Conferir a aba Actions periodicamente e reativar se necessário.
 - [Diagnóstico manual de cursos 43304915658](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43304915658): concluído com sucesso; etapa de coleta/entrega de vagas marcada `skipped`, como previsto.
+
+
+## Ampliação e verificação em 13/11/2026
+
+- [Execução automática 43470692728](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43470692728) e execução automática 43346438857: evento `schedule`, ambas concluídas com sucesso.
+- Causa da pouca cobertura inicial: consulta restrita à primeira página. A paginação agora alcança até quatro páginas por termo, mantendo os filtros de evidência e localização.
+- 59 testes locais aprovados, incluindo limite de páginas, deduplicação e rejeição de requisitos/área inferidos do título ou da agência.
+- Entrega real às 20h13 de Brasília: 14 registros recebidos com `sync_status=success`. Banco remoto: 21 registros publicados, dos quais 7 ainda válidos de coletas anteriores.
+- Conferência visual na conta do responsável: 9 resultados no filtro do perfil de Tecnologia e 21 em Todas as áreas. Cartão conferido com fonte Jooble e verificação de 13/11/2026.
+- A quantidade varia por coleta, prazo e filtro do perfil; 21 não é quantidade garantida para os dias seguintes. Cursos continuam sem importação automática.

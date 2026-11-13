@@ -7,8 +7,6 @@ on:
       - .github/workflows/catalogo.yml
   schedule:
     - cron: '17 9 * * *'
-    # Verificação inicial do agendador; remover após observar uma execução schedule.
-    - cron: '2,7,12,17 21 12 11 *'
   workflow_dispatch:
     inputs:
       kind:
