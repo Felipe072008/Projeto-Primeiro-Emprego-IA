@@ -51,7 +51,7 @@ Testes locais: `.venv/Scripts/python.exe -m unittest discover -s tests -v`, com 
 - Registro recebido: Jovem Aprendiz em Informática, Quality Digital, Curitiba/PR, área Tecnologia, ID Jooble `-1632924386012570071`.
 - Requisição ao receptor sem segredo retornou HTTP 401. Arquivos instalados foram relidos e comparados com a versão local.
 - Nove cursos existentes foram preservados; três da EV.G foram retirados. Não houve importação automática de cursos.
-- O site respondeu HTTP 200 após a recarga. A conferência visual da área autenticada depende de novo login pelo responsável, pois a configuração já existente gera uma chave de sessão diferente a cada reinício.
+- O site respondeu HTTP 200 após a recarga. A sessão precisou de novo login, pois a configuração já existente gera uma chave de sessão diferente a cada reinício. A área autenticada foi conferida em 13/11/2026, conforme registrado abaixo.
 
 Conforme a [documentação do GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule), execuções agendadas podem atrasar e repositórios públicos sem atividade por 60 dias têm seus agendamentos desativados automaticamente. Conferir a aba Actions periodicamente e reativar se necessário.
 - [Diagnóstico manual de cursos 43304915658](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43304915658): concluído com sucesso; etapa de coleta/entrega de vagas marcada `skipped`, como previsto.
@@ -65,3 +65,5 @@ Conforme a [documentação do GitHub](https://docs.github.com/en/actions/referen
 - Entrega real às 20h13 de Brasília: 14 registros recebidos com `sync_status=success`. Banco remoto: 21 registros publicados, dos quais 7 ainda válidos de coletas anteriores.
 - Conferência visual na conta do responsável: 9 resultados no filtro do perfil de Tecnologia e 21 em Todas as áreas. Cartão conferido com fonte Jooble e verificação de 13/11/2026.
 - A quantidade varia por coleta, prazo e filtro do perfil; 21 não é quantidade garantida para os dias seguintes. Cursos continuam sem importação automática.
+
+- [Execução final 43526033475](https://github.com/Felipe072008/Projeto-Primeiro-Emprego-IA/actions/runs/43526033475), commit `005ec02`: 59 testes aprovados e entrega de 14 registros às 20h18 de Brasília. O banco remoto confirmou o mesmo recibo. Após recarregar o navegador, o cartão exibiu Curitiba - PR, Jovem Aprendiz e verificação de 13/11/2026 às 20h18.
