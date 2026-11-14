@@ -105,7 +105,7 @@ class ProfileSectionsTests(unittest.TestCase):
         self.save('skills',items=[{'name':'Conhecimento privado'}])
         self.client.post('/api/auth/logout')
         self.assertEqual(self.client.patch('/api/profile/skills',json={'items':[]}).status_code,401)
-        self.client.post('/api/auth/register',json={'name':'Outra pessoa','email':'outra@example.test','password':'teste1234'})
+        self.client.post('/api/auth/register',json={'terms_accepted':True,'terms_version':site.TERMS_VERSION,'name':'Outra pessoa','email':'outra@example.test','password':'teste1234'})
         self.assertEqual(self.client.get('/api/me').json['profile']['skills'],'')
         self.save('skills',items=[{'name':'Outro conhecimento'}])
         self.client.post('/api/auth/login',json={'email':'teste@example.com','password':'teste1234'})

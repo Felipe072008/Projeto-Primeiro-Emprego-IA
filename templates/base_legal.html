@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="description" content="Informações legais e preferências de privacidade do PrimeiroEmprego IA." /><title>{% block title %}{% endblock %} — PrimeiroEmprego IA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='fontes_locais.css') }}" /><link rel="stylesheet" href="{{ url_for('static', filename='estilos_base.css') }}" /><link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" /><link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}" />
+</head>
+<body class="legal-page"><a class="legal-skip" href="#legal-content">Pular para o conteúdo</a>
+  <header class="legal-header"><a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">p.</span><span>PrimeiroEmprego <b>IA</b></span></a><a class="button button--outline" href="{{ url_for('home') }}">Voltar à plataforma</a></header>
+  <main id="legal-content" class="legal-content" tabindex="-1">{% block content %}{% endblock %}</main>
+  {% include 'parciais/rodape.html' %}{% include 'parciais/cookies.html' %}
+  <script src="{{ url_for('static', filename='preferencias_cookies.js') }}" data-cookie-version="{{ privacy_version }}" data-cookie-days="{{ cookie_days }}"></script>
+</body></html>

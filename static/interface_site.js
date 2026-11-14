@@ -317,7 +317,7 @@ function itemVerification(item) {
 function restoreCatalogFilters(kind) {
   const form = $(`#${kind}-filters`);
   try {
-    const saved = new URLSearchParams(sessionStorage.getItem('filters-'+kind) || '');
+    const saved = new URLSearchParams(window.sitePrivacy?.allows('functionality') ? (sessionStorage.getItem('filters-'+kind) || '') : '');
     for (const [name, value] of saved) {
       const field = form.elements.namedItem(name);
       // Explorar todas as áreas exige uma escolha nesta visita, nunca restauração silenciosa.
@@ -335,7 +335,7 @@ function resetCatalogAreaFilters() {
     ++catalogVersions[kind];
     catalogRows[kind] = [];
     $(`#${kind}-list`).innerHTML = '';
-    try { sessionStorage.setItem('filters-'+kind, new URLSearchParams(new FormData($(`#${kind}-filters`))).toString()); } catch {}
+    try { if (window.sitePrivacy?.allows('functionality')) sessionStorage.setItem('filters-'+kind, new URLSearchParams(new FormData($(`#${kind}-filters`))).toString()); } catch {}
   }
 }
 function catalogEmptyMessage(data, kind, filters) {
@@ -370,7 +370,7 @@ async function loadCatalog(kind) {
   $(`#${kind}-sources`).innerHTML = '';
   $(`#${kind}-external`).innerHTML = '';
   const filters = new URLSearchParams(new FormData($(`#${kind}-filters`)));
-  try { sessionStorage.setItem('filters-'+kind, filters.toString()); } catch {}
+  try { if (window.sitePrivacy?.allows('functionality')) sessionStorage.setItem('filters-'+kind, filters.toString()); } catch {}
   try {
     const data = await api(`/api/${kind}?${filters}`);
     if (version !== catalogVersions[kind]) return;
@@ -739,6 +739,7 @@ async function handleAuth(event) {
   if(submit) submit.disabled=true;
   const mode = event.currentTarget.id === "register-form" ? "register" : "login";
   const data = Object.fromEntries(new FormData(event.currentTarget));
+  if (mode === 'register') data.terms_accepted = data.terms_accepted === 'true';
   try {
     const result = await api(`/api/auth/${mode}`, { method: "POST", body: data });
     toast(result.message);

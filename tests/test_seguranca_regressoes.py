@@ -65,7 +65,7 @@ class AuditTests(unittest.TestCase):
         self.assertIn('Suporte de TI',inspect_pdf(pdf.data)['text'])
         uploaded=self.client.post('/api/resumes/upload',data={'file':(io.BytesIO(self.pdf()),'../unsafe.pdf')}).json['id']
         self.client.post('/api/auth/logout')
-        self.client.post('/api/auth/register',json={'name':'Outra pessoa','email':'other@example.test','password':'safe-test-123'})
+        self.client.post('/api/auth/register',json={'terms_accepted':True,'terms_version':site.TERMS_VERSION,'name':'Outra pessoa','email':'other@example.test','password':'safe-test-123'})
         for ident in (first,uploaded):
             for suffix in ('','/pdf','/file'):
                 self.assertEqual(self.client.get(f'/api/resumes/{ident}{suffix}').status_code,404)

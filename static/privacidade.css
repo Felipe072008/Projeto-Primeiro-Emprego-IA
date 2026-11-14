@@ -1,0 +1,51 @@
+/* Compartilha as cores e fontes do site; textos legais têm largura própria de leitura. */
+.visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+.site-footer { padding:36px clamp(20px,5vw,70px) 18px; color:var(--ink); background:var(--paper); border-top:1px solid var(--line); }
+.app-shell:not(.hidden) ~ .site-footer { margin-left:258px; }
+.footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:28px; max-width:1300px; margin:auto; }
+.footer-grid > * { min-width:0; }
+.footer-grid h2 { margin:0 0 10px; font-size:15px; }
+.footer-grid p,.footer-grid a { font-size:14px; }
+.footer-grid nav a { display:block; margin:7px 0; }
+.footer-grid a:not(.brand),.legal-content a,.cookie-banner a,.cookie-dialog a { color:var(--blue); text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+.footer-copyright { max-width:1300px; margin:26px auto 0; border-top:1px solid var(--line); padding-top:16px; color:var(--ink-soft); font-size:13px; }
+.legal-header { max-width:1250px; margin:auto; padding:24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.legal-content { width:min(100% - 40px,820px); margin:24px auto 56px; padding:clamp(24px,5vw,48px); background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); line-height:1.75; }
+.legal-content h1 { font-size:clamp(27px,4vw,40px); line-height:1.2; }
+.legal-content h2 { margin-top:28px; font-size:22px; line-height:1.3; }
+.legal-content h3 { margin-top:20px; font-size:18px; }
+.legal-content ul { padding-left:23px; }
+.legal-content li { margin:8px 0; }
+.legal-date { color:var(--ink-soft); font-size:14px; }
+.legal-note { border-left:4px solid var(--blue); padding:16px; background:var(--blue-pale); border-radius:0 10px 10px 0; }
+.legal-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+.legal-table th,.legal-table td { border:1px solid var(--line); padding:12px; text-align:left; vertical-align:top; overflow-wrap:anywhere; }
+.legal-table th { background:var(--blue-pale); }
+.legal-skip { display:inline-block; margin:12px 24px; color:var(--blue); }
+.terms-choice { display:flex; align-items:flex-start; gap:10px; font-size:14px; line-height:1.5; }
+.terms-choice input { width:19px; height:19px; flex:none; margin:3px 0 0; }
+.terms-choice a { color:var(--blue); text-decoration:underline; }
+.cookie-banner[hidden] { display:none; }
+.cookie-banner { position:fixed; z-index:1000; left:20px; right:20px; bottom:20px; max-width:1180px; margin:auto; padding:22px; border:1px solid #a9c6c9; border-radius:20px; background:var(--paper); color:var(--ink); box-shadow:0 12px 50px rgba(11,32,48,.22); }
+.cookie-banner h2 { margin:0 0 8px; font-size:20px; }
+.cookie-banner p { margin:6px 0; font-size:14px; line-height:1.5; }
+.cookie-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; }
+.cookie-actions .button { flex:1 1 160px; min-height:44px; justify-content:center; text-align:center; }
+.cookie-dialog { width:min(700px,calc(100% - 32px)); max-height:calc(100dvh - 32px); overflow:auto; margin:auto; padding:30px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
+.cookie-dialog::backdrop { background:rgba(11,32,48,.65); }
+.cookie-dialog h2 { margin:0 42px 16px 0; font-size:25px; }
+.cookie-dialog p { font-size:14px; line-height:1.65; }
+.cookie-dialog fieldset { min-width:0; border:1px solid var(--line); border-radius:12px; margin:20px 0; padding:16px; }
+.cookie-dialog legend { padding:0 6px; font-weight:700; }
+.cookie-choice { display:flex; align-items:center; gap:10px; }
+.cookie-choice input { width:19px; height:19px; flex:none; accent-color:var(--blue); }
+.cookie-close { position:absolute; right:16px; top:12px; width:44px; height:44px; border:0; border-radius:10px; background:var(--blue-pale); color:var(--ink); font-size:28px; }
+.noscript-privacy { padding:18px; }
+@media(max-width:900px) { .app-shell:not(.hidden) ~ .site-footer { margin-left:0; } .footer-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:620px) { .footer-grid { grid-template-columns:1fr; gap:22px; } .legal-header { align-items:flex-start; flex-wrap:wrap; } .legal-header .button { font-size:13px; } .legal-content { width:calc(100% - 24px); padding:22px 18px; } .cookie-banner { left:10px; right:10px; bottom:10px; padding:18px; max-height:calc(100dvh - 24px); overflow:auto; } .cookie-actions { gap:8px; margin-top:12px; } .cookie-actions .button { flex:1 1 100%; padding:10px 12px; } .cookie-dialog { padding:24px 18px; } .legal-table { font-size:12px; } .legal-table th,.legal-table td { padding:8px; } }
+
+.form-stack .terms-choice { flex-direction:row; }
+
+@media(max-width:620px) { .legal-table { table-layout:fixed; } }
+
+.cookie-dialog :focus-visible,.cookie-banner :focus-visible,.site-footer :focus-visible,.legal-content :focus-visible { outline:3px solid #126b81; outline-offset:3px; }

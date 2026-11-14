@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="PrimeiroEmprego IA: orientação profissional, currículo e cursos para sua primeira oportunidade." />
     <title>PrimeiroEmprego IA</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontes_locais.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_base.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}" />
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
@@ -71,6 +70,9 @@
             <label>Crie uma senha
               <input required minlength="6" type="password" name="password" autocomplete="new-password" placeholder="Pelo menos 6 caracteres" />
             </label>
+            <input type="hidden" name="terms_version" value="{{ terms_version }}" />
+            <label class="terms-choice"><input required type="checkbox" name="terms_accepted" value="true" /><span>Li e concordo com os <a href="{{ url_for('terms_of_use') }}" target="_blank" rel="noopener">Termos de Uso</a>.</span></label>
+            <p class="form-note">Saiba como seus dados são tratados na <a href="{{ url_for('privacy_policy') }}" target="_blank" rel="noopener">Política de Privacidade</a>. Cookies opcionais não são exigidos para criar sua conta.</p>
             <button class="button button--primary button--wide" type="submit">Criar meu perfil</button>
           </form>
         </div>
@@ -255,6 +257,9 @@
       </div>
     </div>
 
+    {% include 'parciais/rodape.html' %}
+    {% include 'parciais/cookies.html' %}
+    <script src="{{ url_for('static', filename='preferencias_cookies.js') }}" data-cookie-version="{{ privacy_version }}" data-cookie-days="{{ cookie_days }}"></script>
     <!-- Os editores de perfil precisam estar definidos antes da inicialização da interface. -->
     <script src="{{ url_for('static', filename='editor_perfil.js') }}"></script>
     <script src="{{ url_for('static', filename='interface_site.js') }}"></script>

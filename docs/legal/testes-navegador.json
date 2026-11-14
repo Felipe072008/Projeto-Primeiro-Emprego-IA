@@ -1,0 +1,22 @@
+{
+  "tested_at": "2026-11-13T21:12:36.043701",
+  "scenarios": [
+    "1. Primeira visita mostra banner; opcionais desativados.",
+    "2. Aceitar Todos salva somente a categoria funcional em uso.",
+    "5. Preferências persistem após recarga.",
+    "6. Rodapé reabre; revogação remove filtros e devolve foco. Modal contém o foco pelo teclado.",
+    "4. Preferência específica é salva pelo formulário.",
+    "3. Rejeitar Opcionais não cria cookie opcional.",
+    "7 e 8. Páginas públicas e links do cadastro abrem sem login; Termos desmarcados impedem cadastro.",
+    "12. Cadastro funciona com todos os opcionais rejeitados e registra aceite separado.",
+    "9. Perfil, login e busca continuam acessíveis após rejeição; filtros não são gravados.",
+    "Funcionalidade real: lembrar filtros depende da escolha; revogar preserva autenticação.",
+    "10. Cinco telas do site, gerador de currículo e páginas legais acessíveis em 390x844 sem rolagem horizontal.",
+    "Preferência de versão antiga é descartada e solicita nova escolha.",
+    "Escolha expirada após 180 dias é descartada em novo acesso.",
+    "Armazenamento bloqueado é informado e não simula persistência após recarga.",
+    "11. Nenhuma requisição de rastreamento/terceiro; fontes locais e somente recursos da própria origem."
+  ],
+  "browser_errors": [],
+  "result": "passed"
+}
