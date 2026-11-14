@@ -12,7 +12,7 @@ const node = selector => {
 const context = vm.createContext({URL, URLSearchParams, Intl, Date,
   FormData: class {constructor(form){this.rows=Object.entries(form.data);} [Symbol.iterator](){return this.rows[Symbol.iterator]();}},
   document:{querySelector:node, querySelectorAll:()=>[]}, sessionStorage:{setItem(){}},
-  window:{}, console,
+  window:{sitePrivacy:{allows:()=>true}}, console,
 });
 vm.runInContext(fs.readFileSync(path.join(root,'static/interface_site.js'),'utf8').replace(/boot\(\);\s*$/, ''),context);
 const course = {id:'fixture',title:'Curso sintético <exemplo>',institution:'Instituição de teste',source:'Fonte sintética',original_url:'https://example.org/curso/1',description:'Apenas teste',match:'explore',enrollment_status:'unknown',access_status:'free_full',certificate_status:'paid',checked_on:'2026-10-08',last_verified_at:null,requirements:[]};

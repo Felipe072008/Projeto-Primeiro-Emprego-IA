@@ -17,6 +17,7 @@ from flask import Flask, jsonify, render_template, request, send_file, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
+from documentos_legais import TERMS_VERSION, PRIVACY_VERSION, REVIEW_DATE, CONTACT_EMAIL, DATA_CONTROLLER, COOKIE_PREFERENCES_DAYS
 from catalogo_oportunidades import recommendations
 from documentos_curriculo import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
 from analise_curriculo import analyze, ai_status
@@ -79,6 +80,14 @@ def init_db():
                 email TEXT NOT NULL UNIQUE,
                 password_hash TEXT NOT NULL,
                 created_at TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS terms_acceptances (
+                user_id INTEGER NOT NULL,
+                terms_version TEXT NOT NULL,
+                accepted_at TEXT NOT NULL,
+                PRIMARY KEY (user_id, terms_version),
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS profiles (
@@ -256,6 +265,29 @@ def profile_advice(profile: dict) -> dict:
     }
 
 
+@app.context_processor
+def legal_context():
+    return dict(terms_version=TERMS_VERSION, privacy_version=PRIVACY_VERSION,
+                legal_review_date=REVIEW_DATE, legal_contact=CONTACT_EMAIL,
+                data_controller=DATA_CONTROLLER, cookie_days=COOKIE_PREFERENCES_DAYS,
+                legal_year=now_sp().year, session_cookie_name=app.config['SESSION_COOKIE_NAME'])
+
+
+@app.get('/termos-de-uso')
+def terms_of_use():
+    return render_template('termos_de_uso.html')
+
+
+@app.get('/politica-de-privacidade')
+def privacy_policy():
+    return render_template('politica_de_privacidade.html')
+
+
+@app.get('/cookies')
+def cookie_policy():
+    return render_template('politica_cookies.html')
+
+
 @app.get("/")
 def home():
     return render_template("pagina_principal.html")
@@ -309,6 +341,13 @@ def register():
     data = request.get_json(silent=True) or {}
     if not isinstance(data, dict):
         return jsonify({"error": "Dados de acesso inválidos."}), 400
+    # O aceite é explícito, versionado e independente das preferências opcionais de cookies.
+    if data.get('terms_accepted') is not True:
+        return jsonify(error='Leia e concorde com os Termos de Uso para criar a conta.',
+                       errors={'terms_accepted': 'A concordância com os Termos é necessária.'}), 400
+    if data.get('terms_version') != TERMS_VERSION:
+        return jsonify(error='Os Termos foram atualizados. Atualize a página e leia a versão atual.',
+                       errors={'terms_version': 'Versão dos Termos desatualizada.'}), 400
     name = str(data.get("name", "")).strip()
     email = str(data.get("email", "")).strip().lower()
     password = str(data.get("password", ""))
@@ -323,6 +362,8 @@ def register():
                 (name, email, generate_password_hash(password), timestamp()),
             )
             user_id = cursor.lastrowid
+            connection.execute('INSERT INTO terms_acceptances (user_id, terms_version, accepted_at) VALUES (?, ?, ?)',
+                               (user_id, TERMS_VERSION, timestamp()))
             values = [user_id, timestamp()] + [""] * len(PROFILE_FIELDS)
             columns = "user_id, updated_at, " + ", ".join(PROFILE_FIELDS)
             placeholders = ", ".join("?" for _ in values)

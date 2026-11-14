@@ -1,0 +1,9 @@
+<footer class="site-footer" aria-label="Rodapé do PrimeiroEmprego IA">
+  <div class="footer-grid">
+    <div><a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">p.</span><span>PrimeiroEmprego <b>IA</b></span></a><p>Seu primeiro emprego começa com um plano.</p></div>
+    <nav aria-label="Plataforma"><h2>Plataforma</h2><a href="{{ url_for('home') }}#dashboard">Início</a><a href="{{ url_for('home') }}#jobs">Vagas</a><a href="{{ url_for('home') }}#resume">Meu currículo</a><a href="{{ url_for('home') }}#courses">Cursos</a><a href="{{ url_for('home') }}#dashboard">Orientação profissional</a></nav>
+    <nav aria-label="Informações legais"><h2>Informações legais</h2><a href="{{ url_for('terms_of_use') }}">Termos de Uso</a><a href="{{ url_for('privacy_policy') }}">Política de Privacidade</a><a href="{{ url_for('cookie_policy') }}" data-cookie-open>Configurações de Cookies</a></nav>
+    <div><h2>Contato</h2><a href="mailto:{{ legal_contact }}">{{ legal_contact }}</a></div>
+  </div>
+  <p class="footer-copyright">© {{ legal_year }} — PrimeiroEmprego IA</p>
+</footer>

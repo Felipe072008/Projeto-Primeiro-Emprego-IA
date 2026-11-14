@@ -117,3 +117,14 @@ Consulte a [revisão por anúncio e o teste de Administração](docs/catalogo/RE
 As datas de inscrição foram extraídas das fontes; a revisão diária não é uma prorrogação da oferta.
 Meu Emprego foi retirado da configuração. A conta de hospedagem confirmada e usada na instalação
 é `PrimeiroEmpregoIA`; a rotina executa no GitHub Actions, sem depender da aba Tasks nem do notebook.
+
+## Termos, privacidade e preferências de cookies
+
+As rotas públicas `/termos-de-uso`, `/politica-de-privacidade` e `/cookies` compartilham a identidade visual do site.
+O cadastro exige aceite explícito da versão `2026-11-13` dos Termos; cookies opcionais são independentes.
+Ao iniciar o Flask, a tabela `terms_acceptances` é criada sem atribuir aceites a usuários anteriores.
+O gerenciador controla o armazenamento dos filtros; rejeitar preserva o uso da plataforma.
+As fontes visuais são locais e não há Analytics ou publicidade instalados.
+
+Veja o [inventário, testes e pendências antes de publicação](docs/legal/IMPLEMENTACAO.md).
+As configurações e os documentos desta etapa foram preparados localmente; não houve deploy.

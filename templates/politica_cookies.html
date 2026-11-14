@@ -1,0 +1,17 @@
+{% extends 'base_legal.html' %}
+{% block title %}Configurações de Cookies{% endblock %}
+{% block content %}
+<p class="eyebrow">Sua privacidade</p><h1>Configurações de Cookies</h1><p class="legal-date">Última revisão: {{ legal_review_date }}</p>
+<p>Cookies são pequenos arquivos de texto armazenados no dispositivo. Armazenamento local (localStorage) e armazenamento da aba (sessionStorage) são tecnologias diferentes, também descritas aqui para que você controle suas preferências.</p>
+<p><button class="button button--primary" type="button" data-cookie-open>Gerenciar minhas preferências de cookies</button></p>
+<h2>O que está efetivamente em uso</h2>
+<table class="legal-table"><thead><tr><th scope="col">Recurso</th><th scope="col">Finalidade</th><th scope="col">Duração</th></tr></thead><tbody>
+<tr><th scope="row">{{ session_cookie_name }}<br />Cookie necessário</th><td>Manter a conta autenticada e proteger a sessão. Não é cookie de publicidade.</td><td>Cookie de sessão, sem data de expiração persistente definida pelo aplicativo. É removido ao sair da conta; o encerramento/restauração do navegador depende de suas configurações.</td></tr>
+<tr><th scope="row">primeiroemprego.cookie_preferences<br />localStorage necessário</th><td>Guardar sua escolha, versão e datas para respeitar as preferências. Não contém e-mail ou nome.</td><td>Validade de {{ cookie_days }} dias. A aplicação descarta registros vencidos, inválidos ou de versão anterior em novo acesso e solicita outra escolha. O navegador pode conservar o registro até esse acesso ou até você limpar o armazenamento.</td></tr>
+<tr><th scope="row">filters-jobs e filters-courses<br />sessionStorage opcional</th><td>Lembrar filtros de vagas e cursos quando a categoria de funcionalidade estiver autorizada.</td><td>Durante a sessão da aba, conforme o comportamento do navegador. Removidos pelo site quando a autorização é revogada.</td></tr>
+</tbody></table>
+<h2>Categorias opcionais</h2><p><strong>Funcionalidade:</strong> desativada até sua escolha; apenas lembra filtros. <strong>Análise e desempenho:</strong> não utilizados. <strong>Publicidade e marketing:</strong> não utilizados. Google Analytics e pixels publicitários não estão instalados.</p>
+<p>“Aceitar Todos” habilita apenas as categorias opcionais efetivamente disponíveis. “Rejeitar Opcionais” mantém somente os recursos necessários. Você pode reabrir o gerenciador pelo rodapé a qualquer momento; revogar remove o armazenamento opcional controlado pelo site sem encerrar seu login.</p>
+<p>Se o navegador bloquear o armazenamento de preferências, a escolha vale nesta página e o banner poderá reaparecer. A mera continuação da navegação não é tratada como consentimento. As fontes são hospedadas localmente e não dependem de aceite para consultas ao Google.</p>
+<p>Leia a <a href="{{ url_for('privacy_policy') }}">Política de Privacidade</a> e os <a href="{{ url_for('terms_of_use') }}">Termos de Uso</a>. Contato: <a href="mailto:{{ legal_contact }}">{{ legal_contact }}</a>.</p>
+{% endblock %}

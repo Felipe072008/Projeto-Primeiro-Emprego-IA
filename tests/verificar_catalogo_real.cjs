@@ -15,7 +15,7 @@ fs.mkdirSync(out,{recursive:true});
     const errors=[];
     page.on('pageerror',error=>errors.push(error.message));
     const registration=await context.request.post(base+'/api/auth/register',{
-      headers:{'X-Requested-With':'FirstJob'},data:{name:'Teste de catálogo',email:`catalogo-${Date.now()}@example.org`,password:'CatalogoTeste123!'}});
+      headers:{'X-Requested-With':'FirstJob'},data:{terms_accepted:true,terms_version:'2026-11-13',name:'Teste de catálogo',email:`catalogo-${Date.now()}@example.org`,password:'CatalogoTeste123!'}});
     assert.ok(registration.ok(),await registration.text());
     await page.goto(base+'/#profile');
     const saveArea = async area => {

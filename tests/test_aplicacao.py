@@ -40,7 +40,7 @@ class SiteTests(unittest.TestCase):
         site.init_db()
         self.client = site.app.test_client()
         self.client.environ_base['HTTP_X_REQUESTED_WITH'] = 'FirstJob'
-        self.client.post('/api/auth/register', json={'name':'Pessoa de Teste', 'email':'teste@example.com', 'password':'teste1234'})
+        self.client.post('/api/auth/register', json={'terms_accepted':True,'terms_version':site.TERMS_VERSION,'name':'Pessoa de Teste', 'email':'teste@example.com', 'password':'teste1234'})
 
     def pdf(self):
         return build_resume_pdf({'name':'Pessoa de Teste', 'headline':'Tecnologia', 'contacts':['teste@example.com'], 'sections':[{'title':'Formação', 'content':'Ensino médio concluído em 2025. Desenvolvi um projeto escolar com Python e Git.'}]}).getvalue()
@@ -96,7 +96,7 @@ class SiteTests(unittest.TestCase):
         self.assertIn('inline',self.client.get(f'/api/resumes/{id}/pdf?inline=1').headers['Content-Disposition'])
         self.client.post('/api/auth/logout')
         self.assertEqual(self.client.get(f'/api/resumes/{id}/pdf').status_code,401)
-        self.client.post('/api/auth/register',json={'name':'Outra Pessoa','email':'outra@example.com','password':'teste1234'})
+        self.client.post('/api/auth/register',json={'terms_accepted':True,'terms_version':site.TERMS_VERSION,'name':'Outra Pessoa','email':'outra@example.com','password':'teste1234'})
         self.assertEqual(self.client.get(f'/api/resumes/{id}/pdf').status_code,404)
         self.assertEqual(self.client.post(f'/api/resumes/{id}/analyze').status_code,404)
 

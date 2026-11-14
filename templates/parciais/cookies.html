@@ -1,0 +1,19 @@
+<aside id="cookie-banner" class="cookie-banner" role="region" aria-labelledby="cookie-banner-title" hidden>
+  <div><h2 id="cookie-banner-title">Sua privacidade é importante para nós</h2><p>Utilizamos cookies necessários para o funcionamento da plataforma. Com sua autorização, também podemos lembrar seus filtros durante a sessão. Nesta versão não utilizamos cookies de análise nem de publicidade.</p><p>Você pode aceitar, rejeitar ou personalizar suas preferências a qualquer momento. Consulte nossa <a href="{{ url_for('privacy_policy') }}">Política de Privacidade</a>.</p></div>
+  <div class="cookie-actions"><button type="button" class="button button--outline" data-cookie-action="accept">Aceitar Todos</button><button type="button" class="button button--outline" data-cookie-action="reject">Rejeitar Opcionais</button><button type="button" class="button button--outline" data-cookie-open>Gerenciar Preferências</button></div>
+</aside>
+<dialog id="cookie-dialog" class="cookie-dialog" aria-labelledby="cookie-dialog-title" aria-describedby="cookie-dialog-description">
+  <button type="button" class="cookie-close" data-cookie-close aria-label="Fechar configurações de cookies">×</button>
+  <h2 id="cookie-dialog-title">Configurações de Cookies</h2>
+  <p id="cookie-dialog-description">Cookies são pequenos arquivos de texto armazenados no seu dispositivo durante a navegação. Eles permitem o funcionamento da plataforma. Tecnologias de armazenamento equivalentes também podem lembrar preferências, quando autorizadas.</p>
+  <form id="cookie-preferences-form">
+    <fieldset><legend>Cookies estritamente necessários</legend><label class="cookie-choice"><input type="checkbox" checked disabled /> Sempre ativos</label><p>Essenciais para autenticação, segurança e gerenciamento da sessão. Não dependem de consentimento opcional.</p></fieldset>
+    <fieldset><legend>Cookies de desempenho e análise</legend><label class="cookie-choice"><input type="checkbox" disabled /> Não utilizados nesta versão</label><p>Não há Google Analytics nem outra ferramenta de análise de navegação instalada. Esta categoria permanece desativada.</p></fieldset>
+    <fieldset><legend>Cookies de funcionalidade</legend><label class="cookie-choice" for="cookie-functionality"><input type="checkbox" id="cookie-functionality" name="functionality" /> Lembrar meus filtros nesta sessão</label><p>Permite guardar filtros de vagas e cursos no armazenamento da aba (sessionStorage). A busca funciona também com esta opção desativada. Revogar remove os filtros armazenados sem encerrar seu login.</p></fieldset>
+    <fieldset><legend>Cookies de publicidade e marketing</legend><label class="cookie-choice"><input type="checkbox" disabled /> Não utilizados nesta versão</label><p>Não há pixels, anúncios personalizados ou rastreamento de campanhas instalados.</p></fieldset>
+    <p>Seu registro de preferências fica neste navegador por até {{ cookie_days }} dias. Saiba os detalhes na <a href="{{ url_for('cookie_policy') }}">página de cookies</a>.</p>
+    <div class="cookie-actions"><button type="submit" class="button button--primary">Salvar Preferências</button><button type="button" class="button button--outline" data-cookie-action="accept">Aceitar Todos</button><button type="button" class="button button--outline" data-cookie-action="reject">Rejeitar Opcionais</button></div>
+  </form>
+</dialog>
+<p id="cookie-status" class="visually-hidden" role="status" aria-live="polite"></p>
+<noscript><p class="noscript-privacy">JavaScript está desativado. Nenhuma funcionalidade opcional é ativada nesta página. Consulte a <a href="{{ url_for('cookie_policy') }}">página de cookies</a>.</p></noscript>
