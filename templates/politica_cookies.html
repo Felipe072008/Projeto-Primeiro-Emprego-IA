@@ -4,9 +4,10 @@
 <p class="eyebrow">Sua privacidade</p><h1>Configurações de Cookies</h1><p class="legal-date">Última revisão: {{ legal_review_date }}</p>
 <p>Cookies são pequenos arquivos de texto armazenados no dispositivo. Armazenamento local (localStorage) e armazenamento da aba (sessionStorage) são tecnologias diferentes, também descritas aqui para que você controle suas preferências.</p>
 <p><button class="button button--primary" type="button" data-cookie-open>Gerenciar minhas preferências de cookies</button></p>
-<h2>O que está efetivamente em uso</h2>
+<h2>O que está efetivamente em uso</h2><p>Complemento sobre o acesso administrativo em 16/11/2026.</p>
 <table class="legal-table"><thead><tr><th scope="col">Recurso</th><th scope="col">Finalidade</th><th scope="col">Duração</th></tr></thead><tbody>
 <tr><th scope="row">{{ session_cookie_name }}<br />Cookie necessário</th><td>Manter a conta autenticada e proteger a sessão. Não é cookie de publicidade.</td><td>Cookie de sessão, sem data de expiração persistente definida pelo aplicativo. É removido ao sair da conta; o encerramento/restauração do navegador depende de suas configurações.</td></tr>
+<tr><th scope="row">peia_admin<br />Cookie necessário ao acesso restrito</th><td>Autenticar exclusivamente o administrador com identificador opaco. Secure, HttpOnly e SameSite=Strict; criado ao iniciar o acesso restrito.</td><td>Cookie de sessão. A autorização de PIN dura 5 minutos; a sessão administrativa expira no servidor após 30 minutos de inatividade e é invalidada no logout.</td></tr>
 <tr><th scope="row">primeiroemprego.cookie_preferences<br />localStorage necessário</th><td>Guardar sua escolha, versão e datas para respeitar as preferências. Não contém e-mail ou nome.</td><td>Validade de {{ cookie_days }} dias. A aplicação descarta registros vencidos, inválidos ou de versão anterior em novo acesso e solicita outra escolha. O navegador pode conservar o registro até esse acesso ou até você limpar o armazenamento.</td></tr>
 <tr><th scope="row">filters-jobs e filters-courses<br />sessionStorage opcional</th><td>Lembrar filtros de vagas e cursos quando a categoria de funcionalidade estiver autorizada.</td><td>Durante a sessão da aba, conforme o comportamento do navegador. Removidos pelo site quando a autorização é revogada.</td></tr>
 </tbody></table>

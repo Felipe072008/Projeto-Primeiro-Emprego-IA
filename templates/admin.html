@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}"><meta name="robots" content="noindex,nofollow">
+  <title>Administração | PrimeiroEmprego IA</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='fontes_locais.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='estilos_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='estilos_interface.css') }}">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <script src="/admin-assets/admin.js" defer></script>
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#admin-content">Pular para o conteúdo</a>
+  <aside class="admin-sidebar"><a class="brand" href="/admin">PrimeiroEmprego IA</a><p>Administração</p>
+    <nav aria-label="Administração">
+      {% for key,label in [('overview','Visão geral'),('users','Usuários'),('resumes','Currículos'),('jobs','Vagas'),('courses','Cursos'),('system','Sistema'),('activities','Atividades'),('account','Conta')] %}
+      <button type="button" data-view="{{ key }}">{{ label }}</button>
+      {% endfor %}
+    </nav><button id="admin-logout" class="button" type="button">Sair</button>
+  </aside>
+  <main id="admin-content" class="admin-content" tabindex="-1">
+    <h1 id="admin-title">Visão geral</h1><p id="admin-message" role="status" aria-live="polite"></p>
+    <div id="admin-toolbar"></div><div id="admin-results"></div>
+  </main>
+  <dialog id="admin-edit-dialog" aria-labelledby="admin-edit-title" class="admin-edit-dialog">
+    <form id="admin-edit-form" class="form-stack"><h2 id="admin-edit-title"></h2>
+      <div id="admin-edit-fields"></div><p id="admin-edit-error" role="alert"></p>
+      <button class="button button--primary" type="submit">Salvar</button>
+      <button id="admin-edit-close" class="button" type="button">Cancelar</button>
+    </form>
+  </dialog>
+</body>
+</html>

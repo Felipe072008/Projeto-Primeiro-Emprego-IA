@@ -1,0 +1,6 @@
+.restricted-access { display: block; margin: 16px auto 0; border: 0; padding: 10px; background: transparent; color: var(--ink); opacity: .4; border-radius: 8px; }
+.restricted-access:hover, .restricted-access:focus-visible { opacity: 1; }
+.restricted-dialog { width: min(420px, calc(100% - 32px)); max-height: 90vh; overflow: auto; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); color: var(--ink); }
+.restricted-dialog::backdrop { background: #0b2030aa; }
+.restricted-dialog h2 { margin-top: 0; }
+.restricted-error { color: var(--danger); margin: 0; min-height: 1.5em; }

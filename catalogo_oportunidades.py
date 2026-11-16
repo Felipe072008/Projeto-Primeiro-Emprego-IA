@@ -99,7 +99,8 @@ def catalog_records(kind):
     path = DATA_DIR / f'{kind}.json'
     manual = json.loads(path.read_text(encoding='utf-8')) if path.exists() else []
     imported, runs = read_state(kind)
-    return imported + manual, runs
+    from administracao_dados import apply_controls
+    return apply_controls(kind, imported + manual), runs
 
 
 def enrich_record(row, kind):

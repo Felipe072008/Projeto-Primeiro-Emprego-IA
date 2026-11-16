@@ -1,5 +1,6 @@
 """Ponto de entrada Flask: autenticação, perfil, catálogo e rotas dos currículos."""
 import json
+import sys
 import os
 import re
 import secrets
@@ -151,6 +152,9 @@ def init_db():
             """
         )
 
+        from administracao_dados import migrate
+        migrate(connection)
+
 
 PROFILE_FIELDS = (
     "phone", "city", "state", "age", "education", "course", "desired_area",
@@ -170,7 +174,7 @@ def profile_completion(profile: dict) -> int:
 def get_user(user_id: int):
     with db_connection() as connection:
         row = connection.execute(
-            "SELECT id, name, email, created_at FROM users WHERE id = ?", (user_id,)
+            "SELECT id, name, email, created_at, status FROM users WHERE id = ?", (user_id,)
         ).fetchone()
     return dict(row) if row else None
 
@@ -184,7 +188,14 @@ def get_profile(user_id: int) -> dict:
 
 
 def current_user_id():
-    return session.get("user_id")
+    user_id = session.get('user_id')
+    if user_id:
+        with db_connection() as connection:
+            user = connection.execute('SELECT status,session_version FROM users WHERE id=?', (user_id,)).fetchone()
+        if not user or user['status'] != 'active' or session.get('user_version', 0) != user['session_version']:
+            session.clear()
+            return None
+    return user_id
 
 
 def login_required(view):
@@ -295,6 +306,9 @@ def home():
 
 @app.before_request
 def protect_mutations():
+    # Revalida o status inclusive em sessões abertas antes de uma desativação.
+    if request.path.startswith('/api/'):
+        current_user_id()
     # Browser mutations require a same-origin custom header, including multipart uploads.
     if request.method in {'POST', 'PUT', 'PATCH', 'DELETE'}:
         if request.headers.get('Origin') and request.headers['Origin'].rstrip('/') != request.host_url.rstrip('/'):
@@ -384,10 +398,13 @@ def login():
     password = str(data.get("password", ""))
     with db_connection() as connection:
         row = connection.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
-    if not row or not check_password_hash(row["password_hash"], password):
+    if not row or row["status"] != "active" or not check_password_hash(row["password_hash"], password):
         return jsonify({"error": "E-mail ou senha incorretos."}), 401
     session.clear()
     session["user_id"] = row["id"]
+    session["user_version"] = row["session_version"]
+    with db_connection() as connection:
+        connection.execute('UPDATE users SET last_login_at=? WHERE id=?', (timestamp(), row['id']))
     return jsonify({"message": "Login realizado.", "user": get_user(row["id"])})
 
 
@@ -713,6 +730,8 @@ def too_large(_error):
 
 
 init_db()
+from admin import register_admin
+register_admin(app, sys.modules[__name__])
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
