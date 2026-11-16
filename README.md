@@ -128,3 +128,7 @@ As fontes visuais são locais e não há Analytics ou publicidade instalados.
 
 Veja o [inventário, testes e pendências antes de publicação](docs/legal/IMPLEMENTACAO.md).
 As configurações e os documentos desta etapa foram preparados localmente; não houve deploy.
+
+## Administração
+
+Painel com autenticação separada, controle de usuários e catálogo: [implementação, arquivos e aplicação no PythonAnywhere](docs/admin/IMPLEMENTACAO.md). A conta é criada somente com `python create_admin.py` no console; não há cadastro administrativo público.

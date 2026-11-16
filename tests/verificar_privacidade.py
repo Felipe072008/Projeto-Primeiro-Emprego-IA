@@ -37,7 +37,7 @@ def no_overflow(page):
 
 def main():
     with tempfile.TemporaryDirectory() as temporary:
-        for env,filename in [('FIRST_JOB_DATABASE','users.db'),('FIRST_JOB_CATALOG_DATABASE','catalog.db'),('FIRST_JOB_UPLOAD_DIR','uploads')]:
+        for env,filename in [('FIRST_JOB_DATABASE','users.db'),('FIRST_JOB_ADMIN_DATABASE','admin.db'),('FIRST_JOB_CATALOG_DATABASE','catalog.db'),('FIRST_JOB_UPLOAD_DIR','uploads')]:
             os.environ[env]=str(Path(temporary)/filename)
         import app as site
         site.app.config.update(TESTING=True,SESSION_COOKIE_SECURE=False)

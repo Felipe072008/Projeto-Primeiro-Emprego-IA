@@ -1,0 +1,22 @@
+<button id="restricted-access" class="restricted-access" type="button" aria-label="Acesso restrito">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="8" cy="8" r="4"/><path d="m11 11 9 9m-3-3 3-3m-6 0 3-3"/></svg>
+</button>
+<dialog id="admin-pin-dialog" class="restricted-dialog" aria-labelledby="admin-pin-title">
+  <form id="admin-pin-form" class="form-stack">
+    <h2 id="admin-pin-title">Acesso restrito</h2>
+    <label>PIN<input name="pin" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="off" required /></label>
+    <p role="alert" class="restricted-error"></p>
+    <button class="button button--primary" type="submit">Continuar</button>
+    <button class="text-button" type="button" data-close-admin>Cancelar</button>
+  </form>
+</dialog>
+<dialog id="admin-login-dialog" class="restricted-dialog" aria-labelledby="admin-login-title">
+  <form id="admin-login-form" class="form-stack">
+    <h2 id="admin-login-title">Acesso restrito</h2>
+    <label>Usuário<input name="username" maxlength="80" autocomplete="username" required /></label>
+    <label>Senha<input name="password" type="password" maxlength="256" autocomplete="current-password" required /></label>
+    <p role="alert" class="restricted-error"></p>
+    <button class="button button--primary" type="submit">Entrar</button>
+    <button class="text-button" type="button" data-close-admin>Cancelar</button>
+  </form>
+</dialog>

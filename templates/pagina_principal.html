@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_base.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='acesso_admin.css') }}" />
+    <script src="{{ url_for('static', filename='acesso_admin.js') }}" defer></script>
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
@@ -52,6 +54,7 @@
             </label>
             <button class="button button--primary button--wide" type="submit">Entrar</button>
           </form>
+          {% include "parciais/acesso_admin.html" %}
           <p class="switch-copy">Ainda não tem uma conta? <button class="text-button" data-show-auth="register">Criar perfil</button></p>
         </div>
 

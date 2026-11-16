@@ -36,6 +36,8 @@ def connect():
         CREATE TABLE IF NOT EXISTS catalog_items (
             source_id TEXT NOT NULL, item_id TEXT NOT NULL, kind TEXT NOT NULL,
             payload TEXT NOT NULL, PRIMARY KEY(source_id, item_id));
+        CREATE TABLE IF NOT EXISTS sync_status (
+            name TEXT PRIMARY KEY, last_run_at TEXT, last_result TEXT, message TEXT);
         CREATE TABLE IF NOT EXISTS catalog_runs (
             source_id TEXT PRIMARY KEY, last_attempt_at TEXT NOT NULL,
             last_success_at TEXT, sync_status TEXT NOT NULL,
@@ -198,6 +200,9 @@ def update_source(source_id, *, due=False, now=None):
                    'sync_status=excluded.sync_status,error_code=excluded.error_code,message=excluded.message,'
                    'imported_count=excluded.imported_count',
                    (source_id, now.isoformat(), last_success, status, code, message, count))
+        db.execute('INSERT INTO sync_status VALUES (?,?,?,?) ON CONFLICT(name) DO UPDATE SET '
+                   'last_run_at=excluded.last_run_at,last_result=excluded.last_result,message=excluded.message',
+                   (source['kind'], now.isoformat(), status, message))
         return dict(db.execute('SELECT * FROM catalog_runs WHERE source_id=?', (source_id,)).fetchone())
 
 
@@ -235,4 +240,7 @@ def receive_jooble(payload, now=None):
                    'imported_count=excluded.imported_count',
                    ('jooble', now.isoformat(), collected.isoformat(), 'success', None,
                     'Lote recebido do GitHub Actions; ausências preservadas.', count))
+        db.execute('INSERT INTO sync_status VALUES (?,?,?,?) ON CONFLICT(name) DO UPDATE SET '
+                   'last_run_at=excluded.last_run_at,last_result=excluded.last_result,message=excluded.message',
+                   ('jobs',now.isoformat(),'success','Lote recebido e validado.'))
     return {'sync_status': 'success', 'imported_count': count, 'collected_at': collected.isoformat()}
