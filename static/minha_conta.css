@@ -1,0 +1,17 @@
+button.account-chip { border: 1px solid transparent; border-radius: 12px; background: transparent; color: var(--ink); text-align: left; padding: 6px; min-height: 48px; min-width: 48px; }
+button.account-chip:hover { background: var(--blue-pale); border-color: var(--line); }
+button.account-chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.account-chip > .account-chip-text { display: grid; width: auto; height: auto; background: transparent; border-radius: 0; text-align: left; justify-items: start; }
+.account-chip-text b { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-sections { display: grid; gap: 24px; max-width: 760px; }
+.account-sections .card { padding: 24px; }
+.account-sections h2 { margin-top: 0; }
+.account-sections form { margin: 20px 0; }
+.account-sections input { min-width: 0; width: 100%; }
+.account-password { display: flex; gap: 8px; align-items: center; }
+.account-password button { border: 1px solid var(--line); padding: 10px; min-height: 44px; border-radius: 8px; background: var(--paper); color: var(--blue-deep); }
+.account-dates { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+.account-dates dd { margin: 0; }
+.account-danger { background: #8b302b; color: white; }
+.account-sections [role=status] { overflow-wrap: anywhere; }
+@media(max-width:600px) { .account-chip-text b { max-width: 90px; } .account-sections .card { padding: 18px; } .account-dates { grid-template-columns: 1fr; } }

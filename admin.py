@@ -47,6 +47,8 @@ def init_admin():
                 id INTEGER PRIMARY KEY, ip TEXT NOT NULL, kind TEXT NOT NULL,
                 success INTEGER NOT NULL, created_at REAL NOT NULL);
             CREATE INDEX IF NOT EXISTS admin_attempt_window ON admin_attempts(ip,created_at);
+            CREATE TABLE IF NOT EXISTS admin_access_calls (ip TEXT NOT NULL, created_at REAL NOT NULL);
+            CREATE INDEX IF NOT EXISTS admin_access_window ON admin_access_calls(ip,created_at);
             CREATE TABLE IF NOT EXISTS admin_blocks (ip TEXT PRIMARY KEY, blocked_until REAL NOT NULL);
             CREATE TABLE IF NOT EXISTS admin_audit_log (
                 id INTEGER PRIMARY KEY, created_at TEXT NOT NULL, action TEXT NOT NULL,
@@ -184,7 +186,6 @@ def register_admin(app, site):
                 db.execute('UPDATE admin_sessions SET last_seen=?,expires_at=? WHERE token_hash=?',
                            (now, now + 1800, row['token_hash']))
                 g.admin_session = dict(row)
-                audit(db, 'access', details={'endpoint': request.endpoint})
             if any(type(value) is int and not 1 <= value <= 9223372036854775807 for value in kwargs.values()):
                 return invalid(400)
             return view(*args, **kwargs)
@@ -206,6 +207,14 @@ def register_admin(app, site):
     @bp.get('/admin-access')
     def access():
         with connection() as db:
+            db.execute('BEGIN IMMEDIATE')
+            now, ip = time.time(), client_ip()
+            db.execute('DELETE FROM admin_access_calls WHERE created_at<=?', (now - 600,))
+            count = db.execute('SELECT COUNT(*) FROM admin_access_calls WHERE ip=?', (ip,)).fetchone()[0]
+            if count >= 20:
+                audit(db, 'access_blocked', details={'endpoint': 'admin-access'})
+                return invalid(429)
+            db.execute('INSERT INTO admin_access_calls VALUES (?,?)', (ip, now))
             token, csrf = new_session(db, 'initial')
         return set_cookie(jsonify(csrf=csrf), token)
 
@@ -259,52 +268,13 @@ def register_admin(app, site):
         with connection() as db:
             audit(db, action, target_type, target_id, details)
 
+    from arquivos_conta import file_path as safe_file_path, remove_records as shared_remove
+
     def file_path(name):
-        if not name:
-            return None
-        root = site.UPLOAD_DIR.resolve()
-        candidate = root / name
-        if Path(name).name != name or candidate.is_symlink() or candidate.resolve().parent != root:
-            raise ValueError('Caminho de arquivo inválido; exclusão interrompida.')
-        return candidate
+        return safe_file_path(site.UPLOAD_DIR, name)
 
     def remove_records(user_id=None, resume_id=None):
-        staged = []
-        try:
-            with site.db_connection() as db:
-                db.execute('BEGIN IMMEDIATE')
-                if user_id is not None:
-                    user = db.execute('SELECT status FROM users WHERE id=?', (user_id,)).fetchone()
-                    if not user or user[0] != 'deactivated':
-                        raise ValueError('Desative a conta antes de apagar definitivamente.')
-                    for table in ('profiles', 'profile_sections', 'resumes', 'terms_acceptances'):
-                        if not any(r[2] == 'users' and r[6] == 'CASCADE' for r in db.execute(f'PRAGMA foreign_key_list({table})')):
-                            raise ValueError('A exclusão foi interrompida: confira as chaves estrangeiras.')
-                    rows = db.execute('SELECT id,saved_name FROM resumes WHERE user_id=?', (user_id,)).fetchall()
-                else:
-                    rows = db.execute('SELECT id,saved_name FROM resumes WHERE id=?', (resume_id,)).fetchall()
-                    if not rows:
-                        raise ValueError('Currículo não encontrado.')
-                for row in rows:
-                    path = file_path(row['saved_name'])
-                    if path and path.exists():
-                        temporary = path.with_name('.admin-delete-' + secrets.token_hex(16))
-                        path.rename(temporary)
-                        staged.append((path, temporary))
-                if user_id is not None:
-                    db.execute('DELETE FROM users WHERE id=?', (user_id,))
-                else:
-                    db.execute('DELETE FROM resumes WHERE id=?', (resume_id,))
-        except Exception:
-            for path, temporary in reversed(staged):
-                temporary.rename(path)
-            raise
-        pending = 0
-        for _path, temporary in staged:
-            try:
-                temporary.unlink()
-            except OSError:
-                pending += 1
+        pending = shared_remove(site.db_connection, site.UPLOAD_DIR, user_id=user_id, resume_id=resume_id)
         if pending:
             log('file_cleanup_pending', 'user' if user_id is not None else 'resume', user_id if user_id is not None else resume_id, {'pending_files':pending})
             raise ValueError('Registros excluídos; há arquivos temporários pendentes de limpeza no servidor. Confira Atividades e o roteiro de operação.')

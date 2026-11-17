@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='acesso_admin.css') }}" />
     <script src="{{ url_for('static', filename='acesso_admin.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='minha_conta.css') }}" />
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
@@ -71,7 +72,7 @@
               <input required type="email" name="email" autocomplete="email" placeholder="voce@email.com" />
             </label>
             <label>Crie uma senha
-              <input required minlength="6" type="password" name="password" autocomplete="new-password" placeholder="Pelo menos 6 caracteres" />
+              <input required minlength="8" maxlength="256" type="password" name="password" autocomplete="new-password" placeholder="De 8 a 256 caracteres" />
             </label>
             <input type="hidden" name="terms_version" value="{{ terms_version }}" />
             <label class="terms-choice"><input required type="checkbox" name="terms_accepted" value="true" /><span>Li e concordo com os <a href="{{ url_for('terms_of_use') }}" target="_blank" rel="noopener">Termos de Uso</a>.</span></label>
@@ -109,7 +110,7 @@
         <header class="topbar">
           <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-sidebar">☰</button>
           <div class="topbar-date"><span class="live-dot"></span> <span id="site-date">--/--/----</span></div>
-          <div class="account-chip"><span id="account-initial">P</span><div><b id="account-name">Seu perfil</b><small>Meu espaço</small></div></div>
+          <button type="button" class="account-chip" data-route="account" aria-label="Abrir Minha conta"><span id="account-initial">P</span><span class="account-chip-text"><b id="account-name">Seu perfil</b><small>Minha conta</small></span></button>
         </header>
 
         <div class="page-wrap">
@@ -152,6 +153,7 @@
             </section>
           </section>
 
+          {% include "parciais/minha_conta.html" %}
           <section class="page" id="page-profile" data-page="profile">
             <div class="page-heading split-heading">
               <div>
@@ -265,6 +267,7 @@
     <script src="{{ url_for('static', filename='preferencias_cookies.js') }}" data-cookie-version="{{ privacy_version }}" data-cookie-days="{{ cookie_days }}"></script>
     <!-- Os editores de perfil precisam estar definidos antes da inicialização da interface. -->
     <script src="{{ url_for('static', filename='editor_perfil.js') }}"></script>
+    <script src="{{ url_for('static', filename='minha_conta.js') }}"></script>
     <script src="{{ url_for('static', filename='interface_site.js') }}"></script>
   </body>
 </html>
