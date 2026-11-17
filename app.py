@@ -364,9 +364,9 @@ def register():
                        errors={'terms_version': 'Versão dos Termos desatualizada.'}), 400
     name = str(data.get("name", "")).strip()
     email = str(data.get("email", "")).strip().lower()
-    password = str(data.get("password", ""))
-    if not name or not email or len(password) < 6:
-        return jsonify({"error": "Informe nome, e-mail e uma senha com pelo menos 6 caracteres."}), 400
+    password = data.get("password")
+    if not name or len(name)>120 or not email or len(email)>254 or not isinstance(password,str) or not 8 <= len(password) <= 256:
+        return jsonify({"error": "Informe nome, e-mail e uma senha de 8 a 256 caracteres."}), 400
     if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
         return jsonify({"error": "Informe um e-mail válido."}), 400
     try:
@@ -732,6 +732,8 @@ def too_large(_error):
 init_db()
 from admin import register_admin
 register_admin(app, sys.modules[__name__])
+from contas import register_accounts
+register_accounts(app, sys.modules[__name__])
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

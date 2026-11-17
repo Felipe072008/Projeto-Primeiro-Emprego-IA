@@ -298,3 +298,57 @@ class AdminTests(unittest.TestCase):
         for user_id in [0,10**30]:
             self.assertEqual(self.post(f'/admin-api/users/{user_id}/deactivate').status_code,400)
             self.assertEqual(self.post(f'/admin-api/resumes/{user_id}',{},'DELETE').status_code,400)
+
+
+    def test_access_limit_persists_per_ip_expires_and_cleans_old_records(self):
+        now=time.time()+1000
+        with patch('admin.time.time',return_value=now):
+            for _ in range(20):
+                self.assertEqual(self.staff.get('/admin-access').status_code,200)
+            admin.init_admin()
+            other_client=site.app.test_client()
+            denied=other_client.get('/admin-access')
+            self.assertEqual(denied.status_code,429)
+            self.assertNotIn('Set-Cookie',denied.headers)
+            self.assertEqual(other_client.get('/admin-access',environ_overrides={'REMOTE_ADDR':'192.0.2.1'}).status_code,200)
+            with admin.connection() as db:
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM admin_access_calls').fetchone()[0],21)
+        with patch('admin.time.time',return_value=now+599):
+            self.assertEqual(self.staff.get('/admin-access').status_code,429)
+        with patch('admin.time.time',return_value=now+600):
+            self.assertEqual(self.staff.get('/admin-access').status_code,200)
+            with admin.connection() as db:
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM admin_access_calls').fetchone()[0],1)
+
+    def test_access_limit_serializes_concurrent_requests(self):
+        from concurrent.futures import ThreadPoolExecutor
+        with admin.connection() as db:
+            db.execute('DELETE FROM admin_access_calls')
+        def call(_):
+            return site.app.test_client().get('/admin-access').status_code
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            codes=list(pool.map(call,range(25)))
+        self.assertEqual(codes.count(200),20)
+        self.assertEqual(codes.count(429),5)
+
+    def test_audit_omits_reads_but_keeps_mutations_login_and_denials(self):
+        self.login()
+        with admin.connection() as db:
+            before=db.execute('SELECT COUNT(*) FROM admin_audit_log').fetchone()[0]
+            self.assertTrue(db.execute("SELECT 1 FROM admin_audit_log WHERE action='access_login'").fetchone())
+        for route in ['/admin','/admin-assets/admin.js','/admin-assets/admin.css','/admin-api/overview',
+                      '/admin-api/users','/admin-api/resumes','/admin-api/catalog/jobs','/admin-api/catalog/courses',
+                      '/admin-api/system','/admin-api/activities']:
+            response=self.staff.get(route)
+            self.assertEqual(response.status_code,200,route)
+            response.close()
+        with admin.connection() as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM admin_audit_log').fetchone()[0],before)
+        self.post('/admin-api/users/1/deactivate')
+        self.client.get('/admin-assets/admin.js')
+        self.staff.post('/admin-api/logout',json={})
+        with admin.connection() as db:
+            actions=[r[0] for r in db.execute('SELECT action FROM admin_audit_log')]
+        for action in ['user_deactivate','access_denied','csrf_denied']:
+            self.assertIn(action,actions)
+        self.assertNotIn('access',actions)

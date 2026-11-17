@@ -1,0 +1,34 @@
+<section class="page" id="page-account" data-page="account">
+  <div class="page-heading"><h1>Minha conta</h1><p class="lead">Cuide dos seus dados de acesso e da sua privacidade.</p></div>
+  <div class="account-sections">
+    <article class="card"><h2>Dados da conta</h2>
+      <form id="account-name-form" class="form-stack"><label>Nome<input name="name" required maxlength="120" autocomplete="name"></label><button class="button button--primary" type="submit">Salvar nome</button><p role="status"></p></form>
+      <p>E-mail atual: <strong id="account-current-email"></strong></p>
+      <form id="account-email-form" class="form-stack">
+        <label>Novo e-mail<input type="email" name="email" required maxlength="254" autocomplete="email"></label>
+        <label>Repita o novo e-mail<input type="email" name="email_confirmation" required maxlength="254" autocomplete="off"></label>
+        <label>Senha atual<span class="account-password"><input id="email-current-password" name="current_password" type="password" required maxlength="256" autocomplete="current-password"><button type="button" data-password-toggle="email-current-password" aria-label="Mostrar senha atual do e-mail" aria-pressed="false">Mostrar</button></span></label>
+        <p class="muted">O endereço será alterado sem confirmação por e-mail. Confira se digitou corretamente.</p>
+        <button class="button button--primary" type="submit">Alterar e-mail</button><p role="status"></p>
+      </form>
+      <dl class="account-dates"><dt>Data de cadastro</dt><dd id="account-created"></dd><dt>Último acesso</dt><dd id="account-last-login"></dd></dl>
+    </article>
+    <article class="card"><h2>Trocar senha</h2><p id="account-password-rules">Use de 8 a 256 caracteres. A nova senha deve ser diferente da atual. As sessões dos outros aparelhos serão encerradas; você continuará conectado aqui.</p>
+      <form id="account-password-form" class="form-stack">
+        {% for name,label in [('current_password','Senha atual'),('new_password','Nova senha'),('password_confirmation','Confirme a nova senha')] %}
+        <label>{{ label }}<span class="account-password"><input id="account-{{ name }}" name="{{ name }}" type="password" required maxlength="256" {% if name != 'current_password' %}minlength="8" aria-describedby="account-password-rules"{% endif %} autocomplete="{{ 'current-password' if name == 'current_password' else 'new-password' }}"><button type="button" data-password-toggle="account-{{ name }}" aria-label="Mostrar {{ label | lower }}" aria-pressed="false">Mostrar</button></span></label>
+        {% endfor %}
+        <button class="button button--primary" type="submit">Trocar senha</button><p role="status"></p>
+      </form>
+    </article>
+    <article class="card"><h2>Segurança</h2><p>Encerre todas as sessões, incluindo esta. Será necessário entrar novamente.</p><button type="button" id="account-end-sessions" class="button button--outline">Sair de todos os dispositivos</button><p id="account-sessions-status" role="status"></p></article>
+    <article class="card"><h2>Privacidade</h2><p id="account-terms"></p>
+      <p><a href="/termos-de-uso" target="_blank" rel="noopener">Termos de Uso</a> · <a href="/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a href="/cookies" target="_blank" rel="noopener">Cookies</a></p>
+      <button type="button" class="button button--outline" data-cookie-open>Gerenciar cookies</button>
+      <h3>Baixar meus dados</h3><p>Baixe um arquivo ZIP com seus dados e os currículos disponíveis. Guarde-o em um local seguro.</p>
+      <form id="account-export-form" class="form-stack"><label>Senha atual<input name="current_password" type="password" required maxlength="256" autocomplete="current-password"></label><button type="submit" class="button button--outline">Baixar meus dados</button><p role="status"></p></form>
+      <h3>Excluir minha conta</h3><p>Esta ação é definitiva: sua conta, perfil e currículos ativos serão apagados. Não será possível recuperá-los pelo site. Cópias de segurança seguem os procedimentos do responsável.</p>
+      <form id="account-delete-form" class="form-stack"><label>Senha atual<input name="current_password" type="password" required maxlength="256" autocomplete="current-password"></label><label>Digite EXCLUIR para confirmar<input name="confirmation" required maxlength="20" autocomplete="off" pattern="EXCLUIR"></label><button type="submit" class="button account-danger">Excluir minha conta</button><p role="status"></p></form>
+    </article>
+  </div>
+</section>

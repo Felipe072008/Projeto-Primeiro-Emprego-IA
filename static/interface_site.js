@@ -74,7 +74,7 @@ function accountDetails() {
 }
 
 function navigate(route, fromHistory = false) {
-  if (!['dashboard','profile','jobs','courses','resume'].includes(route)) route='dashboard';
+  if (!['dashboard','profile','jobs','courses','resume','account'].includes(route)) route='dashboard';
   if (!fromHistory && location.hash !== '#'+route) history.pushState(null, '', '#'+route);
   $$('.nav-link').forEach(button => { if(button.dataset.route===route) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current'); });
   $$(".page").forEach((page) => page.classList.toggle("active", page.dataset.page === route));
@@ -85,6 +85,7 @@ function navigate(route, fromHistory = false) {
   if (heading) { heading.tabIndex=-1; heading.focus({preventScroll:true}); }
   if (route === "dashboard") loadDashboard();
   if (route === "profile") populateProfileForm();
+  if (route === "account") loadMyAccount();
   if (route === "jobs" || route === "courses") loadCatalog(route);
   if (route === "resume") { loadResumes(); loadAIStatus(); }
 }
@@ -763,6 +764,7 @@ async function logout() {
 }
 
 function bindEvents() {
+  bindAccountEvents();
   $('.skip-link').addEventListener('click',event=>{event.preventDefault();$('#main-content').focus();});
   window.addEventListener('hashchange', () => { if(state.me && location.hash !== '#main-content') navigate(location.hash.slice(1),true); });
   bindProfileEvents();
