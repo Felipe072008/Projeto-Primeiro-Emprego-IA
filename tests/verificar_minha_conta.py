@@ -36,11 +36,22 @@ def main():
                 expect(page.locator('#page-account')).to_have_class('page active')
                 expect(page.locator('#account-name-form [name=name]')).to_have_value('Teste conta')
                 assert page.locator('.sidebar [data-route=account]').count()==0
-                page.get_by_text('Editar dados',exact=True).click()
+                nav=page.locator('#main-sidebar').bounding_box()
+                icon=page.locator('.account-chip').bounding_box()
+                assert abs(nav['y']+nav['height']/2-icon['y']-icon['height']/2)<1
+                page.locator('#logout-button').click()
+                expect(page.locator('#login-form [name=email]')).to_be_focused()
+                assert context.request.get(base+'/api/account/profile').status==401
+                page.locator('#login-form [name=email]').fill('conta@example.test')
+                page.locator('#login-form [name=password]').fill('Inicial12345')
+                page.locator('#login-form [type=submit]').click()
+                page.get_by_role('button',name='Abrir Minha conta').click()
+                page.get_by_text('Alterar nome',exact=True).click()
                 page.locator('#account-name-form [name=name]').fill('Nome atualizado')
                 page.locator('#account-name-form [type=submit]').click()
                 expect(page.locator('#account-display-name')).to_have_text('Nome atualizado')
                 checks.append('Ícone acessível por teclado abre a conta e o nome atualizado aparece na página.')
+                page.locator('summary').filter(has_text='Alterar e-mail').click()
                 form=page.locator('#account-email-form')
                 form.locator('[name=email]').fill('NOVO@example.test');form.locator('[name=email_confirmation]').fill('novo@example.test');form.locator('[name=current_password]').fill('Inicial12345')
                 form.locator('[type=submit]').click()
