@@ -761,10 +761,7 @@ async function handleAuth(event) {
 async function logout() {
   try {
     const result = await api("/api/auth/logout", { method: "POST" });
-    state.me = null;
-    switchView(false);
-    toggleAuth("login");
-    toast(result.message);
+    finishAccountSession(result.message);
   } catch (error) {
     toast(error.message, "error");
   }

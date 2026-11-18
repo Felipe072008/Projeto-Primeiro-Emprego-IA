@@ -1,9 +1,11 @@
 <section class="page" id="page-account" data-page="account">
-  <div class="page-heading"><h1>Minha conta</h1><p class="lead">Cuide dos seus dados de acesso e da sua privacidade.</p></div>
+  <div class="page-heading split-heading"><div><h1>Minha conta</h1><p class="lead">Cuide dos seus dados de acesso e da sua privacidade.</p></div><button id="logout-button" type="button" class="button button--outline">Sair</button></div>
   <div class="account-sections">
-    <article class="card"><h2>Dados da conta</h2><p id="account-display-name"></p><details><summary>Editar dados</summary>
-      <form id="account-name-form" class="form-stack"><label>Nome<input name="name" required maxlength="120" autocomplete="name"></label><button class="button button--primary" type="submit">Salvar nome</button><p role="status"></p></form>
+    <article class="card"><h2>Dados da conta</h2><p id="account-display-name"></p>
       <p>E-mail atual: <strong id="account-current-email"></strong></p>
+      <details><summary>Alterar nome</summary>
+      <form id="account-name-form" class="form-stack"><label>Nome<input name="name" required maxlength="120" autocomplete="name"></label><button class="button button--primary" type="submit">Salvar nome</button><p role="status"></p></form></details>
+      <details><summary>Alterar e-mail</summary>
       <form id="account-email-form" class="form-stack">
         <label>Novo e-mail<input type="email" name="email" required maxlength="254" autocomplete="email"></label>
         <label>Repita o novo e-mail<input type="email" name="email_confirmation" required maxlength="254" autocomplete="off"></label>
@@ -21,7 +23,7 @@
         <button class="button button--primary" type="submit">Trocar senha</button><p role="status"></p>
       </form></details>
     </article>
-    <article class="card"><h2>Segurança</h2><button id="logout-button" class="text-link">Sair desta conta</button><p>Encerre todas as sessões, incluindo esta. Será necessário entrar novamente.</p><button type="button" id="account-end-sessions" class="button button--outline">Sair de todos os dispositivos</button><p id="account-sessions-status" role="status"></p></article>
+    <article class="card"><h2>Segurança</h2><p>Encerre todas as sessões, incluindo esta. Será necessário entrar novamente.</p><button type="button" id="account-end-sessions" class="button button--outline">Sair de todos os dispositivos</button><p id="account-sessions-status" role="status"></p></article>
     <article class="card"><h2>Privacidade</h2><p id="account-terms"></p>
       <p><a href="/termos-de-uso" target="_blank" rel="noopener">Termos de Uso</a> · <a href="/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a href="/cookies" target="_blank" rel="noopener">Cookies</a></p>
       <button type="button" class="button button--outline" data-cookie-open>Gerenciar cookies</button>
