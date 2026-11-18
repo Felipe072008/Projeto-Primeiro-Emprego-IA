@@ -51,7 +51,9 @@ function recordCards(section, data, inEditor = false) {
 function renderProfileSummary() {
   const target = $('#profile-summary');
   if (!state.me?.profile?.sections || !target) return;
-  const {profile,user} = state.me;
+  const {profile} = state.me;
+  $('#profile-meter').value = state.me.completion;
+  $('#meter-value').textContent = state.me.completion + '%';
   const blocks = Object.entries(profileSections).map(([section,config])=>{
     const data = sectionData(section);
     let content = '';
@@ -67,11 +69,10 @@ function renderProfileSummary() {
       else if (!data.items.length && !data.legacy) content += `<div class="profile-empty-state"><span>+</span><p>${section === 'experiences' ? 'Seu primeiro emprego pode começar aqui. Projetos e habilidades também ajudam a contar sua história.' : config.hint}</p></div>`;
     }
     if(section==='contact' && Object.keys(profile.validation_errors || {}).some(k=>data[k])) content += '<p class="field-error">Há dados antigos que precisam de revisão. Eles foram preservados; edite esta seção para corrigir telefone ou idade.</p>';
-    const add = config.singular ? sectionButton(section,`Adicionar ${config.singular}`,'new') : '';
-    return `<section id="profile-block-${section}" class="profile-summary-section"><div class="profile-section-heading"><div><h2>${config.title}</h2></div><div class="section-actions">${sectionButton(section)}${add}</div></div>${content}</section>`;
+    const add = config.singular ? sectionButton(section,'Adicionar','new') : '';
+    return `<section id="profile-block-${section}" class="profile-summary-section"><div class="profile-section-heading"><div><h2>${config.title}</h2></div><div class="section-actions">${!add || data.items?.length || data.legacy || section === 'experiences' || section === 'education' ? sectionButton(section) : ''}${add}</div></div>${content && (data.items?.length || data.legacy || data.phone || data.city || data.age || data.state || data.sector || data.desired_area || data.periods?.length || data.level || data.no_experience || data.objective || data.target_role || data.salary || data.contracts?.length || data.secondary_areas?.length || data.work_modes?.length) ? `<details><summary>Ver informações</summary>${content}</details>` : ''}</section>`;
   }).join('');
-  const missing = profile.missing_fields || [];
-  target.innerHTML = `<section class="profile-overview-card"><div class="profile-avatar">${escapeHtml(user.name[0] || 'P')}</div><div class="profile-overview-main"><p class="eyebrow">Seu espaço profissional</p><h2>${escapeHtml(user.name)}</h2><p>${escapeHtml(user.email)}</p><p class="profile-basic-status">${missing.length ? `Para completar o básico: ${escapeHtml(missing.join(', '))}.` : 'Seu perfil básico está completo. Continue acrescentando suas vivências no seu ritmo.'}</p></div><div class="profile-completion"><span>${state.me.completion}%</span><small>perfil básico</small></div></section>${blocks}`;
+  target.innerHTML = blocks;
 }
 
 function editorField(name,label,value='',options={}) {
