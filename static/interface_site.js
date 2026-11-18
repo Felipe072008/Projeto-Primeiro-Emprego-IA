@@ -50,10 +50,6 @@ async function api(path, options = {}) {
   return data;
 }
 
-function updateDate(meta) {
-  $("#site-date").textContent = meta.date;
-  $("#auth-date").textContent = meta.date;
-}
 
 function toggleAuth(mode) {
   $("#login-card").classList.toggle("hidden", mode !== "login");
@@ -68,9 +64,7 @@ function switchView(isAuthenticated) {
 function accountDetails() {
   const user = state.me?.user;
   if (!user) return;
-  $("#account-name").textContent = user.name;
-  $("#account-initial").textContent = user.name.trim().charAt(0).toUpperCase() || "P";
-  $("#welcome-name").textContent = user.name.trim().split(/\s+/)[0] || "";
+  $("#account-display-name").textContent = user.name;
 }
 
 function navigate(route, fromHistory = false) {
@@ -376,6 +370,11 @@ async function loadCatalog(kind) {
     const data = await api(`/api/${kind}?${filters}`);
     if (version !== catalogVersions[kind]) return;
     if (!data || !Array.isArray(data[kind])) throw new Error('Resposta do catálogo inválida.');
+    const contract = filters.get('contract');
+    if (kind === 'jobs' && contract) {
+      data.jobs = data.jobs.filter(item => item.contract_type === contract);
+      data.total = data.jobs.length;
+    }
     catalogRows[kind] = data[kind];
     $(`#${kind}-context`).textContent = `${filters.get('all') === '1' ? 'Todas as áreas — filtro ativo. ' : 'Área salva no perfil. '}${data.total} ${data.total === 1 ? "resultado" : "resultados"}. ${data.interest ? `Área do perfil: ${data.interest}. ` : 'Informe sua área no perfil para personalizar. '}${data.interest && !data.recognized_areas?.length ? 'Ainda não reconhecemos essa área; você pode explorar todas as áreas. ' : ''}${data.notice || ''}`;
     renderCatalogSources(kind, data);
@@ -686,22 +685,30 @@ async function editResumeVersion(id) {
 }
 async function uploadResume(event) {
   event.preventDefault();
-  const form = event.currentTarget;
-  const button = $('button[type="submit"]', form);
-  if (button.disabled) return;
-  const file = $('#resume-file').files[0];
-  if (!file || !file.name.toLowerCase().endsWith('.pdf')) return toast('Selecione apenas um arquivo PDF.', 'error');
-  if (!file.size || file.size > 8 * 1024 * 1024) return toast('Envie um PDF não vazio de até 8 MB.', 'error');
-  const formData = new FormData(); formData.append('file', file);
-  button.disabled = true; button.textContent = 'Verificando PDF…';
+  const input = $('#resume-file');
+  const status = $('#upload-status');
+  const file = input.files[0];
+  if (!file || input.disabled) return;
+  input.value = '';
+  if (!file.name.toLowerCase().endsWith('.pdf') || !file.size || file.size > 8 * 1024 * 1024) {
+    status.textContent = 'Selecione um PDF não vazio de até 8 MB.';
+    return;
+  }
+  const body = new FormData();
+  body.append('file', file);
+  input.disabled = true;
+  status.textContent = 'Enviando PDF…';
   try {
-    const result = await api('/api/resumes/upload', {method: 'POST', body: formData});
-    toast(result.message);
+    const result = await api('/api/resumes/upload', {method: 'POST', body});
+    status.textContent = result.message;
     if (result.warning) toast(result.warning, 'error');
-    form.reset(); $('.file-label span').textContent = 'Selecionar arquivo';
-    await loadResumes(); loadDashboard();
-  } catch (error) { toast(error.message, 'error'); }
-  finally { button.disabled = false; button.textContent = 'Enviar currículo'; }
+    await loadResumes();
+    loadDashboard();
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    input.disabled = false;
+  }
 }
 
 async function generateResume(event) {
@@ -776,7 +783,7 @@ function bindEvents() {
     restoreCatalogFilters(kind);
     form.addEventListener('reset', () => { setTimeout(() => loadCatalog(kind), 0); });
     $(`#${kind}-filters`).addEventListener('submit', event => { event.preventDefault(); loadCatalog(kind); });
-    $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"]')) loadCatalog(kind); });
+    $(`#${kind}-filters`).addEventListener('change', event => { if (event.target.matches('select, [type="checkbox"], [type="radio"]')) loadCatalog(kind); });
     $(`#${kind}-list`).addEventListener('click', event => { const button = event.target.closest('[data-catalog]'); if (button) showCatalogDetail(button.dataset.catalog, Number(button.dataset.index)); });
   });
   $$('#resume-builder-form textarea').forEach(field => field.maxLength = 12000);
@@ -817,9 +824,7 @@ function bindEvents() {
   $$('[data-close-modal]').forEach((item) => item.addEventListener("click", () => closeModal("#builder-modal")));
   $$('[data-close-profile]').forEach((item) => item.addEventListener("click", () => requestCloseProfile()));
   $$('[data-close-preview]').forEach((item) => item.addEventListener("click", () => closeModal("#preview-modal")));
-  $("#resume-file").addEventListener("change", (event) => {
-    $(".file-label span").textContent = event.target.files[0]?.name || "Selecionar arquivo";
-  });
+  $("#resume-file").addEventListener("change", uploadResume);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       if ($$('.modal:not(.hidden)').length) {
@@ -834,8 +839,7 @@ function bindEvents() {
 async function boot() {
   bindEvents();
   try {
-    const [meta, me] = await Promise.all([api("/api/meta"), api("/api/me")]);
-    updateDate(meta);
+    const me = await api("/api/me");
     if (me.authenticated) {
       await enterApplication(me);
     }
