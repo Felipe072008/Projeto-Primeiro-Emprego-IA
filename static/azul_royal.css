@@ -10,10 +10,10 @@ body:has(.auth-view:not(.hidden)) {
 .auth-view {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: var(--largura-site);
+  max-width: 72rem;
   margin: auto;
   padding: clamp(16px, 3vw, 40px);
-  gap: clamp(20px, 2.5vw, 40px);
+  gap: clamp(24px, 4vw, 64px);
   align-items: center;
   background: transparent;
 }
@@ -28,13 +28,13 @@ body:has(.auth-view:not(.hidden)) {
 .intro-copy h1 {
   margin: 0;
   color: white;
-  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-size: clamp(1.65rem, 2.55vw, 2.5rem);
   line-height: 1.06;
 }
 .login-art {
   display: block;
-  width: min(100%, 25rem);
-  max-height: 42vh;
+  width: min(100%, 29rem);
+  max-height: 46vh;
   aspect-ratio: 1443 / 1090;
   object-fit: contain;
   object-position: left bottom;
@@ -52,14 +52,21 @@ body:has(.auth-view:not(.hidden)) {
   box-shadow: 0 16px 42px #131f6b26;
 }
 .auth-card h2 { font-size: clamp(1.4rem, 2vw, 1.75rem); line-height: 1.15; margin: 0 0 .65em; }
-#login-form { gap: 16px; }
+#login-card { background: linear-gradient(135deg, #edf4ff, #d7e5ff); }
+#login-card h2 { margin-bottom: 6px; }
+.login-support { margin: 0 0 18px; color: #36476c; }
+#login-form { gap: 12px; }
+.login-field { display: grid; gap: 6px; }
+#login-error { margin: 0; color: #92203c; }
+#login-error:empty { margin-block: -6px; }
+#login-card :is(input, button, a):focus-visible { outline: 3px solid #19399e; outline-offset: 3px; }
 #login-form label, #login-form input, #login-form .button, #login-card .switch-copy {
   font-size: 1rem;
 }
 #login-form input {
-  background: #edf3ffb8;
-  border-color: #8197c5;
-  min-height: 46px;
+  background: #f8fbff;
+  border-color: #647ba7;
+  min-height: 52px;
   color: #0c1746;
 }
 #login-form input::placeholder { color: #475a87; }
@@ -67,7 +74,8 @@ body:has(.auth-view:not(.hidden)) {
   border-color: #2450c7;
   box-shadow: 0 0 0 3px #2350c733;
 }
-#login-form .button { background: #004de5; min-height: 46px; }
+#login-form .button { background: #0841cd; min-height: 52px; }
+#login-form [data-password-toggle] { min-height: 48px; }
 #login-form .button:hover { background: #003bb7; }
 #login-card .switch-copy {
   margin: 14px 0 0;
@@ -75,7 +83,10 @@ body:has(.auth-view:not(.hidden)) {
   border: 0;
   color: #202f62;
 }
-#login-card .text-button { color: #163ebb; }
+#login-card .text-button { color: #163ebb; min-height: 44px; }
+.login-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 20px; }
+.login-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #163ebb; text-decoration: underline; text-underline-offset: 3px; }
+#login-card .restricted-access { margin-top: 0; min-height: 44px; }
 .auth-intro .brand:focus-visible { outline-color: #eff5ff; }
 .button.button--primary,.button.button--dark {background:#1741cf;color:white;}
 .button.button--primary:hover,.button.button--dark:hover {background:#122f9b;}
@@ -136,11 +147,10 @@ summary {cursor:pointer;color:var(--blue);padding-block:8px;}
 .sidebar {background:#152c7d;}
 .page-wrap {margin-top:16px;}
 .auth-view {display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-content:start;}
-.auth-intro {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:0;}
-.auth-intro .brand {grid-column:1/-1;}
+.auth-intro {align-items:center;gap:6px;text-align:center;}
 .intro-copy {margin:8px 0;}
 .intro-copy h1 {font-size:clamp(1.35rem,5vw,2.4rem);}
-.login-art {width:min(26vw,160px);max-height:none;}
+.login-art {width:min(44vw,200px);max-height:none;margin-inline:auto;}
 .auth-panel {padding:0;min-height:0;}
 .auth-card {margin:auto;}
 }
@@ -154,11 +164,71 @@ summary {cursor:pointer;color:var(--blue);padding-block:8px;}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after {animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
 
-.contract-choices {grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;border:0;padding:0;}
-.contract-choices legend {font-size:.85rem;margin-bottom:6px;}
-.contract-choices label {display:inline-flex;align-items:center;gap:6px;border-radius:24px;padding:6px 12px;border:1px solid var(--line);cursor:pointer;}
-.contract-choices input {width:auto;min-height:0;margin:0;accent-color:var(--blue);}
-.contract-choices label:has(:checked) {background:#e4ebff;border-color:var(--blue);}
+#jobs-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) repeat(2, auto);
+  gap: 12px;
+}
+#jobs-filters > label { min-width: 0; text-align: center; }
+#jobs-filters input::placeholder { color: var(--ink-soft); }
+#jobs-filters > .button { width: 100%; min-width: 0; padding-inline: 12px; }
+
+.contract-choices {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.contract-choices legend {
+  margin: 0 auto 8px;
+  color: var(--ink-soft);
+  font-size: .85rem;
+  font-weight: 700;
+  text-align: center;
+}
+#jobs-filters .contract-choices label {
+  flex: 0 1 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+}
+.contract-choices input {
+  flex: none;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  accent-color: var(--blue);
+}
+#jobs-filters .contract-choices label:has(:checked) {
+  background: var(--blue-pale);
+  border-color: var(--blue);
+}
+.contract-choices label:has(:focus-visible) {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  #jobs-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  #jobs-filters > label { grid-column: 1 / -1; }
+  .contract-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #jobs-filters .contract-choices label { padding-inline: 6px; }
+}
 
 .overview-shortcut {display:grid;grid-template-columns:26px 1fr;column-gap:12px;align-content:start;}
 .overview-shortcut svg {width:24px;height:24px;grid-row:1/4;}

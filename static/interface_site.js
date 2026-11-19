@@ -348,7 +348,7 @@ function renderCatalogSources(kind, data) {
   const failed = sources.filter(source => ['error', 'partial'].includes(source.sync_status));
   $(`#${kind}-status`).textContent = [
     data.data_status === 'stale' ? 'Dados desatualizados: ofertas vencidas não são exibidas.' : '',
-    data.stale_count > 0 ? `${data.stale_count} registro(s) fora do prazo de revisão oculto(s).` : '',
+    kind === 'courses' && data.stale_count > 0 ? `${data.stale_count} registro(s) fora do prazo de revisão oculto(s).` : '',
     failed.length ? `Atualização com falha ou incompleta: ${failed.map(source => source.name).join(', ')}. A tentativa não confirma as ofertas; os últimos dados válidos podem continuar disponíveis até o prazo de revisão.` : '',
   ].filter(Boolean).join(' ');
   $(`#${kind}-sources`).innerHTML = sources.length ? `<details class="catalog-source-status"><summary>Atualização das fontes</summary><p class="muted">A última tentativa pode falhar. Apenas um lote aceito altera a última sincronização bem-sucedida; a verificação de cada oferta aparece no cartão.</p><ul>${sources.map(source => `<li><strong>${escapeHtml(source.name)}</strong> · ${escapeHtml(classification[source.classification] || 'Integração pendente')}<p>${escapeHtml(syncStatus[source.sync_status] || 'Estado não informado')}.</p><p>Última tentativa: ${catalogDate(source.last_attempt_at)}.<br>Última sincronização bem-sucedida: ${source.last_success_at ? catalogDate(source.last_success_at) : 'Nenhuma registrada'}.</p></li>`).join('')}</ul></details>` : '';
@@ -748,6 +748,8 @@ async function handleAuth(event) {
   if(submit) submit.disabled=true;
   const mode = event.currentTarget.id === "register-form" ? "register" : "login";
   const data = Object.fromEntries(new FormData(event.currentTarget));
+  const loginError = mode === "login" ? $("#login-error") : null;
+  if (loginError) loginError.textContent = "";
   if (mode === 'register') data.terms_accepted = data.terms_accepted === 'true';
   try {
     const result = await api(`/api/auth/${mode}`, { method: "POST", body: data });
@@ -755,7 +757,8 @@ async function handleAuth(event) {
     await enterApplication();
     if (mode === "register") navigate("profile");
   } catch (error) {
-    toast(error.message, "error");
+    if (loginError) loginError.textContent = error.message;
+    else toast(error.message, "error");
   } finally { if(submit) submit.disabled=false; }
 }
 
