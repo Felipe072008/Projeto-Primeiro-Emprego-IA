@@ -1,4 +1,20 @@
-# Editor visual — 18/11/2026
+# Editor visual
+
+## Versão com canvas
+
+Consulte o [guia do administrador](COMO_USAR.md) e o [catálogo de elementos e limites](CATALOGO.md). O roteiro de atualização no PythonAnywhere está neste documento, na seção **Aplicar no PythonAnywhere**.
+
+Arquivos da versão com canvas, relativos à raiz do repositório:
+
+| Parte | Arquivos |
+|---|---|
+| Servidor | `admin.py`, `canvas_login.py`, `conteudo_editavel.py`, `editor_site.py` |
+| Editor | `templates/canvas_login.html`, `admin_assets/canvas_login.css`, `admin_assets/canvas_login.js`, `admin_assets/editor_site.js` |
+| Site público | `templates/pagina_principal.html`, `static/conteudo_site.css`, `static/interface_site.js`, `static/layout_visual.js` |
+| Testes | `tests/test_editor_site.py`, `tests/verificar_canvas_login.py`, `tests/verificar_editor_site.py` |
+| Documentação | `docs/editor-site/CATALOGO.md`, `docs/editor-site/COMO_USAR.md`, `docs/editor-site/IMPLEMENTACAO.md` |
+
+## Registro histórico da primeira versão — 18/11/2026
 
 Projeto confirmado no VS Code: `C:\Users\felip\Documents\primeiro-emprego-ia`, branch `atualizar-primeiro-emprego-ia`. A árvore estava limpa antes desta tarefa. Nenhum deploy ou publicação no servidor foi executado. As publicações dos testes usaram bancos temporários.
 

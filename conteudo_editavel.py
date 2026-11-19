@@ -74,7 +74,15 @@ def link(value):
 def validate(value):
     keys(value, ('theme','texts','layout','blocks'))
     theme, texts, layout, blocks = (value[k] for k in ('theme','texts','layout','blocks'))
-    keys(theme, defaults()['theme'])
+    from canvas_login import LAYOUT_KEYS, validate_canvas
+    if not isinstance(theme,dict):
+        raise ValueError('Tema inválido.')
+    layouts = LAYOUT_KEYS & theme.keys()
+    keys(theme, (*defaults()['theme'], *layouts, *(('board_backgrounds',) if 'board_backgrounds' in theme else ())))
+    backgrounds = theme.get('board_backgrounds', {})
+    if not isinstance(backgrounds,dict) or backgrounds.keys()-layouts or any(
+            not isinstance(v,str) or not re.fullmatch(r'#[0-9a-fA-F]{6}',v) for v in backgrounds.values()):
+        raise ValueError('Fundo da página inválido.')
     for key in COLORS:
         if not isinstance(theme[key],str) or not re.fullmatch(r'#[0-9a-fA-F]{6}',theme[key]):
             raise ValueError('Cores devem usar #RRGGBB.')
@@ -125,6 +133,9 @@ def validate(value):
             raise ValueError('Use até 12 perguntas por bloco.')
         for item in block['items']:
             keys(item, ('question','answer')); plain(item['question'],200); plain(item['answer'],2000)
+    for key in layouts:
+        page, device = key.rsplit('_',1)
+        validate_canvas(theme[key],page,device,blocks)
     return copy.deepcopy(value)
 
 

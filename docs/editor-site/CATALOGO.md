@@ -22,4 +22,25 @@ Fontes: DM Sans e Plus Jakarta Sans, já distribuídas localmente com licença S
 
 Não são editáveis: Termos, Privacidade, Cookies, aceites, navegação, formulários, mensagens de validação, dados dinâmicos e o próprio painel. As prévias não consultam usuários, currículos ou ofertas reais; exibem apenas exemplos fixos identificados.
 
-Direção da interface: estender o painel existente, com barra de ações, tema/estrutura à esquerda e prévia à direita; no celular os controles precedem a prévia. Reutilizar botões, fontes e cores locais. A ação principal é salvar rascunho; publicar é uma decisão explícita com resumo. Não há alteração visual fora desse escopo.
+## Canvas por página e dispositivo
+
+O catálogo de conteúdo acima permanece disponível no editor clássico. O catálogo de posicionamento fica em `canvas_login.py`. O servidor valida cada composição em computador e celular. A página pública usa o CSS original nos dispositivos sem composição publicada. Várias versões podem coexistir no histórico.
+
+| Página | Elementos do canvas |
+|---|---|
+| Login | Título, ilustração e vidro opcional na coluna de apresentação |
+| Visão geral | Chamada, título, introdução, botão de perfil, três atalhos e orientação |
+| Meu perfil | Título, introdução, progresso, explicação e região de dados profissionais |
+| Vagas e Cursos | Títulos de página, introdução/localização quando disponíveis e região de catálogo com filtros e resultados |
+| Meu currículo | Título, introdução, situação da revisão, envio de PDF, chamada e botão de criação, currículos salvos |
+| Minha conta | Título, introdução e botão Sair. Dados de acesso e formulários de segurança ficam fora da composição |
+
+Cada página também aceita texto, card, botão com URL validada, aviso, perguntas frequentes, forma e cópia da ilustração local. Os blocos visíveis do catálogo anterior aparecem em Camadas. Uma edição de seu conteúdo no canvas cria uma versão específica daquele dispositivo. Regiões dinâmicas conservam os nós e eventos do site e permitem rolagem interna. A ordem do DOM acompanha a posição vertical e depois a horizontal, inclusive ao alternar de dispositivo.
+
+**Escala e proteção.** O editor mede o layout original em uma janela de 1280 ou 390 px. A coluna do login no computador usa 560 unidades do piloto anterior. O quadro cresce com o conteúdo, tem margem inferior e largura máxima. Posições horizontais respeitam a largura da área. Formulários de login e cadastro, aceite, navegação, cookies e rodapé ficam fora da área de posicionamento e de sua pilha de camadas.
+
+**Estilos e publicação.** A lista permitida inclui cores hexadecimais de seis ou oito dígitos, opacidades entre 0 e 1, desfoque de 0 a 40 px, raio de 0 a 48 px, borda de 0 a 12 px, quatro níveis de sombra, fonte de 12 a 96 px e três alinhamentos. O tema global continua usando cores de seis dígitos. Fontes explicitamente menores que 14 px bloqueiam a publicação no celular. A verificação de contraste estima a cor composta sobre o fundo escolhido. Imagens, transparências sobre outros elementos e a aparência final do vidro exigem inspeção visual.
+
+**Persistência.** Rascunhos e publicações continuam nas tabelas existentes. As composições são opcionais no JSON de tema. A migração acrescenta `site_editor_meta` para a hora do salvamento. A auditoria do editor registra publicação, restauração, desfazer e troca de logo. A edição comum do rascunho não gera eventos com seu conteúdo. A folha pública passa por `/site-theme.css`, com ETag e política de estilos locais.
+
+Consulte [Como usar](COMO_USAR.md) e o [roteiro de backup e atualização no PythonAnywhere](IMPLEMENTACAO.md).

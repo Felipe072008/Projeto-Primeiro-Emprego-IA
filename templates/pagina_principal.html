@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='azul_royal.css') }}" />
     <link rel="stylesheet" href="/static/conteudo_site.css" />
     <link rel="stylesheet" href="/site-theme.css" />
+    <script defer src="/static/layout_visual.js"></script>
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
@@ -24,8 +25,11 @@
         <a class="brand brand--light" href="#" aria-label="Página inicial PrimeiroEmprego IA">
           <span class="steps-mark" aria-hidden="true"></span><span>PrimeiroEmprego <b>IA</b></span>
         </a>
-        <div class="intro-copy"><h1 data-edit-key="login.title">O seu futuro,<br>no seu ritmo</h1></div>
-        <img class="login-art" src="{{ url_for('static',filename='escada-transparente.webp') }}" alt="" />
+        <div class="login-composition">
+          <div data-canvas="glass" aria-hidden="true"></div>
+          <div class="intro-copy" data-canvas="title"><h1 data-edit-key="login.title">O seu futuro,<br>no seu ritmo</h1></div>
+          <img class="login-art" data-canvas="art" src="{{ url_for('static',filename='escada-transparente.webp') }}" alt="Jovem subindo uma escada" />
+        </div>
       </section>
 
       <section class="auth-panel" data-section-key="login.forms">
@@ -96,7 +100,7 @@
             <div class="overview-intro" data-section-key="dashboard.intro">
               <p class="eyebrow">Seu espaço</p><h1 data-edit-key="dashboard.title">Seu próximo passo,<br>com mais clareza.</h1>
               <p class="lead" data-edit-key="dashboard.intro">Comece pelo seu perfil. O resto vem no seu ritmo.</p>
-              <button class="button button--primary" data-go="profile">Completar meu perfil</button>
+              <button id="overview-profile-action" class="button button--primary" data-go="profile">Completar meu perfil</button>
             </div>
             <div class="overview-links" data-section-key="dashboard.shortcuts">
               {% for route,title,description,action in [('resume','Meu currículo','Sua história, bem apresentada.','Preparar currículo'),('jobs','Vagas','Explore oportunidades na sua área.','Explorar vagas'),('courses','Cursos','Aprenda algo para o próximo passo.','Explorar cursos')] %}
@@ -107,7 +111,7 @@
             <div class="progress-card">
               <div class="progress-copy"><span class="soft-icon">◔</span><div><p class="label">Seu perfil profissional</p><h2 id="profile-progress-text">0% concluído</h2><p id="profile-progress-message" class="muted">Quanto mais você preencher, mais personalizada será sua orientação.</p></div></div>
               <div class="progress-number" id="profile-progress-number">0<small>%</small></div>
-              <div class="progress-line"><span id="profile-progress-line" style="width: 0%"></span></div>
+              <div class="progress-line"><span id="profile-progress-line"></span></div>
             </div>
 
             <div class="dashboard-grid">

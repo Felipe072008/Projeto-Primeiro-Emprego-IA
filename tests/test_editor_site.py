@@ -40,6 +40,36 @@ class EditorTests(unittest.TestCase):
         stale=self.post('/admin-api/site/draft',{'content':defaults(),'revision':'old'})
         self.assertEqual(stale.status_code,409)
 
+    def test_canvas_devices_validation_publication_and_history(self):
+        self.login()
+        legacy=defaults(); legacy['texts']['login.title']='Texto da versão anterior'
+        self.save(legacy); self.publish()
+        item=dict(x=0,y=0,w=120,h=80,z=1,visible=True,locked=False,style={})
+        mobile={key:copy.deepcopy(item) for key in ('title','glass','art')}
+        mobile['title']['style']={'font':12}
+        draft=copy.deepcopy(legacy);draft['theme']['login_mobile']=mobile
+        self.assertEqual(self.save(draft).status_code,200)
+        self.assertEqual(self.publish().status_code,400)
+        self.assertEqual(self.state()['issues'][0]['fix'],'font')
+        mobile['title']['style']={'font':14,'color':'#ffffff','ink':'#ffffff','border':0}
+        self.assertEqual(self.save(draft).status_code,200)
+        self.assertEqual(self.publish().status_code,400)
+        self.assertEqual(self.publish(confirm_low_contrast=True).status_code,200)
+        self.assertIn('width < 900px',self.client.get('/site-theme.css').text)
+        self.assertNotIn('unsafe-inline',self.client.get('/').headers['Content-Security-Policy'])
+        for prop,value in [('x',380),('y',-1),('style',{'blur':41}),('style',{'css':'initial'})]:
+            invalid=copy.deepcopy(draft);invalid['theme']['login_mobile']['art'][prop]=value
+            self.assertEqual(self.save(invalid).status_code,400)
+        invalid=copy.deepcopy(draft);invalid['theme']['login_mobile']['login-form']=item
+        self.assertEqual(self.save(invalid).status_code,400)
+        self.assertEqual(self.post('/admin-api/site/undo',{'revision':self.state()['revision']}).status_code,200)
+        self.assertEqual(self.client.get('/api/site-content').json,legacy)
+        with site.db_connection() as db:
+            db.execute("UPDATE site_theme SET payload=? WHERE state='published'",(json.dumps(invalid['theme']),))
+        editor.CACHE.clear()
+        self.assertNotIn('data-page-design=',self.client.get('/').text)
+        self.assertIn('Texto da versão anterior',self.client.get('/').text)
+
     def test_draft_publish_restore_undo_and_contrast(self):
         self.login(); value=defaults(); value['texts']['login.title']='Texto novo'
         self.assertEqual(self.save(value).status_code,200)
@@ -75,7 +105,7 @@ class EditorTests(unittest.TestCase):
         self.assertIn('exemplo@example.test',html)
         import admin
         with admin.connection() as db:
-            self.assertEqual(db.execute("SELECT count(*) FROM admin_audit_log WHERE action='site_draft'").fetchone()[0],1)
+            self.assertEqual(db.execute("SELECT count(*) FROM admin_audit_log WHERE action='site_draft'").fetchone()[0],0)
         self.assertIn("script-src 'self'",self.client.get('/').headers['Content-Security-Policy'])
 
     def test_logo_validation_and_draft_privacy(self):

@@ -36,7 +36,14 @@
   }
   function change(fn) {
     past.push(clone(content)); if (past.length>50) past.shift(); future.length=0;
-    fn(); status.textContent='Há alterações não salvas.'; drawInspector(); return render();
+    fn();
+    for (const [key,layout] of Object.entries(content.theme)) {
+      if (!/_(desktop|mobile)$/.test(key) || !layout) continue;
+      const page=key.split('_')[0];
+      const visible=new Set(content.blocks.filter(b=>b.visible && b.slot===page).map(b=>'block_'+b.id));
+      for(const id of Object.keys(layout))if(id.startsWith('block_') && !visible.has(id))delete layout[id];
+    }
+    status.textContent='Há alterações não salvas.'; drawInspector(); return render();
   }
   function input(label,value,max=120,large=false) {
     const wrapper=el('label',label), node=el(large?'textarea':'input',null,{maxlength:max});

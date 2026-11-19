@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf-token" content="{{ csrf }}"><title>Editar site · PrimeiroEmprego IA</title>
+<link rel="stylesheet" href="/static/fontes_locais.css"><link rel="stylesheet" href="/admin-assets/canvas_login.css">
+<script defer src="/static/layout_visual.js"></script><script defer src="/admin-assets/canvas_login.js"></script></head>
+<body><header aria-label="Barra do editor">
+<label>Página <select id="page"></select></label>
+<select id="device" aria-label="Dispositivo"><option value="desktop">Computador</option><option value="mobile">Celular</option></select>
+<button id="undo" title="Desfazer (Ctrl+Z)">Desfazer</button><button id="redo" title="Refazer (Ctrl+Y)">Refazer</button>
+<button id="preview">Pré-visualizar</button><output id="status" role="status">Carregando…</output><button id="publish">Publicar</button></header>
+<main><aside id="library"><button id="collapse" aria-expanded="true" title="Recolher ou abrir painel">Camadas e blocos</button>
+<div id="library-body"><details name="library-tabs" open><summary>Camadas</summary><div id="layers"></div></details>
+<details name="library-tabs"><summary>Adicionar</summary><div id="add"></div></details>
+<button id="generate" hidden>Gerar a partir do computador</button>
+<a href="/admin/site?modo=classico">Tema, blocos e histórico</a><a href="/admin">Voltar ao painel</a>
+<button id="help" title="Ajuda e atalhos">?</button></div></aside>
+<section class="workspace" aria-label="Área de desenho"><div class="stage"><iframe id="frame" sandbox="allow-same-origin" title="Página em edição"></iframe></div></section>
+<aside id="inspector"><h2>Propriedades</h2><div id="props"></div><button id="reset">Voltar ao layout padrão</button></aside></main>
+<dialog id="dialog"><h2 id="dialog-title"></h2><div id="dialog-body"></div><form method="dialog"><button>Fechar</button></form></dialog>
+</body></html>
