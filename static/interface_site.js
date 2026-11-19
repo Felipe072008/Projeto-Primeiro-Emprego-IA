@@ -99,7 +99,8 @@ function renderRecommendationCards(target, recommendations, emptyMessage) {
 
 function renderDashboard(data) {
   const completion = data.profile_completion || 0;
-  $('#page-dashboard [data-go="profile"]').textContent = completion === 100 ? 'Revisar perfil' : 'Completar meu perfil';
+  const profileAction = $('#overview-profile-action');
+  if (!profileAction.hasAttribute('data-original-label')) profileAction.textContent = completion === 100 ? 'Revisar perfil' : 'Completar meu perfil';
   $("#profile-progress-text").textContent = completion === 100 ? "Perfil básico completo" : `${completion}% do perfil básico`;
   $("#profile-progress-number").innerHTML = `${completion}<small>%</small>`;
   $("#profile-progress-line").style.width = `${completion}%`;

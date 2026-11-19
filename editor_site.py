@@ -14,6 +14,8 @@ from pathlib import Path
 from flask import Response, abort, g, jsonify, render_template, request, send_file
 from PIL import Image, UnidentifiedImageError
 
+from canvas_login import LAYOUT_KEYS, layer_catalog, DEVICES, canvas_css, migrate_saved_layout, problems
+
 from conteudo_editavel import (COLORS, PAGES, TEXTS, catalog, changes, contrast, defaults,
                               digest, plain, validate)
 
@@ -22,6 +24,7 @@ PARTS = ('theme','texts','layout','blocks')
 
 
 def init_schema(db):
+    db.execute('CREATE TABLE IF NOT EXISTS site_editor_meta (id INTEGER PRIMARY KEY CHECK(id=1), saved_at TEXT NOT NULL)')
     for part in PARTS:
         db.execute(f'CREATE TABLE IF NOT EXISTS site_{part} (state TEXT PRIMARY KEY CHECK(state IN (\'draft\',\'published\')), payload TEXT NOT NULL)')
     db.execute('''CREATE TABLE IF NOT EXISTS site_versions (id INTEGER PRIMARY KEY,
@@ -29,7 +32,7 @@ def init_schema(db):
         state TEXT NOT NULL DEFAULT 'published')''')
 
 
-def read(db, state):
+def read(db, state, strict=False):
     result = defaults()
     found = 0
     try:
@@ -38,9 +41,31 @@ def read(db, state):
             if row:
                 result[part] = json.loads(row[0]); found += 1
         if found not in (0,4):
-            return defaults()
-        return validate(result)
+            raise ValueError('Registro incompleto.')
+        migrate_saved_layout(result)
+        try:
+            return validate(result)
+        except (ValueError, TypeError):
+            if state != 'published' or not isinstance(result['theme'],dict):
+                raise
+            # Um quadro inválido não descarta o conteúdo nem os outros dispositivos.
+            theme = result['theme']
+            layouts = {key:theme.pop(key) for key in LAYOUT_KEYS & theme.keys()}
+            backgrounds = theme.pop('board_backgrounds',{})
+            valid = validate(result)
+            for key, layout in layouts.items():
+                candidate = copy.deepcopy(valid)
+                candidate['theme'][key] = layout
+                if isinstance(backgrounds,dict) and key in backgrounds:
+                    candidate['theme'].setdefault('board_backgrounds',{})[key] = backgrounds[key]
+                try:
+                    valid = validate(candidate)
+                except (ValueError,TypeError):
+                    continue
+            return valid
     except (ValueError, TypeError, sqlite3.DatabaseError):
+        if strict:
+            raise ValueError('Rascunho inválido. Restaure uma versão antes de publicar.')
         return defaults()
 
 
@@ -88,6 +113,14 @@ def css(value):
         result += 'body{font-family:"'+theme['body_font']+'",sans-serif}'
     if theme['heading_font']!=original['heading_font']:
         result += 'body :is(h1,h2,h3){font-family:"'+theme['heading_font']+'",sans-serif!important}'
+    for page in PAGES:
+        for device in DEVICES:
+            key = page+'_'+device
+            result += canvas_css(theme.get(key),page,device,value['blocks'])
+            bg = theme.get('board_backgrounds',{}).get(key)
+            if bg and theme.get(key):
+                media = '(min-width:900px)' if device=='desktop' else '(width < 900px)'
+                result += f'@media {media}{{[data-layout-board="{page}"]{{background:{bg}}}}}'
     return result
 
 
@@ -162,6 +195,11 @@ def render_site(source, value, page=None):
 
     def walk(node):
         attrs = node.attrs
+        area = 'login' if 'login-composition' in attrs.get('class','').split() else attrs.get('data-page')
+        if area in PAGES:
+            layouts = {d:value['theme'].get(area+'_'+d) for d in DEVICES}
+            if any(layouts.values()):
+                attrs['data-page-design'] = json.dumps(dict(page=area,catalog=layer_catalog(area,value['blocks']),**layouts),ensure_ascii=False)
         if preview and node.tag=='script':
             node.tag=''; node.raw=''; node.children=[]; return
         if attrs.get('data-edit-key') in TEXTS:
@@ -214,7 +252,7 @@ def register_public(app, site):
     def site_theme():
         value=published(site)
         response = Response(css(value),mimetype='text/css')
-        response.set_etag(digest(value)); response.cache_control.no_cache=True
+        response.add_etag(); response.cache_control.no_cache=True
         return response.make_conditional(request)
 
     @app.get('/site-logo/<name>')
@@ -230,7 +268,7 @@ def register_public(app, site):
             response.set_data(render_site(response.get_data(as_text=True),published(site)))
             response.headers['Cache-Control']='no-cache'
         if not request.path.startswith('/admin'):
-            response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+            response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
             response.headers['X-Content-Type-Options']='nosniff'
         return response
 
@@ -289,16 +327,19 @@ def register_editor(bp, site, restricted, log):
     @bp.get('/admin/site')
     @restricted
     def editor():
-        return render_template('editor_site.html',csrf=g.admin_session['csrf'])
+        template = 'editor_site.html' if request.args.get('modo')=='classico' else 'canvas_login.html'
+        return render_template(template,csrf=g.admin_session['csrf'])
 
     @bp.get('/admin-api/site/state')
     @restricted
     def editor_state():
         with site.db_connection() as db:
             draft, public = read(db,'draft'),read(db,'published')
+            meta=db.execute('SELECT saved_at FROM site_editor_meta WHERE id=1').fetchone()
             history=[dict(row) for row in db.execute('SELECT id,created_at,note FROM site_versions ORDER BY id DESC')]
-        return jsonify(draft=draft, published=public, revision=digest(draft), catalog=catalog(), history=history,
-                       changes=changes(public,draft), contrast=contrast(draft['theme']))
+        return jsonify(draft=draft, published=public, revision=digest(draft), saved_at=meta[0] if meta else None, catalog=catalog(), layers={p:layer_catalog(p,draft['blocks']) for p in PAGES}, history=history, issues=problems(draft['theme'],draft['blocks']),
+                       changes=changes(public,draft), contrast=contrast(draft['theme']),
+                       contrast_fix=max(('#000000','#ffffff'),key=lambda c:contrast(dict(draft['theme'],text=c))))
 
     @bp.post('/admin-api/site/render')
     @restricted
@@ -323,7 +364,7 @@ def register_editor(bp, site, restricted, log):
                 limited('publish',10)
             with site.db_connection() as db:
                 db.execute('BEGIN IMMEDIATE')
-                draft, public = read(db,'draft'),read(db,'published')
+                draft, public = read(db,'draft',strict=action=='publish'),read(db,'published')
                 if data.get('revision')!=digest(draft):
                     return jsonify(error='O rascunho mudou em outra aba. Recarregue antes de continuar.'),409
                 if action=='draft':
@@ -335,7 +376,7 @@ def register_editor(bp, site, restricted, log):
                     elif type(identifier) is int:
                         row=db.execute('SELECT snapshot FROM site_versions WHERE id=?',(identifier,)).fetchone()
                         if not row: raise ValueError('Versão não encontrada.')
-                        value=checked(json.loads(row[0]))
+                        value=checked(migrate_saved_layout(json.loads(row[0])))
                     else: raise ValueError('Versão inválida.')
                     write(db,'draft',value)
                 else:
@@ -343,22 +384,24 @@ def register_editor(bp, site, restricted, log):
                     if action=='undo':
                         rows=db.execute('SELECT snapshot FROM site_versions ORDER BY id DESC LIMIT 2').fetchall()
                         if len(rows)<2: raise ValueError('Não há publicação anterior para desfazer.')
-                        value=checked(json.loads(rows[1][0]))
+                        value=checked(migrate_saved_layout(json.loads(rows[1][0])))
                     else:
                         if data.get('confirm') is not True: raise ValueError('Confirme a publicação.')
-                        if contrast(value['theme'])<4.5 and data.get('confirm_low_contrast') is not True:
+                        issues = problems(checked(value)['theme'],value['blocks'])
+                        if any(problem['critical'] for problem in issues):
+                            raise ValueError('Corrija os problemas críticos antes de publicar.')
+                        if (issues or contrast(value['theme'])<4.5) and data.get('confirm_low_contrast') is not True:
                             raise ValueError('Contraste abaixo de 4,5:1. Confirme o aviso antes de publicar.')
                     if not db.execute('SELECT 1 FROM site_versions').fetchone():
                         version(db,public,'Padrão anterior à primeira publicação')
                     version(db,value,'Desfazer última publicação' if action=='undo' else plain(data.get('note',''),200,empty=True))
                     write(db,'published',value); write(db,'draft',value)
+                db.execute('INSERT OR REPLACE INTO site_editor_meta VALUES (1,?)',(site.timestamp(),))
             CACHE.clear()
-            # Um único evento de rascunho por sessão administrativa, sem textos no log.
             with admin_connection() as db:
                 from admin import audit
-                session_key=g.admin_session['token_hash']
-                if action!='draft' or not db.execute("SELECT 1 FROM admin_audit_log WHERE action='site_draft' AND target_id=?",(session_key,)).fetchone():
-                    audit(db,'site_'+action,'site',session_key if action=='draft' else '',{'parts':changes(public,value)})
+                if action!='draft':
+                    audit(db,'site_'+action,'site',details={'parts':changes(public,value)})
                 if action=='draft' and draft['theme']['logo']!=value['theme']['logo']:
                     audit(db,'site_logo','site',details={'operation':'draft_change'})
             return jsonify(message='Rascunho salvo.' if action in {'draft','restore'} else 'Publicação atualizada.',revision=digest(value))

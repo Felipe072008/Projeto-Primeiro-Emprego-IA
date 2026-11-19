@@ -37,6 +37,8 @@ def main():
                 result=context.request.post(base+'/admin-access/login',data={'username':'browserfixture','password':password},headers=headers).json()
                 page=context.new_page(); errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
                 page.goto(base+'/admin');page.get_by_role('link',name='Editar site',exact=True).click()
+                page.get_by_role('button',name='Fechar',exact=True).click()
+                page.get_by_role('link',name='Tema, blocos e histórico').click()
                 expect(page.locator('#editor-status')).to_have_text('Rascunho carregado.')
                 def preview(): return page.frame_locator('#editor-frame')
                 preview().locator('[data-edit-key="login.title"]').click()

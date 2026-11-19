@@ -262,7 +262,7 @@ def register_admin(app, site):
     @bp.get('/admin-assets/<name>')
     @restricted
     def assets(name):
-        if name not in {'admin.js', 'admin.css', 'editor_site.js', 'editor_site.css'}:
+        if name not in {'admin.js', 'admin.css', 'editor_site.js', 'editor_site.css', 'canvas_login.js', 'canvas_login.css'}:
             abort(404)
         return send_from_directory(BASE_DIR / 'admin_assets', name)
 
