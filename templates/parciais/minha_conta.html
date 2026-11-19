@@ -1,6 +1,6 @@
-<section class="page" id="page-account" data-page="account">
-  <div class="page-heading split-heading"><div><h1>Minha conta</h1><p class="lead">Cuide dos seus dados de acesso e da sua privacidade.</p></div><button id="logout-button" type="button" class="button button--outline">Sair</button></div>
-  <div class="account-sections">
+<section class="page" id="page-account" data-page="account" data-section-group="account">
+  <div class="page-heading split-heading" data-section-key="account.heading"><div><h1 data-edit-key="account.title">Minha conta</h1><p class="lead" data-edit-key="account.intro">Cuide dos seus dados de acesso e da sua privacidade.</p></div><button id="logout-button" type="button" class="button button--outline">Sair</button></div>
+  <div class="account-sections" data-section-key="account.security">
     <article class="card"><h2>Dados da conta</h2><p id="account-display-name"></p>
       <p>E-mail atual: <strong id="account-current-email"></strong></p>
       <details><summary>Alterar nome</summary>
@@ -33,4 +33,5 @@
       <form id="account-delete-form" class="form-stack"><label>Senha atual<input name="current_password" type="password" required maxlength="256" autocomplete="current-password"></label><label>Digite EXCLUIR para confirmar<input name="confirmation" required maxlength="20" autocomplete="off" pattern="EXCLUIR"></label><button type="submit" class="button account-danger">Excluir minha conta</button><p role="status"></p></form></details>
     </article>
   </div>
+  <div class="site-slot" data-slot="account"></div>
 </section>

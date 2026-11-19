@@ -13,20 +13,22 @@
     <script src="{{ url_for('static', filename='acesso_admin.js') }}" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='minha_conta.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='azul_royal.css') }}" />
+    <link rel="stylesheet" href="/static/conteudo_site.css" />
+    <link rel="stylesheet" href="/site-theme.css" />
   </head>
   <body>
     <div id="toast-region" class="toast-region" aria-live="polite"></div>
 
-    <main id="auth-view" class="auth-view">
-      <section class="auth-intro">
+    <main id="auth-view" class="auth-view" data-section-group="login">
+      <section class="auth-intro" data-section-key="login.intro">
         <a class="brand brand--light" href="#" aria-label="Página inicial PrimeiroEmprego IA">
           <span class="steps-mark" aria-hidden="true"></span><span>PrimeiroEmprego <b>IA</b></span>
         </a>
-        <div class="intro-copy"><h1>O seu futuro,<br>no seu ritmo</h1></div>
+        <div class="intro-copy"><h1 data-edit-key="login.title">O seu futuro,<br>no seu ritmo</h1></div>
         <img class="login-art" src="{{ url_for('static',filename='escada-transparente.webp') }}" alt="" />
       </section>
 
-      <section class="auth-panel">
+      <section class="auth-panel" data-section-key="login.forms">
         <div class="auth-card" id="login-card">
           <h2>Entre na sua conta</h2>
 
@@ -64,6 +66,7 @@
           </form>
         </div>
       </section>
+      <div class="site-slot" data-slot="login"></div>
     </main>
 
     <div id="app-view" class="app-shell hidden">
@@ -89,18 +92,18 @@
       <main class="app-main" id="main-content" tabindex="-1">
 
         <div class="page-wrap">
-          <section class="page active" id="page-dashboard" data-page="dashboard">
-            <div class="overview-intro">
-              <p class="eyebrow">Seu espaço</p><h1>Seu próximo passo,<br>com mais clareza.</h1>
-              <p class="lead">Comece pelo seu perfil. O resto vem no seu ritmo.</p>
+          <section class="page active" id="page-dashboard" data-page="dashboard" data-section-group="dashboard">
+            <div class="overview-intro" data-section-key="dashboard.intro">
+              <p class="eyebrow">Seu espaço</p><h1 data-edit-key="dashboard.title">Seu próximo passo,<br>com mais clareza.</h1>
+              <p class="lead" data-edit-key="dashboard.intro">Comece pelo seu perfil. O resto vem no seu ritmo.</p>
               <button class="button button--primary" data-go="profile">Completar meu perfil</button>
             </div>
-            <div class="overview-links">
+            <div class="overview-links" data-section-key="dashboard.shortcuts">
               {% for route,title,description,action in [('resume','Meu currículo','Sua história, bem apresentada.','Preparar currículo'),('jobs','Vagas','Explore oportunidades na sua área.','Explorar vagas'),('courses','Cursos','Aprenda algo para o próximo passo.','Explorar cursos')] %}
               <div class="overview-shortcut"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="{{ {'resume':'M5 2h9l5 5v15H5z M14 2v6h5 M8 12h8 M8 16h7','jobs':'M2 7h20v14H2z M8 7V4h8v3 M2 12q10 5 20 0','courses':'M12 6Q8 2 2 4v15q6-2 10 2 4-4 10-2V4q-6-2-10 2z M12 6v15'}[route] }}"/></svg><h2>{{ title }}</h2><p>{{ description }}</p><button class="text-link" data-go="{{ route }}">{{ action }} →</button></div>
               {% endfor %}
             </div>
-            <details class="more-guidance"><summary>Orientação personalizada</summary>
+            <details class="more-guidance" data-section-key="dashboard.guidance"><summary>Orientação personalizada</summary>
             <div class="progress-card">
               <div class="progress-copy"><span class="soft-icon">◔</span><div><p class="label">Seu perfil profissional</p><h2 id="profile-progress-text">0% concluído</h2><p id="profile-progress-message" class="muted">Quanto mais você preencher, mais personalizada será sua orientação.</p></div></div>
               <div class="progress-number" id="profile-progress-number">0<small>%</small></div>
@@ -116,7 +119,7 @@
               </article>
 
               <article class="card action-card">
-                <h2>Seu currículo,<br />do seu jeito.</h2>
+                <h2 data-edit-key="dashboard.resume">Seu currículo,<br />do seu jeito.</h2>
                 <p>Crie uma versão organizada somente com as informações que você informou.</p>
                 <button class="button button--dark" data-go="resume">Criar currículo</button>
                 <span class="graphic-lines" aria-hidden="true"></span>
@@ -128,24 +131,26 @@
               <div class="recommendation-row" id="dashboard-recommendations"></div>
             </section>
             </details>
+            <div class="site-slot" data-slot="dashboard"></div>
           </section>
 
           {% include "parciais/minha_conta.html" %}
-          <section class="page" id="page-profile" data-page="profile">
-            <div class="page-heading split-heading">
+          <section class="page" id="page-profile" data-page="profile" data-section-group="profile">
+            <div class="page-heading split-heading" data-section-key="profile.heading">
               <div>
-                <h1>Meu perfil</h1><p class="lead">Organize suas informações profissionais.</p></div>
+                <h1 data-edit-key="profile.title">Meu perfil</h1><p class="lead" data-edit-key="profile.intro">Organize suas informações profissionais.</p></div>
             </div>
-            <div class="completion"><label for="profile-meter">Progresso do perfil</label><strong id="meter-value"></strong><progress id="profile-meter" max="100" value="0"></progress></div>
-            <details class="profile-criteria"><summary>O que completa o perfil básico?</summary><p>Telefone válido, idade válida, cidade, estado, área profissional, escolaridade, habilidades e idiomas. Experiência profissional não é obrigatória.</p></details><div id="profile-summary" class="profile-summary" aria-live="polite"></div>
+            <div class="completion" data-section-key="profile.progress"><label for="profile-meter">Progresso do perfil</label><strong id="meter-value"></strong><progress id="profile-meter" max="100" value="0"></progress></div>
+            <details class="profile-criteria" data-section-key="profile.help"><summary>O que completa o perfil básico?</summary><p>Telefone válido, idade válida, cidade, estado, área profissional, escolaridade, habilidades e idiomas. Experiência profissional não é obrigatória.</p></details><div data-section-key="profile.data" id="profile-summary" class="profile-summary" aria-live="polite"></div>
+            <div class="site-slot" data-slot="profile"></div>
           </section>
 
-          <section class="page" id="page-jobs" data-page="jobs">
-            <div class="page-heading split-heading">
-              <div><h1>Encontre seu próximo passo.</h1><p class="lead">Cada oportunidade exibida direciona para a página original onde foi publicada.</p></div>
+          <section class="page" id="page-jobs" data-page="jobs" data-section-group="jobs">
+            <div class="page-heading split-heading" data-section-key="jobs.heading">
+              <div><h1 data-edit-key="jobs.title">Encontre seu próximo passo.</h1><p class="lead" data-edit-key="jobs.intro">Cada oportunidade exibida direciona para a página original onde foi publicada.</p></div>
               <span class="verified-pill">Curitiba · PR</span>
             </div>
-            <form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button><button class="button button--outline" type="reset">Limpar filtros</button><fieldset class="contract-choices"><legend>Tipo de contrato</legend>
+            <div data-section-key="jobs.catalog"><form id="jobs-filters" class="catalog-filters"><label>Buscar vaga<input name="q" type="search" placeholder="Cargo ou empresa" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><button class="button button--primary">Buscar vagas</button><button class="button button--outline" type="reset">Limpar filtros</button><fieldset class="contract-choices"><legend>Tipo de contrato</legend>
               {% for code,label in [('', 'Todos'),('aprendiz','Jovem aprendiz'),('estagio','Estágio'),('clt','CLT de entrada')] %}
               <label><input type="radio" name="contract" value="{{ code }}" {% if not code %}checked{% endif %}> {{ label }}</label>
               {% endfor %}
@@ -154,14 +159,15 @@
             <p id="jobs-status" class="catalog-status" role="status"></p>
             <div id="jobs-list" class="jobs-list" aria-busy="false"></div>
             <div id="jobs-sources"></div>
-            <section id="jobs-external" class="catalog-external" aria-label="Consulte também"></section>
+            <section id="jobs-external" class="catalog-external" aria-label="Consulte também"></section></div>
+            <div class="site-slot" data-slot="jobs"></div>
           </section>
 
-          <section class="page" id="page-resume" data-page="resume">
-            <div class="page-heading split-heading">
-              <div><h1>Meu currículo</h1><p class="lead">Envie um currículo pronto ou crie uma versão profissional com as suas próprias informações.</p></div>
+          <section class="page" id="page-resume" data-page="resume" data-section-group="resume">
+            <div class="page-heading split-heading" data-section-key="resume.heading">
+              <div><h1 data-edit-key="resume.title">Meu currículo</h1><p class="lead" data-edit-key="resume.intro">Envie um currículo pronto ou crie uma versão profissional com as suas próprias informações.</p></div>
             </div>
-            <p id="ai-availability" class="muted" role="status">Verificando opções de revisão…</p>
+            <div data-section-key="resume.tools"><p id="ai-availability" class="muted" role="status">Verificando opções de revisão…</p>
             <div class="resume-options">
               <article class="resume-option upload-option">
                 <h2>Já tenho um currículo</h2>
@@ -177,23 +183,24 @@
 
               </article>
             </div>
-            <section class="saved-resumes-section">
+            </div><section class="saved-resumes-section" data-section-key="resume.saved">
               <div class="section-title"><div><p class="eyebrow">Seus arquivos</p><h2>Currículos salvos</h2></div></div>
               <div id="resume-list" class="resume-list"></div>
             </section>
+            <div class="site-slot" data-slot="resume"></div>
           </section>
 
-          <section class="page" id="page-courses" data-page="courses">
-            <div class="course-hero">
-              <h1>Cursos</h1>
+          <section class="page" id="page-courses" data-page="courses" data-section-group="courses">
+            <div class="course-hero" data-section-key="courses.heading">
+              <h1 data-edit-key="courses.title">Cursos</h1>
             </div>
-            <form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Conteúdo completo gratuito</label><label class="check-label"><input type="checkbox" name="certificate_free" value="1" /> Certificado gratuito</label><button class="button button--primary">Buscar cursos</button><button class="button button--outline" type="reset">Limpar filtros</button></form>
+            <div data-section-key="courses.catalog"><form id="courses-filters" class="catalog-filters"><label>Buscar curso<input name="q" type="search" placeholder="Curso ou instituição" maxlength="120" /></label><label>Exibir<select name="all"><option value="0">Minha área e áreas correlatas</option><option value="1">Todas as áreas</option></select></label><label>Tipo<select name="type"><option value="">Todos</option><option value="tecnico">Técnico</option><option value="livre">Livre / capacitação profissional</option></select></label><label class="check-label"><input type="checkbox" name="free" value="1" /> Conteúdo completo gratuito</label><label class="check-label"><input type="checkbox" name="certificate_free" value="1" /> Certificado gratuito</label><button class="button button--primary">Buscar cursos</button><button class="button button--outline" type="reset">Limpar filtros</button></form>
             <p id="courses-context" class="muted" aria-live="polite"></p>
             <p id="courses-status" class="catalog-status" role="status"></p>
             <div id="courses-list" class="jobs-list" aria-busy="false"></div>
             <div id="courses-sources"></div>
-            <section id="courses-external" class="catalog-external" aria-label="Consulte também"></section>
-
+            <section id="courses-external" class="catalog-external" aria-label="Consulte também"></section></div>
+            <div class="site-slot" data-slot="courses"></div>
           </section>
         </div>
       </main>
