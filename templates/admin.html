@@ -18,7 +18,7 @@
       {% for key,label in [('overview','Visão geral'),('users','Usuários'),('resumes','Currículos'),('jobs','Vagas'),('courses','Cursos'),('system','Sistema'),('activities','Atividades'),('account','Conta')] %}
       <button type="button" data-view="{{ key }}">{{ label }}</button>
       {% endfor %}
-    </nav><button id="admin-logout" class="button" type="button">Sair</button>
+    <a class="button" href="/admin/site">Editar site</a></nav><button id="admin-logout" class="button" type="button">Sair</button>
   </aside>
   <main id="admin-content" class="admin-content" tabindex="-1">
     <h1 id="admin-title">Visão geral</h1><p id="admin-message" role="status" aria-live="polite"></p>

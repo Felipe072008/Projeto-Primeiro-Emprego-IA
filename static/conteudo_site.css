@@ -1,0 +1,11 @@
+[data-edit-key],.site-block p { white-space:pre-line; }
+[data-section-key][hidden] { display:none !important; }
+.site-slot { display:grid; gap:20px; margin-block:24px; }
+.site-slot:empty { display:none; }
+.auth-view>.site-slot { grid-column:1/-1; }
+.site-block { padding:20px; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:12px; }
+.site-block h2 { margin-bottom:12px; }
+.site-block--notice { background:var(--blue-pale); }
+.site-block--notice.site-block--warning { border-color:var(--orange); }
+.site-block details { padding-block:12px; }
+.site-logo { display:block; width:auto; max-width:200px; max-height:64px; object-fit:contain; }

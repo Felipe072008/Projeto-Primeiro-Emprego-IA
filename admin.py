@@ -198,6 +198,8 @@ def register_admin(app, site):
         response.headers['X-Frame-Options'] = 'DENY'
         response.headers['Referrer-Policy'] = 'same-origin'
         response.headers['Content-Security-Policy'] = "default-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
+        if request.path == '/admin/site':
+            response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' blob:; frame-src 'self'; frame-ancestors 'none'; object-src 'none'; form-action 'self'; base-uri 'self'"
         return response
 
     @bp.errorhandler(400)
@@ -260,7 +262,7 @@ def register_admin(app, site):
     @bp.get('/admin-assets/<name>')
     @restricted
     def assets(name):
-        if name not in {'admin.js', 'admin.css'}:
+        if name not in {'admin.js', 'admin.css', 'editor_site.js', 'editor_site.css'}:
             abort(404)
         return send_from_directory(BASE_DIR / 'admin_assets', name)
 
@@ -591,4 +593,6 @@ def register_admin(app, site):
         response.delete_cookie(COOKIE,path='/',secure=True,httponly=True,samesite='Strict')
         return response
 
+    from editor_site import register_editor
+    register_editor(bp, site, restricted, log)
     app.register_blueprint(bp)

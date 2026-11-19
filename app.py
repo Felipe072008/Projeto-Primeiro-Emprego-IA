@@ -154,6 +154,8 @@ def init_db():
 
         from administracao_dados import migrate
         migrate(connection)
+        from editor_site import init_schema
+        init_schema(connection)
 
 
 PROFILE_FIELDS = (
@@ -734,6 +736,8 @@ from admin import register_admin
 register_admin(app, sys.modules[__name__])
 from contas import register_accounts
 register_accounts(app, sys.modules[__name__])
+from editor_site import register_public
+register_public(app, sys.modules[__name__])
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

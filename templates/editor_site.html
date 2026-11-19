@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}"><meta name="robots" content="noindex,nofollow">
+  <title>Editar site | PrimeiroEmprego IA</title>
+  <link rel="stylesheet" href="/static/fontes_locais.css"><link rel="stylesheet" href="/static/estilos_base.css">
+  <link rel="stylesheet" href="/static/estilos_interface.css"><link rel="stylesheet" href="/static/azul_royal.css">
+  <link rel="stylesheet" href="/admin-assets/admin.css"><link rel="stylesheet" href="/admin-assets/editor_site.css">
+  <script src="/admin-assets/editor_site.js" defer></script>
+</head><body class="admin-body editor-body">
+  <header class="editor-header"><a href="/admin" class="button">Voltar ao painel</a><h1>Editar site</h1><p>Prévia com dados fictícios. O público vê somente a versão publicada.</p><a href="#editor-canvas">Ir para a prévia</a></header>
+  <nav class="editor-toolbar" aria-label="Ferramentas do editor">
+    <label>Página<select id="editor-page"></select></label>
+    <label>Largura<select id="editor-width"><option value="desktop">Computador</option><option value="mobile">Celular</option></select></label>
+    <button class="button" id="editor-undo" type="button">Desfazer</button><button class="button" id="editor-redo" type="button">Refazer</button>
+    <button class="button button--primary" id="editor-save" type="button">Salvar rascunho</button>
+    <button class="button" id="editor-preview" type="button" aria-pressed="false">Pré-visualizar</button>
+    <button class="button button--dark" id="editor-publish" type="button">Publicar</button>
+    <button class="button" id="editor-history" type="button">Histórico</button>
+  </nav>
+  <p id="editor-status" role="status" aria-live="polite">Carregando rascunho…</p>
+  <main class="editor-workspace">
+    <aside class="editor-inspector" aria-label="Configurações do site">
+      <details open><summary>Tema</summary><div id="editor-theme"></div>
+        <form id="editor-logo-form"><h2>Logo</h2><label>Imagem (PNG, JPG ou WEBP; até 1 MB)<input name="file" type="file" accept="image/png,image/jpeg,image/webp" required></label><label>Texto alternativo<input name="alt" maxlength="160" required></label><button class="button" type="submit">Enviar logo</button></form>
+        <button class="button" id="editor-original-logo" type="button">Voltar ao logo original</button>
+      </details>
+      <details open><summary>Estrutura da página</summary><p>Seções essenciais ficam travadas. Use Subir/Descer ou arraste as seções liberadas.</p><div id="editor-sections"></div><h2>Blocos adicionados</h2><div id="editor-blocks"></div><label>Tipo de bloco<select id="editor-block-type"><option value="text">Texto</option><option value="notice">Aviso em destaque</option><option value="button">Botão com link</option><option value="faq">Perguntas frequentes</option></select></label><button class="button" id="editor-add-block" type="button">Adicionar bloco</button></details>
+      <details><summary>Textos da página</summary><p>Você também pode selecionar o texto na prévia.</p><div id="editor-texts"></div></details>
+    </aside>
+    <div class="editor-canvas" id="editor-canvas"><iframe id="editor-frame" title="Prévia do site com dados fictícios" sandbox="allow-same-origin"></iframe></div>
+  </main>
+  <dialog id="editor-dialog" class="admin-edit-dialog" aria-labelledby="editor-dialog-title"><h2 id="editor-dialog-title"></h2><div id="editor-dialog-body"></div><p id="editor-dialog-error" role="alert"></p><button class="button" id="editor-dialog-close" type="button">Fechar</button></dialog>
+</body></html>

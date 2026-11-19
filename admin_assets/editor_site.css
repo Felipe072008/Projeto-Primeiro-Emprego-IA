@@ -1,0 +1,29 @@
+body.editor-body { display:block; color:var(--ink); background:var(--cream); }
+.editor-inspector input[type=color] { width:100%; height:44px; padding:4px; }
+.editor-header { display:flex; align-items:center; flex-wrap:wrap; gap:16px; padding:20px 24px; background:var(--paper); }
+.editor-header h1 { font-size:28px; margin:0; }
+.editor-header p { margin:0; max-width:65ch; }
+.editor-toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:end; padding:16px 24px; background:var(--paper); border-block:1px solid var(--line); }
+.editor-toolbar .button { min-height:44px; }
+#editor-status { padding:0 24px; min-height:24px; }
+.editor-workspace { display:grid; grid-template-columns:300px minmax(0,1fr); gap:20px; padding:0 24px 24px; }
+.editor-inspector { display:grid; gap:16px; align-content:start; }
+.editor-inspector details { padding:16px; background:var(--paper); border:1px solid var(--line); border-radius:12px; }
+.editor-inspector summary { font-size:18px; font-weight:700; cursor:pointer; }
+.editor-inspector h2 { font-size:18px; margin-block:20px 12px; }
+.editor-inspector label,.editor-inspector .button { margin-block:10px; }
+.editor-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding-block:12px; border-bottom:1px solid var(--line); }
+.editor-row>strong { flex-basis:100%; }
+.editor-row button { min-height:44px; padding:8px; }
+.editor-row[draggable=true] { cursor:grab; }
+.editor-canvas { min-width:0; overflow:auto; padding:12px; background:var(--line); border-radius:12px; }
+#editor-frame { display:block; width:100%; min-width:320px; height:850px; border:0; margin:auto; background:var(--paper); }
+#editor-frame.mobile { width:390px; max-width:100%; }
+.editor-text-form { display:grid; gap:12px; }
+.editor-text-form textarea { width:100%; min-height:120px; }
+#editor-dialog-body { display:grid; gap:12px; margin-block:20px; }
+#editor-dialog-error { color:var(--danger); }
+.editor-live-text { outline:2px solid var(--blue); outline-offset:4px; }
+.editor-live-text textarea { width:100%; min-height:80px; }
+@media(max-width:900px) { .editor-workspace { grid-template-columns:1fr; padding-inline:12px; }.editor-header,.editor-toolbar { padding:16px 12px; }.editor-inspector { grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
