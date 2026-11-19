@@ -27,7 +27,7 @@
         </a>
         <div class="login-composition">
           <div data-canvas="glass" aria-hidden="true"></div>
-          <div class="intro-copy" data-canvas="title"><h1 data-edit-key="login.title">O seu futuro,<br>no seu ritmo</h1></div>
+          <div class="intro-copy" data-canvas="title"><h1 data-edit-key="login.title">O seu futuro, no seu ritmo</h1></div>
           <img class="login-art" data-canvas="art" src="{{ url_for('static',filename='escada-transparente.webp') }}" alt="Jovem subindo uma escada" />
         </div>
       </section>
@@ -35,18 +35,29 @@
       <section class="auth-panel" data-section-key="login.forms">
         <div class="auth-card" id="login-card">
           <h2>Entre na sua conta</h2>
+          <p class="login-support">Acesse seu perfil, currículo, vagas e cursos.</p>
 
           <form id="login-form" class="form-stack">
-            <label>E-mail
-              <input required type="email" name="email" autocomplete="email" placeholder="voce@email.com" />
-            </label>
-            <label>Senha
-              <span class="account-password"><input id="login-password" required type="password" name="password" autocomplete="current-password" placeholder="Sua senha" /><button type="button" data-password-toggle="login-password" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></span>
-            </label>
+            <div class="login-field">
+              <label for="login-email">E-mail</label>
+              <input id="login-email" required type="email" name="email" autocomplete="email" placeholder="voce@email.com" />
+            </div>
+            <div class="login-field">
+              <label for="login-password">Senha</label>
+              <div class="account-password">
+                <input id="login-password" required type="password" name="password" autocomplete="current-password" placeholder="Sua senha" />
+                <button type="button" data-password-toggle="login-password" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
+              </div>
+            </div>
+            <p id="login-error" role="alert"></p>
             <button class="button button--primary button--wide" type="submit">Entrar</button>
           </form>
+          <p class="switch-copy">Ainda não tem uma conta? <button class="text-button" type="button" data-show-auth="register">Criar perfil</button></p>
+          <nav class="login-legal" aria-label="Informações legais">
+            <a href="{{ url_for('privacy_policy') }}">Privacidade</a>
+            <a href="{{ url_for('terms_of_use') }}">Termos de uso</a>
+          </nav>
           {% include "parciais/acesso_admin.html" %}
-          <p class="switch-copy">Ainda não tem uma conta? <button class="text-button" data-show-auth="register">Criar perfil</button></p>
         </div>
 
         <div class="auth-card hidden" id="register-card">

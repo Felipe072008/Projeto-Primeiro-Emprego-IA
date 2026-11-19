@@ -11,7 +11,7 @@ FONTS = ('DM Sans', 'Plus Jakarta Sans')
 COLORS = {'primary':'#123dcd', 'secondary':'#162675', 'background':'#edf2ff',
           'text':'#111943', 'accent':'#d89969'}
 TEXTS = {
-    'login.title': ('login', 120, 'O seu futuro,\nno seu ritmo'),
+    'login.title': ('login', 120, 'O seu futuro, no seu ritmo'),
     'dashboard.title': ('dashboard', 120, 'Seu próximo passo,\ncom mais clareza.'),
     'dashboard.intro': ('dashboard', 500, 'Comece pelo seu perfil. O resto vem no seu ritmo.'),
     'dashboard.resume': ('dashboard', 120, 'Seu currículo,\ndo seu jeito.'),
