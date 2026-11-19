@@ -27,10 +27,9 @@
 [data-layout-board] :focus-visible { outline:3px solid currentColor; outline-offset:-3px; }
 
 .custom-board-host > .overview-intro,.custom-board-host > .overview-links { display:none; }
-[data-layout-board="dashboard"] > h1 { color:var(--ink);font-size:clamp(2rem,4vw,4rem);line-height:1.1; }
 [data-layout-board] > img { object-fit:contain; }
 
 @media (width < 900px) { [data-layout-board] { max-width:600px; } }
 
 .custom-board-host > :is(.page-heading,.course-hero,[data-section-key="resume.tools"]) { display:none; }
-[data-layout-board] > h1 { color:var(--ink);font-size:clamp(2rem,4vw,4rem);line-height:1.1; }
+[data-layout-board] > h1 { color:var(--ink);font-size:var(--titulo-pagina);line-height:1.1; }
