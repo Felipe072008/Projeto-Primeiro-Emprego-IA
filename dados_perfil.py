@@ -229,6 +229,27 @@ def record_text(section, item):
     return '\n'.join(filter(None,[item['title'],item['context'],' a '.join(filter(None,[display_date(item['start']),display_date(item['end'])])),item['description']]))
 
 
+def curriculum_record(section, item):
+    if section == 'education':
+        level = ' · '.join(filter(None, [item['course'], item['level']]))
+        heading = ' — '.join(filter(None, [level, item['institution']]))
+        year_label = 'Previsão: ' if item['status'] == 'Cursando' else 'Conclusão: ' if item['status'] == 'Concluído' else 'Ano: '
+        status = ' · '.join(filter(None, [item['status'], year_label + item['year'] if item['year'] else '']))
+        return '\n'.join(filter(None, [heading, 'Status: ' + status if status else '',
+                                        ' - '.join(filter(None, [item['city'], item['state']]))]))
+    if section == 'courses':
+        heading = ' — '.join(filter(None, [item['name'], item['institution']]))
+        details = ' | '.join(filter(None, ['Carga horária: ' + item['hours'] + 'h' if item['hours'] else '',
+                                           'Ano: ' + item['year'] if item['year'] else '']))
+        return heading + (' (' + details + ')' if details else '')
+    if section in ('experiences', 'projects'):
+        job = section == 'experiences'
+        heading = ' | '.join(filter(None, [item['role' if job else 'title'], item['company' if job else 'context']]))
+        dates = ' – '.join(filter(None, [display_date(item['start'])[3:], 'Atual' if item.get('current') else display_date(item['end'])[3:]]))
+        return '\n'.join(filter(None, [heading, dates, item.get('contract'), item['description']]))
+    return record_text(section, item)
+
+
 # Textos antigos continuam disponíveis; não são convertidos em experiências inventadas.
 def hydrate_profile(raw, stored):
     profile = dict(raw)
@@ -247,7 +268,21 @@ def hydrate_profile(raw, stored):
         parts = [data['legacy']] + [record_text(section, item) for item in items]
         profile[field] = ('; ' if section in {'skills','languages'} else '\n\n').join(filter(None,parts))
     resume_fields = {field: profile.get(field,'') for field in ('education','course','professional_experience','academic_experience','courses','skills','languages','objective')}
-    resume_fields['education'] = '\n\n'.join(filter(None,[profile['education']] + [record_text('education',item) for item in sections['education']['items']]))
+    training = sections['education']['items']
+    names = list(dict.fromkeys(item['course'] for item in training if item['course']))
+    modes = sections['goals']['contracts']
+    mode_names = {'aprendiz': 'Jovem Aprendiz', 'estagio': 'Estágio', 'clt': 'CLT'}
+    resume_fields.update(modality=mode_names.get(modes[0], '') if len(modes) == 1 else '',
+                         objective_area=sections['goals'].get('sector') or profile['desired_area'],
+                         objective_course=names[0] if len(names) == 1 else '')
+    level = profile['education'] if not any(item['level'] == profile['education'] for item in training) else ''
+    resume_fields['education'] = '\n\n'.join(filter(None, [level, *(curriculum_record('education', item) for item in training)]))
+    for section in ('experiences', 'courses', 'projects'):
+        group = sections[section]
+        items = group['items']
+        if section == 'experiences':
+            items = sorted(items, key=lambda item: (item['current'], item['start']), reverse=True)
+        resume_fields[LIST_FIELDS[section]] = '\n\n'.join(filter(None, [group['legacy'], *(curriculum_record(section, item) for item in items)]))
     resume_fields['course'] = sections['education']['legacy']
     availability = sections['availability']
     resume_fields['additional_information'] = ' · '.join(filter(None,[', '.join(availability['periods']), ', '.join(availability['days']), 'Trabalho em outra cidade: '+availability['other_city'] if availability['other_city'] else '', 'Viagens: '+availability['travel'] if availability['travel'] else '']))

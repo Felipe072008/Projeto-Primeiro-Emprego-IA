@@ -6,6 +6,7 @@
     <meta name="description" content="PrimeiroEmprego IA: orientação profissional, currículo e cursos para sua primeira oportunidade." />
     <title>PrimeiroEmprego IA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='fontes_locais.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('resume_colors_css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_base.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos_interface.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}" />
@@ -230,25 +231,41 @@
       </div>
     </div>
 
+    {% macro resume_colors() %}
+    <fieldset class="resume-colors"><legend>Cor do currículo</legend>
+      {% for key, pair in resume_palette.items() %}
+      <label title="{{ pair[0] }}"><input type="radio" name="accent" value="{{ key }}" aria-label="{{ pair[0] }}" data-resume-accent="{{ key }}" {% if loop.first %}checked{% endif %}></label>
+      {% endfor %}
+    </fieldset>
+    {% endmacro %}
+    <template id="resume-color-template">{{ resume_colors() }}</template>
     <div id="builder-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="builder-title">
       <div class="modal-backdrop" data-close-modal></div>
       <div class="modal-content builder-content">
         <button class="modal-close" data-close-modal aria-label="Fechar">×</button>
         <div class="builder-header"><p class="eyebrow">Criar currículo</p><h2 id="builder-title">Revise as suas informações</h2><p class="muted">Preencha ou ajuste apenas o que quiser incluir. Campos vazios não aparecem no currículo.</p></div>
         <form id="resume-builder-form" class="builder-form">
-          <label>Nome desta versão<input name="title" maxlength="120" placeholder="Ex.: Currículo para suporte de TI" /></label><p class="muted">Uma versão salva é independente do perfil. Editar o perfil não altera currículos anteriores.</p><label>Nome completo<input name="full_name" required maxlength="120" /></label><label>Área ou cargo pretendido<input name="headline" maxlength="160" /></label><label>E-mail para o currículo<input name="email" type="email" /></label>
+          <label>Nome desta versão<input name="title" maxlength="120" placeholder="Ex.: Currículo para suporte de TI" /></label><p class="muted">Uma versão salva é independente do perfil. Editar o perfil não altera currículos anteriores.</p><label>Nome completo<input name="full_name" required maxlength="120" /></label><label>Cargo no cabeçalho (opcional)<input name="headline" maxlength="160" /></label><label>E-mail para o currículo<input name="email" type="email" /></label>
           <div class="form-grid">
             <label>Telefone<input name="phone" /></label>
             <label>Cidade / Estado<input name="location" maxlength="160" /></label>
+            <label class="full">LinkedIn ou portfólio<input name="link" type="url" maxlength="500"></label>
+            <label>Modalidade do objetivo<select name="modality"><option value="">Selecione, se desejar</option><option>Estágio</option><option>Jovem Aprendiz</option><option value="CLT">CLT (primeiro emprego)</option></select></label>
+            <label>Área de interesse<input name="objective_area" maxlength="160"></label>
+            <label>Curso para o objetivo de estágio<input name="objective_course" maxlength="160"></label>
             <label class="full">Objetivo profissional<textarea name="objective"></textarea></label>
             <label class="full">Formação acadêmica<textarea name="education"></textarea></label><label class="full">Curso em andamento ou concluído<textarea name="course"></textarea></label>
             <label class="full">Experiência profissional<textarea name="professional_experience"></textarea></label>
             <label class="full">Experiências acadêmicas e projetos<textarea name="academic_experience"></textarea></label>
             <label>Cursos e certificações<textarea name="courses"></textarea></label>
             <label>Habilidades<textarea name="skills"></textarea></label>
+            <label>Conhecimentos técnicos<textarea name="technical_skills"></textarea></label><label>Competências comportamentais<textarea name="behavioral_skills"></textarea></label>
             <label>Idiomas<textarea name="languages"></textarea></label>
             <label>Informações adicionais<textarea name="additional_information" placeholder="Somente informações que você queira incluir"></textarea></label>
           </div>
+          {{ resume_colors() }}
+          <details id="builder-proof"><summary>Conferir prévia antes de salvar</summary><div id="builder-preview"></div></details>
+          <p id="builder-preview-status" role="status"></p>
           <div class="form-actions"><p class="form-note">O currículo será montado somente a partir destes campos.</p><button class="button button--primary" type="submit">✨ Criar meu currículo</button></div>
         </form>
       </div>

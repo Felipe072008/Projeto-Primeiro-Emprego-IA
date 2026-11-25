@@ -3,7 +3,8 @@ import io
 import unittest
 
 from pypdf import PdfReader
-from documentos_curriculo import build_resume_pdf, resume_section_paragraphs
+from documentos_curriculo import build_resume_pdf
+from modelo_curriculo import presentation, objective_for, valid_link, accent_id
 
 
 SAMPLE = {
@@ -23,22 +24,57 @@ SAMPLE = {
 
 
 class ResumeLayoutTests(unittest.TestCase):
-    def test_highlights_lists_and_literal_markup(self):
-        section = {'title': 'Cursos e certificações', 'content': '<Curso> & prática · Escola\nDescrição\n\nOutro curso · Outra escola'}
-        paragraphs = list(resume_section_paragraphs(section))
-        self.assertEqual(paragraphs[0], ('<b>&lt;Curso&gt; &amp; prática</b> · Escola', False, True, False))
-        self.assertTrue(paragraphs[1][3])
-        self.assertIn('<b>Outro curso</b>', paragraphs[2][0])
-        bullets = list(resume_section_paragraphs({'title':'Habilidades','content':'Organização; Comunicação\n● Excel'}))
-        self.assertEqual([item[0] for item in bullets], ['Organização','Comunicação','Excel'])
-        self.assertTrue(all(item[1] for item in bullets))
+    def test_objectives_and_omissions(self):
+        for mode in ('Estágio', 'Jovem Aprendiz', 'CLT'):
+            for area in ('', 'Tecnologia'):
+                for course in ('', 'Informática'):
+                    text = objective_for(mode, area, course)
+                    self.assertIn(mode, text)
+                    self.assertEqual('na área de' in text, bool(area) and mode != 'Jovem Aprendiz')
+                    self.assertEqual('no curso de' in text, bool(course) and mode == 'Estágio')
+        self.assertEqual(objective_for('', 'TI', ''), '')
+        model = presentation(dict(name='Ana', contacts=['', 'ana@example.test'], sections=[]))
+        self.assertEqual(model['contact'], 'ana@example.test')
+        self.assertEqual(model['sections'], [])
+        self.assertEqual(accent_id('red'), 'marinho')
+        for url in ('javascript:alert(1)', 'https://', 'https://a b', 'https://[', 'https://a/'+'x'*500):
+            self.assertFalse(valid_link(url))
+        self.assertTrue(valid_link('https://example.test/perfil'))
+
+    def test_profile_contract_defaults_are_unambiguous(self):
+        from dados_perfil import defaults, hydrate_profile
+        profile = dict(desired_area='Administração')
+        goals = defaults(profile)['goals']
+        for modes, name in [(['aprendiz'], 'Jovem Aprendiz'), (['estagio'], 'Estágio'),
+                            (['clt'], 'CLT'), (['clt','aprendiz'], ''), ([], '')]:
+            fields = hydrate_profile(profile, {'goals':dict(goals,contracts=modes)})['resume_fields']
+            self.assertEqual(fields['modality'], name)
+            self.assertEqual(fields['objective_area'], 'Administração')
+
+    def test_course_optional_details_and_page_breaks(self):
+        from dados_perfil import curriculum_record
+        item = dict(name='Excel', institution='Escola', hours='', year='')
+        for hours, year, expected in [('', '', ''), ('20', '', ' (Carga horária: 20h)'),
+                                      ('', '2025', ' (Ano: 2025)'), ('20', '2025', ' (Carga horária: 20h | Ano: 2025)')]:
+            self.assertEqual(curriculum_record('courses', dict(item,hours=hours,year=year)), 'Excel — Escola' + expected)
+        sample = dict(SAMPLE, sections=[dict(title='Formação acadêmica',content='\n\n'.join(
+            'Formação %d — Escola\nStatus: Cursando' % i for i in range(55))),
+            dict(title='Idiomas',content='Português')])
+        pages = PdfReader(build_resume_pdf(sample)).pages
+        self.assertGreater(len(pages), 1)
+        for page in pages:
+            text = page.extract_text().strip()
+            self.assertFalse(text.endswith(('FORMAÇÃO ACADÊMICA', 'HABILIDADES E COMPETÊNCIAS')))
+            for i in range(55):
+                if 'Formação %d — Escola' % i in text:
+                    self.assertIn('Status: Cursando', text.split('Formação %d — Escola' % i)[1])
 
     def test_one_page_embedded_fonts_and_unchanged_data(self):
         original = copy.deepcopy(SAMPLE)
         reader = PdfReader(build_resume_pdf(SAMPLE))
         self.assertEqual(len(reader.pages), 1)
         text = reader.pages[0].extract_text()
-        for value in ('CANDIDATA DE EXEMPLO', 'Análise e Desenvolvimento de Sistemas', '(41) 99620-1002', 'Pacote Office', 'atualmente'):
+        for value in ('CANDIDATA DE EXEMPLO', 'Análise e Desenvolvimento de Sistemas', '(41) 99620-1002', 'Pacote Office', 'Atual'):
             self.assertIn(value, text)
         fonts = [font.get_object() for font in reader.pages[0]['/Resources']['/Font'].values()]
         self.assertTrue(any('Bold' in str(font.get('/BaseFont')) and '/FontFile2' in font['/FontDescriptor'] for font in fonts if '/FontDescriptor' in font))

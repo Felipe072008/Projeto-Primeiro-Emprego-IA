@@ -53,6 +53,47 @@ class SiteTests(unittest.TestCase):
         data = site.resume_payload(user, profile, {'additional_information': 'Texto informado manualmente'})
         self.assertIn({'title': 'Informações adicionais', 'content': 'Texto informado manualmente'}, data['sections'])
 
+    def test_preview_version_color_link_and_stored_objective(self):
+        from modelo_curriculo import PALETTE
+        from pypdf import PdfReader
+        fields = dict(full_name='Ana', email='', location='Curitiba / PR', modality='Estágio',
+                      objective_course='Gestão', technical_skills='<img src=x>', link='https://example.test/ana')
+        for path in ('preview', 'generate'):
+            self.assertEqual(self.client.post('/api/resumes/'+path,json=dict(fields,link='javascript:abc')).status_code,400)
+        proof = self.client.post('/api/resumes/preview',json=fields).json['resume']
+        self.assertEqual(self.client.get('/api/resumes').json['resumes'], [])
+        self.assertIn('&lt;img src=x&gt;', proof['preview_html'])
+        self.assertNotIn('INFORMAÇÕES ADICIONAIS', proof['preview_html'])
+        saved = self.client.post('/api/resumes/generate',json=fields).json
+        self.assertEqual(proof['preview_html'], saved['resume']['preview_html'])
+        path = '/api/resumes/' + str(saved['id'])
+        for color, (_, hex_code) in PALETTE.items():
+            self.assertEqual(self.client.patch(path+'/accent',json={'accent':color}).status_code,200)
+            content = self.client.get(path).json['content']
+            self.assertEqual(content['sections'], proof['sections'])
+            self.assertIn(f'data-resume-accent="{color}"', content['preview_html'])
+            self.assertIn(hex_code, self.client.get('/curriculo-cores.css').get_data(as_text=True))
+            reader = PdfReader(io.BytesIO(self.client.get(path+'/pdf').data))
+            ops = reader.pages[0].get_contents().operations
+            expected = [int(hex_code[i:i+2],16)/255 for i in (1,3,5)]
+            self.assertTrue(any(op == b'rg' and all(abs(float(x)-y)<.00001 for x,y in zip(args,expected)) for args,op in ops))
+        self.assertEqual(self.client.patch(path+'/accent',json={'accent':'red'}).json['accent'],'marinho')
+        self.assertIn('curso de Gestão', self.client.get(path).json['content']['sections'][0]['content'])
+
+    def test_historical_resume_opens_without_rewriting_snapshot(self):
+        path = '/api/resumes/' + str(self.client.post('/api/resumes/generate',json={'objective':'Primeiro emprego'}).json['id'])
+        legacy = dict(name='João',headline='Suporte',contacts=['Curitiba / PR'],sections=[
+            dict(title='Habilidades',content='Organização; Excel'),dict(title='Experiência profissional',content='')])
+        stored = json.dumps(legacy)
+        with site.db_connection() as db:
+            db.execute('UPDATE resumes SET content_json=? WHERE id=?',(stored,int(path.split('/')[-1])))
+        row = self.client.get(path).json
+        self.assertEqual(row['content_json'], stored)
+        self.assertIn('Habilidades:', row['content']['preview_html'])
+        self.assertNotIn('EXPERIÊNCIAS E ATIVIDADES', row['content']['preview_html'])
+        self.assertIn('Organização; Excel',inspect_pdf(self.client.get(path+'/pdf').data)['text'])
+        self.assertEqual(self.client.get(path).json['content_json'], stored)
+
     def test_auth_rejects_nonobject_json(self):
         for endpoint in ('register', 'login'):
             for payload in ([1], 'invalid', 42, True):

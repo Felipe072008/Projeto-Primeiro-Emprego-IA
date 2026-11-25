@@ -269,17 +269,23 @@ input:disabled { color: #6b7781; background: #eff2ef; cursor: not-allowed; }
 .profile-modal-actions { margin-top: 3px; border-top: 1px solid var(--line); padding-top: 20px; }
 .profile-modal-actions > div { display: flex; gap: 9px; }
 .preview-content { width: min(100%, 750px); padding: clamp(28px, 5vw, 64px); }
-.resume-document { max-width: 620px; margin: 0 auto; color: #111; background: #fff; font-family: Arial, Helvetica, sans-serif; overflow-wrap: anywhere; }
-.resume-document-header { margin-bottom: 16px; border-bottom: 1px solid #111; padding-bottom: 16px; }
-.resume-document-header h1 { margin: 0 0 10px; color: #111; font-family: inherit; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: 0; }
-.resume-document-header p, .resume-document-contacts p { margin: 0 0 4px; color: #111; font-size: 13px; line-height: 1.5; }
-.resume-document-section { margin-top: 22px; }
-.resume-document-section h2 { display: flex; align-items: center; gap: 14px; margin: 0 0 12px; color: #111; font-family: inherit; font-size: 16px; line-height: 1.4; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
-.resume-document-section h2::after { content: ''; flex: 1; min-width: 20px; border-top: 1px solid #111; }
-.resume-record { margin-bottom: 12px; }
-.resume-document-section p { margin: 0 0 5px; white-space: pre-wrap; font-size: 14px; line-height: 1.5; }
-.resume-bullet { position: relative; padding-left: 18px; }
-.resume-bullet::before { content: '•'; position: absolute; left: 2px; }
+.resume-document { box-sizing:border-box; width:100%; max-width:210mm; margin:0 auto; padding:clamp(18px,5vw,18mm); background:white; color:#1E293B; font:10pt/1.4 Arial,Helvetica,sans-serif; overflow-wrap:anywhere; }
+.resume-document-header { text-align:center; padding-bottom:12pt; border-bottom:1.5pt solid var(--resume-accent); }
+.resume-document-header h1 { margin:0; color:var(--resume-accent); font:700 24pt/1.2 Arial,Helvetica,sans-serif; letter-spacing:0; }
+.resume-document-header p, .resume-document-header a { margin:3pt 0 0; color:#475569; font:10pt/1.4 Arial,Helvetica,sans-serif; }
+.resume-document-section { margin-top:18pt; }
+.resume-document-section h2 { margin:0 0 5pt; padding-bottom:3pt; border-bottom:.75pt solid #CBD5E1; color:var(--resume-accent); font:700 12.5pt/1.28 Arial,Helvetica,sans-serif; letter-spacing:0; }
+.resume-record { margin-bottom:3pt; break-inside:avoid; }
+.resume-document-section p { margin:0; color:#1E293B; font:inherit; white-space:pre-wrap; }
+.resume-record span { color:#475569; }
+.resume-bullet { position:relative; padding-left:13pt; }
+.resume-bullet::before { content:'•'; position:absolute; left:1pt; }
+.resume-colors { display:flex; flex-wrap:wrap; gap:8px; border:0; margin:12px 0; padding:0; }
+.resume-colors input[type=radio] { appearance:none; width:28px; height:28px; padding:0; border:3px solid white; border-radius:50%; background:var(--resume-accent); cursor:pointer; }
+.resume-colors input:checked { outline:2px solid var(--resume-accent); }
+.resume-colors input:focus-visible { outline:3px dashed currentColor; outline-offset:2px; }
+#builder-proof summary { cursor:pointer; }
+
 .preview-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
 
 /* Feedback */

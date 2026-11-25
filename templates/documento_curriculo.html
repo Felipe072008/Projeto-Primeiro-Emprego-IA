@@ -1,0 +1,18 @@
+<article class="resume-document" data-resume-accent="{{ model.accent }}">
+  <header class="resume-document-header">
+    <h1>{{ model.name }}</h1>
+    {% if model.contact %}<p>{{ model.contact }}</p>{% endif %}
+    {% if model.link %}<p><a href="{{ model.link }}" target="_blank" rel="noopener noreferrer">{{ model.link }}</a></p>{% endif %}
+    {% if model.headline %}<p>{{ model.headline }}</p>{% endif %}
+  </header>
+  {% for section in model.sections %}
+  <section class="resume-document-section">
+    <h2>{{ section.title }}</h2>
+    {% for record in section.records %}
+    <div class="resume-record">{% for row in record %}
+      <p{% if row.bullet %} class="resume-bullet"{% endif %}><strong>{{ row.bold }}</strong>{{ row.text }}<span>{{ row.detail }}</span></p>
+    {% endfor %}</div>
+    {% endfor %}
+  </section>
+  {% endfor %}
+</article>
