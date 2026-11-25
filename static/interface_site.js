@@ -522,6 +522,44 @@ function syncMobileMenu() {
 }
 
 // Informações adicionais começam vazias e só recebem o que a pessoa decidir escrever.
+let proofRevision = 0;
+let proofTimer;
+let suggestedObjective = "";
+
+function builderValues(form) {
+  const values = Object.fromEntries(new FormData(form));
+  if (values.objective === suggestedObjective) values.objective = "";
+  return values;
+}
+
+async function updateBuilderProof(form, revision) {
+  const fieldsBefore = JSON.stringify(Object.fromEntries(new FormData(form)));
+  const values = builderValues(form);
+  const result = await api("/api/resumes/preview", {method: "POST", body: values});
+  if (revision !== proofRevision) return false;
+  const objective = form.elements.objective;
+  if (!values.objective.trim()) {
+    suggestedObjective = result.resume.sections.find(s => s.title === "Objetivo profissional")?.content || "";
+    objective.value = suggestedObjective;
+    const modal = $("#builder-modal");
+    if (modal.dataset.draft === fieldsBefore) modal.dataset.draft = JSON.stringify(Object.fromEntries(new FormData(form)));
+  }
+  $("#builder-preview").innerHTML = result.resume.preview_html;
+  $("#builder-preview-status").textContent = "";
+  return true;
+}
+
+function queueBuilderProof(form) {
+  const revision = ++proofRevision;
+  clearTimeout(proofTimer);
+  proofTimer = setTimeout(() => updateBuilderProof(form, revision).catch(error => {
+    if (revision === proofRevision) {
+      $("#builder-preview").replaceChildren();
+      $("#builder-preview-status").textContent = error.message;
+    }
+  }), 180);
+}
+
 function populateBuilder() {
   const form = $("#resume-builder-form");
   const profile = state.me.profile || {};
@@ -531,63 +569,55 @@ function populateBuilder() {
     ...profile.resume_fields,
     full_name: user.name,
     email: user.email,
-    headline: profile.sections?.goals?.target_role || profile.desired_area || "",
+    headline: "",
     location: [profile.city, profile.state].filter(Boolean).join(" / "),
     additional_information: "",
   };
   $$('[name]', form).forEach((field) => {
-    field.value = values[field.name] || "";
+    if (field.type === "radio") field.checked = field.value === "marinho";
+    else field.value = values[field.name] || "";
   });
+  suggestedObjective = "";
+  $("#builder-preview").textContent = "";
+  queueBuilderProof(form);
   $('#builder-modal').dataset.draft=JSON.stringify(Object.fromEntries(new FormData(form)));
-}
-
-function resumeSectionHtml(section) {
-  const records = ['Formação acadêmica','Curso em andamento ou concluído','Experiência profissional','Experiências acadêmicas e projetos','Cursos e certificações'].includes(section.title);
-  const skills = section.title === 'Habilidades';
-  return section.content.trim().split(/\n\s*\n/).map(group => {
-    const lines = group.split(skills ? /[;\n]+/ : /\n/).map(line=>line.trim()).filter(Boolean);
-    return `<div class="resume-record">${lines.map((line,index)=>{
-      const bullet = skills || /^[-•●*]\s+/.test(line);
-      if(bullet) line = line.replace(/^[-•●*]\s+/, '');
-      let text = escapeHtml(line);
-      if(records && index===0 && !bullet && line.split(' · ')[0].length<=180) {
-        const [title,...details] = line.split(' · ');
-        text = `<strong>${escapeHtml(title)}</strong>${details.length ? escapeHtml(' · '+details.join(' · ')) : ''}`;
-      }
-      return `<p${bullet ? ' class="resume-bullet"' : ''}>${text}</p>`;
-    }).join('')}</div>`;
-  }).join('');
-}
-
-function resumeContactHtml(contact) {
-  const phone = /^(?:\d{10,11}|\(\d{2}\) ?\d{4,5}-\d{4})$/.test(contact);
-  const label = phone ? 'Telefone' : contact.includes('@') ? 'E-mail' : 'Localização';
-  const value = phone ? contact.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3') : contact;
-  return `<p><strong>${label}:</strong> ${escapeHtml(value)}</p>`;
 }
 
 function renderResumePreview(data, resumeId, returnToBuilder = false) {
   $("#preview-title").textContent = returnToBuilder ? "Currículo pronto para revisar" : "Prévia do currículo";
   $('#preview-modal').classList.toggle('return-to-builder', returnToBuilder);
   $('[data-close-preview].modal-close').setAttribute('aria-label', returnToBuilder ? 'Voltar à edição do currículo' : 'Fechar');
-  const sections = data.sections.map((section) => `
-    <section class="resume-document-section">
-      <h2>${escapeHtml(section.title)}</h2>
-      ${resumeSectionHtml(section)}
-    </section>
-  `).join("");
   $("#resume-preview").innerHTML = `
-    <p class="muted">Versão #${resumeId} · ${escapeHtml(data.source || 'Versão histórica salva')} · independente do perfil atual.</p><article class="resume-document">
-      <header class="resume-document-header">
-        <h1>${escapeHtml(data.name).toUpperCase()}</h1>
-        <p class="resume-headline">${escapeHtml(data.headline || "")}</p>
-      </header>
-      <div class="resume-document-contacts">${data.contacts.map(resumeContactHtml).join("")}</div>
-      ${sections}
-      <div class="preview-actions">
-        <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a><a class="button button--outline" href="/api/resumes/${resumeId}/pdf?inline=1" target="_blank" rel="noopener">Abrir prévia em PDF ↗</a>
-      </div>
-    </article>`;
+    <p class="muted">Versão #${resumeId} · ${escapeHtml(data.source || 'Versão histórica salva')}</p>
+    ${$("#resume-color-template").innerHTML}
+    ${data.preview_html}
+    <div class="preview-actions">
+      <a class="button button--primary" href="/api/resumes/${resumeId}/pdf">Baixar PDF</a>
+      <a class="button button--outline" href="/api/resumes/${resumeId}/pdf?inline=1" target="_blank" rel="noopener noreferrer">Abrir prévia em PDF ↗</a>
+    </div>`;
+  const colors = $("#resume-preview .resume-colors");
+  let saved = data.accent || "marinho";
+  const radios = Array.from(colors.querySelectorAll("input"));
+  const select = id => {
+    const radio = radios.find(input => input.value === id) || radios[0];
+    radio.checked = true;
+    $("#resume-preview .resume-document").dataset.resumeAccent = radio.value;
+  };
+  select(saved);
+  colors.onchange = async event => {
+    const value = event.target.value;
+    select(value);
+    colors.disabled = true;
+    const actions = $("#resume-preview .preview-actions");
+    actions.inert = true;
+    try {
+      await api(`/api/resumes/${resumeId}/accent`, {method:"PATCH", body:{accent:value}});
+      saved = value;
+    } catch(error) {
+      if (colors.isConnected) select(saved);
+      toast(error.message, "error");
+    } finally { colors.disabled = false; actions.inert = false; }
+  };
   openModal("#preview-modal");
   $('[data-close-preview].modal-close').focus();
   if (returnToBuilder) $('#builder-modal').inert = true;
@@ -669,8 +699,8 @@ async function editResumeVersion(id) {
   const saved=await api(`/api/resumes/${id}`);
   const content=saved.content;
   $('#preview-title').textContent='Editar uma nova versão';
-  const field=(name,label,value,textarea=false)=>`<label>${escapeHtml(label)}${textarea?`<textarea name="${name}" maxlength="12000">${escapeHtml(value)}</textarea>`:`<input name="${name}" value="${escapeHtml(value)}" maxlength="300" />`}</label>`;
-  $('#resume-preview').innerHTML=`<p>Origem: currículo #${id}, salvo em ${escapeHtml(formatTime(saved.created_at))}. A versão anterior será preservada.</p><form id="version-form" class="builder-form">${field('name','Nome',content.name)}${field('headline','Cargo-alvo',content.headline)}${field('contacts','Contatos (um por linha)',content.contacts.join('\n'),true)}${content.sections.map((s,i)=>field('section-'+i,s.title,s.content,true)).join('')}<button class="button button--primary" type="submit">Salvar nova versão</button></form><button class="button button--outline" type="button" id="version-from-profile">Criar outra a partir do perfil atual</button>`;
+  const field=(name,label,value,textarea=false,maxLength=300)=>`<label>${escapeHtml(label)}${textarea?`<textarea name="${name}" maxlength="12000">${escapeHtml(value)}</textarea>`:`<input name="${name}" value="${escapeHtml(value)}" maxlength="${maxLength}" />`}</label>`;
+  $('#resume-preview').innerHTML=`<p>Origem: currículo #${id}, salvo em ${escapeHtml(formatTime(saved.created_at))}. A versão anterior será preservada.</p><form id="version-form" class="builder-form">${field('name','Nome',content.name)}${field('headline','Cargo-alvo',content.headline)}${field('link','LinkedIn ou portfólio',content.link || '',false,500)}${field('contacts','Contatos (um por linha)',content.contacts.join('\n'),true)}${content.sections.map((s,i)=>field('section-'+i,s.title,s.content,true)).join('')}<button class="button button--primary" type="submit">Salvar nova versão</button></form><button class="button button--outline" type="button" id="version-from-profile">Criar outra a partir do perfil atual</button>`;
   openModal('#preview-modal');
   const form=$('#version-form');
   const initial=JSON.stringify(Object.fromEntries(new FormData(form)));
@@ -678,7 +708,7 @@ async function editResumeVersion(id) {
   form.addEventListener('submit',async event=>{
     event.preventDefault(); const button=$('button',form); if(button.disabled)return;button.disabled=true;
     const values=Object.fromEntries(new FormData(form));
-    const next={name:values.name,headline:values.headline,contacts:values.contacts.split('\n').map(x=>x.trim()).filter(Boolean),sections:content.sections.map((s,i)=>({title:s.title,content:values['section-'+i]}))};
+    const next={accent:content.accent,link:values.link,name:values.name,headline:values.headline,contacts:values.contacts.split('\n').map(x=>x.trim()).filter(Boolean),sections:content.sections.map((s,i)=>({title:s.title,content:values['section-'+i]}))};
     try {const result=await api(`/api/resumes/${id}/version`,{method:'POST',body:{content:next}});delete $('#preview-modal').dataset.versionDraft;renderResumePreview(result.resume,result.id);loadResumes();toast(result.message);}
     catch(error){toast(error.message,'error');} finally{button.disabled=false;}
   });
@@ -717,9 +747,17 @@ async function generateResume(event) {
   const form = event.currentTarget;
   const button = $('button[type="submit"]', form);
   if (button.disabled) return;
-  const values = Object.fromEntries(new FormData(form));
   button.disabled = true;
   try {
+    const before = form.elements.objective.value;
+    clearTimeout(proofTimer);
+    if (!await updateBuilderProof(form, ++proofRevision)) return;
+    if (before !== form.elements.objective.value) {
+      form.elements.objective.focus();
+      toast("Confira o objetivo sugerido antes de salvar.");
+      return;
+    }
+    const values = Object.fromEntries(new FormData(form));
     const result = await api("/api/resumes/generate", { method: "POST", body: values });
     $('#builder-modal').dataset.draft=JSON.stringify(values);
     toast(result.message);
@@ -810,6 +848,14 @@ function bindEvents() {
   $("#register-form").addEventListener("submit", handleAuth);
   $("#profile-form").addEventListener("submit", saveProfile);
   $("#upload-form").addEventListener("submit", uploadResume);
+  $("#resume-builder-form").addEventListener("input", event => {
+    const form = event.currentTarget;
+    if (event.target.name === "objective") suggestedObjective = "";
+    if (event.target.name === "accent") {
+      $("#builder-preview .resume-document")?.setAttribute("data-resume-accent", event.target.value);
+    }
+    queueBuilderProof(form);
+  });
   $("#resume-builder-form").addEventListener("submit", generateResume);
   $("#resume-list").addEventListener("click", handleResumeAction);
   $("#logout-button").addEventListener("click", logout);

@@ -2,6 +2,7 @@
 import io
 import re
 from pathlib import Path
+from modelo_curriculo import presentation
 from xml.sax.saxutils import escape
 
 from pypdf import PdfReader
@@ -43,7 +44,13 @@ def inspect_pdf(content):
 
 
 def text_from_resume(data):
-    return "\n".join([data.get("name", ""), data.get("headline", ""), *data.get("contacts", []), *[f"{s['title']}\n{s['content']}" for s in data.get("sections", [])]])
+    model = presentation(data)
+    parts = [model['name'], model['contact'], model['link'], model['headline']]
+    for section in model['sections']:
+        parts.append(section['title'])
+        for item in section['records']:
+            parts.extend(row['bold'] + row['text'] + row['detail'] for row in item)
+    return "\n".join(filter(None, parts))
 
 
 def safe_text(value):
@@ -51,32 +58,6 @@ def safe_text(value):
     return escape(text).replace("\n", "<br/>")
 
 
-def resume_section_paragraphs(section):
-    """Format saved text without interpreting user content as markup."""
-    records = section['title'] in {'Formação acadêmica', 'Curso em andamento ou concluído',
-                                   'Experiência profissional', 'Experiências acadêmicas e projetos',
-                                   'Cursos e certificações'}
-    skills = section['title'] == 'Habilidades'
-    groups = re.split(r'\n\s*\n', section['content'].strip())
-    for group in groups:
-        lines = [line.strip() for line in re.split(r'[;\n]+' if skills else r'\n', group) if line.strip()]
-        for index, line in enumerate(lines):
-            bullet = skills or bool(re.match(r'^[-•●*]\s+', line))
-            line = re.sub(r'^[-•●*]\s+', '', line) if bullet else line
-            text = safe_text(line)
-            if records and index == 0 and not bullet and len(line.partition(' · ')[0]) <= 180:
-                title, separator, details = line.partition(' · ')
-                text = '<b>' + safe_text(title) + '</b>' + (safe_text(separator + details) if separator else '')
-            yield text, bullet, records and index == 0 and len(lines) > 1 and len(line.partition(' · ')[0]) <= 180, index == len(lines) - 1
-
-
-def resume_contact_text(contact):
-    if re.fullmatch(r'(?:\d{10,11}|\(\d{2}\) ?\d{4,5}-\d{4})', contact):
-        return 'Telefone', re.sub(r'^(\d{2})(\d{4,5})(\d{4})$', r'(\1) \2-\3', contact)
-    return ('E-mail' if '@' in contact else 'Localização'), contact
-
-
-# Centraliza a formatação para que todas as versões tenham a mesma apresentação.
 def build_resume_pdf(data):
     import reportlab
     from reportlab.lib import colors
@@ -85,57 +66,45 @@ def build_resume_pdf(data):
     from reportlab.lib.units import cm
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+    from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, KeepTogether
 
     fonts = Path(reportlab.__file__).parent / 'fonts'
     if 'ResumeSans' not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont('ResumeSans', str(fonts / 'Vera.ttf')))
         pdfmetrics.registerFont(TTFont('ResumeSansBold', str(fonts / 'VeraBd.ttf')))
         pdfmetrics.registerFontFamily('ResumeSans', normal='ResumeSans', bold='ResumeSansBold', italic='ResumeSans', boldItalic='ResumeSansBold')
-    base = dict(fontName='ResumeSans', textColor=colors.black, splitLongWords=True)
-    styles = {
-        'name': ParagraphStyle('Name', **{**base, 'fontName': 'ResumeSansBold'}, fontSize=22, leading=27, spaceAfter=9),
-        'headline': ParagraphStyle('Headline', **base, fontSize=10.5, leading=15, spaceAfter=4),
-        'contact': ParagraphStyle('Contact', **base, fontSize=9.5, leading=14, spaceAfter=3),
-        'heading': ParagraphStyle('Section', **{**base, 'fontName': 'ResumeSansBold'}, fontSize=12, leading=16),
-        'body': ParagraphStyle('Body', **base, fontSize=10.5, leading=14, spaceAfter=3),
-        'bullet': ParagraphStyle('Bullet', **base, fontSize=10.5, leading=14, spaceAfter=3, leftIndent=13, bulletIndent=1),
-    }
+    model = presentation(data)
+    def style(name, size, leading, color, *, bold=False, **options):
+        return ParagraphStyle(name, fontName='ResumeSansBold' if bold else 'ResumeSans',
+                              fontSize=size, leading=leading, textColor=colors.HexColor(color), **options)
+
+    accent = model['color']
+    name = style('Name', 24, 29, accent, bold=True, alignment=1)
+    contact = style('Contacts', 10, 14, '#475569', alignment=1, spaceBefore=3)
+    heading = style('Heading', 12.5, 16, accent, bold=True, spaceBefore=18, spaceAfter=3)
+    body = style('Body', 10, 14, '#1E293B')
+    bullet = style('Bullet', 10, 14, '#1E293B', leftIndent=13, bulletIndent=1)
     stream = io.BytesIO()
-    document = SimpleDocTemplate(stream, pagesize=A4, leftMargin=1.8 * cm, rightMargin=1.8 * cm,
-                                 topMargin=1.7 * cm, bottomMargin=1.6 * cm, title=f"Currículo - {data['name']}", author=data['name'])
-    story = [Paragraph(safe_text(data['name'].upper()), styles['name'])]
-    if data.get('headline'):
-        story.append(Paragraph(safe_text(data['headline']), styles['headline']))
-    story.extend([Spacer(1, 10), HRFlowable(width='100%', thickness=.8, color=colors.black), Spacer(1, 12)])
-    for contact in data.get('contacts', []):
-        label, value = resume_contact_text(contact)
-        story.append(Paragraph('<b>' + label + ':</b> ' + safe_text(value), styles['contact']))
-    for section in data['sections']:
-        if not section['content'].strip():
-            continue
-        heading = section['title'].upper()
-        label_width = min(pdfmetrics.stringWidth(heading, 'ResumeSansBold', 12) + 14, (document.width - 12) * .78)
-        row = Table([[Paragraph(safe_text(heading), styles['heading']), HRFlowable(width='100%', thickness=.7, color=colors.black)]],
-                    colWidths=[label_width, document.width - 12 - label_width], spaceBefore=10, spaceAfter=6, hAlign='LEFT')
-        row.setStyle(TableStyle([('VALIGN', (0, 0), (-1, -1), 'MIDDLE'), ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                                ('RIGHTPADDING', (0, 0), (-1, -1), 0), ('TOPPADDING', (0, 0), (-1, -1), 0), ('BOTTOMPADDING', (0, 0), (-1, -1), 0)]))
-        row.keepWithNext = True
-        story.append(row)
-        for text, bullet, keep_next, last in resume_section_paragraphs(section):
-            paragraph = Paragraph(text, styles['bullet' if bullet else 'body'], bulletText='•' if bullet else None)
-            paragraph.keepWithNext = keep_next
-            story.append(paragraph)
-            if last:
-                story.append(Spacer(1, 2))
-
-    def footer(canvas, doc):
-        canvas.saveState()
-        canvas.setFont('ResumeSans', 8)
-        canvas.setFillColor(colors.HexColor('#666666'))
-        canvas.drawRightString(A4[0] - doc.rightMargin, .9 * cm, str(doc.page))
-        canvas.restoreState()
-
-    document.build(story, onFirstPage=footer, onLaterPages=footer)
+    document = SimpleDocTemplate(stream, pagesize=A4, leftMargin=1.8*cm-6, rightMargin=1.8*cm-6,
+                                 topMargin=1.8*cm-6, bottomMargin=1.8*cm-6, title=data['name'])
+    story = [Paragraph(safe_text(model['name']), name)]
+    for value in (model['contact'], model['link'], model['headline']):
+        if value:
+            story.append(Paragraph(safe_text(value), contact))
+    story.extend([Spacer(1, 12), HRFlowable(width='100%', thickness=1.5, color=colors.HexColor(accent))])
+    for section in model['sections']:
+        intro = [Paragraph(safe_text(section['title']), heading),
+                 HRFlowable(width='100%', thickness=.75, color=colors.HexColor('#CBD5E1'), spaceAfter=5)]
+        for item in section['records']:
+            paragraphs = []
+            for row in item:
+                text = ('<b>' + safe_text(row['bold']) + '</b>' + safe_text(row['text'])
+                        + '<font color="#475569">' + safe_text(row['detail']) + '</font>')
+                paragraphs.append(Paragraph(text, bullet if row['bullet'] else body,
+                                            bulletText='•' if row['bullet'] else None))
+            story.append(KeepTogether(intro + paragraphs))
+            intro = []
+            story.append(Spacer(1, 3))
+    document.build(story)
     stream.seek(0)
     return stream

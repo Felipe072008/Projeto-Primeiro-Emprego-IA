@@ -20,6 +20,7 @@ from werkzeug.utils import secure_filename
 
 from documentos_legais import TERMS_VERSION, PRIVACY_VERSION, REVIEW_DATE, CONTACT_EMAIL, DATA_CONTROLLER, COOKIE_PREFERENCES_DAYS
 from catalogo_oportunidades import recommendations
+from modelo_curriculo import PALETTE, accent_id, objective_for, presentation, valid_link
 from documentos_curriculo import InvalidPDF, MAX_PDF_BYTES, inspect_pdf, build_resume_pdf, text_from_resume
 from analise_curriculo import analyze, ai_status
 from dados_perfil import EDUCATION_OPTIONS, REQUIRED, SECTIONS, ProfileError, hydrate_profile, validate_section, contact_errors, missing_fields
@@ -31,6 +32,7 @@ UPLOAD_DIR = Path(os.environ.get("FIRST_JOB_UPLOAD_DIR", str(BASE_DIR / "uploads
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
 
 app = Flask(__name__)
+app.jinja_env.globals["resume_palette"] = PALETTE
 # Set SECRET_KEY as an environment variable in production (e.g. on PythonAnywhere's
 # Web tab). Without one, a new random key is generated each time the app starts —
 # safer than a fixed default, but it means active sessions are cleared on restart.
@@ -230,14 +232,17 @@ def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> d
     if location:
         contact_parts.append(location)
 
+    suggested = objective_for(choose('modality'), choose('objective_area'), choose('objective_course'))
     sections = [
-        ("Objetivo profissional", choose("objective")),
+        ("Objetivo profissional", choose("objective") or suggested),
         ("Formação acadêmica", choose("education")),
         ("Curso em andamento ou concluído", choose("course")),
         ("Experiência profissional", choose("professional_experience")),
         ("Experiências acadêmicas e projetos", choose("academic_experience")),
         ("Cursos e certificações", choose("courses")),
         ("Habilidades", choose("skills")),
+        ("Conhecimentos Técnicos", choose("technical_skills")),
+        ("Competências Comportamentais", choose("behavioral_skills")),
         ("Idiomas", choose("languages")),
         ("Informações adicionais", str(supplied.get("additional_information", "") or "").strip()),
     ]
@@ -245,6 +250,8 @@ def resume_payload(user: dict, profile: dict, supplied: dict | None = None) -> d
         "name": choose("full_name") or user["name"],
         "headline": str(supplied.get("headline", profile.get('sections', {}).get('goals', {}).get('target_role') or profile.get("desired_area", "")) or "").strip(),
         "contacts": contact_parts,
+        "accent": accent_id(supplied.get("accent")),
+        "link": supplied.get("link", ""),
         "sections": [{"title": title, "content": content} for title, content in sections if content],
         "created_on": date_label(),
     }
@@ -565,6 +572,18 @@ def upload_resume():
     return jsonify({"message": "Currículo PDF enviado com sucesso.", "warning": warning, "id": cursor.lastrowid}), 201
 
 
+@app.get('/curriculo-cores.css')
+def resume_colors_css():
+    rules = [f'[data-resume-accent="{key}"] {{ --resume-accent: {color}; }}'
+             for key, (_, color) in PALETTE.items()]
+    return app.response_class('\n'.join(rules), mimetype='text/css')
+
+
+def resume_response(content):
+    return {**content, 'preview_html': render_template('documento_curriculo.html', model=presentation(content))}
+
+
+@app.post("/api/resumes/preview")
 @app.post("/api/resumes/generate")
 @login_required
 def generate_resume():
@@ -573,12 +592,16 @@ def generate_resume():
         return jsonify({"error": "Use textos de até 12.000 caracteres por campo."}), 400
     if len(supplied.get("full_name", "")) > 120 or len(supplied.get("headline", "")) > 160:
         return jsonify({"error": "Use um nome de até 120 caracteres e uma área de até 160 caracteres."}), 400
+    if supplied.get('link') and not valid_link(supplied['link']):
+        return jsonify(error='Use um link http ou https de até 500 caracteres, sem espaços.'), 400
     user = get_user(current_user_id())
     data = resume_payload(user, get_profile(current_user_id()), supplied)
     data['source'] = 'Perfil revisado pelo usuário'
     data['inputs'] = supplied
     if len(text_from_resume(data)) > 20000:
         return jsonify({"error": "O currículo está muito longo. Reduza o conteúdo para até 20 mil caracteres."}), 400
+    if request.path.endswith('/preview'):
+        return jsonify(resume=resume_response(data))
     if not data["sections"]:
         return jsonify({"error": "Preencha ao menos uma informação profissional antes de criar seu currículo."}), 400
     with db_connection() as connection:
@@ -586,7 +609,7 @@ def generate_resume():
             "INSERT INTO resumes (user_id, kind, original_name, saved_name, content_json, created_at, updated_at) VALUES (?, 'generated', ?, NULL, ?, ?, ?)",
             (current_user_id(), supplied.get('title', '').strip()[:120] or data['headline'] or 'Meu currículo', json.dumps(data, ensure_ascii=False), timestamp(), timestamp()),
         )
-    return jsonify({"message": "Currículo criado com suas informações.", "id": cursor.lastrowid, "resume": data}), 201
+    return jsonify({"message": "Currículo criado com suas informações.", "id": cursor.lastrowid, "resume": resume_response(data)}), 201
 
 
 # Restringe o acesso ao dono do currículo, inclusive nas rotas de download.
@@ -628,14 +651,33 @@ def version_resume(resume_id):
         return jsonify(error='Contatos ou seções inválidos.'), 400
     if any(not isinstance(v, dict) or not isinstance(v.get('title'), str) or not isinstance(v.get('content'), str) for v in content['sections']):
         return jsonify(error='Seções inválidas.'), 400
-    content = {k: content.get(k, '') for k in ('name', 'headline', 'contacts', 'sections')}
+    if content.get('link') and not valid_link(content['link']):
+        return jsonify(error='Link inválido.'), 400
+    content = {k: content.get(k, '') for k in ('name', 'headline', 'contacts', 'sections', 'accent', 'link')}
+    content['accent'] = accent_id(content['accent'])
     content['sections'] = [{'title': v['title'], 'content': v['content']} for v in content['sections'] if v['content'].strip()]
     if not content['name'].strip() or len(content['name']) > 120 or len(content['headline']) > 160 or len(text_from_resume(content)) > 20000:
         return jsonify(error='O currículo ultrapassa os limites de texto.'), 400
     content.update(source=f'Nova versão do currículo #{resume_id}', created_on=date_label())
     with db_connection() as connection:
         cursor = connection.execute("INSERT INTO resumes (user_id,kind,original_name,content_json,created_at,updated_at) VALUES (?,'generated',?,?,?,?)", (current_user_id(), (old['original_name'] or 'Meu currículo')[:100] + ' — cópia', json.dumps(content, ensure_ascii=False), timestamp(), timestamp()))
-    return jsonify(id=cursor.lastrowid, resume=content, message='Nova versão salva. A anterior foi preservada.'), 201
+    return jsonify(id=cursor.lastrowid, resume=resume_response(content), message='Nova versão salva. A anterior foi preservada.'), 201
+
+
+@app.patch('/api/resumes/<int:resume_id>/accent')
+@login_required
+def change_resume_accent(resume_id):
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or 'accent' not in data:
+        return jsonify(error='Escolha uma cor da paleta.'), 400
+    accent = accent_id(data['accent'])
+    with db_connection() as connection:
+        result = connection.execute(
+            "UPDATE resumes SET content_json=json_set(content_json, '$.accent', ?) WHERE id=? AND user_id=? AND kind='generated'",
+            (accent, resume_id, current_user_id()))
+        if not result.rowcount:
+            return jsonify(error='Currículo não encontrado.'), 404
+    return jsonify(accent=accent)
 
 
 @app.get("/api/resumes/<int:resume_id>")
@@ -645,7 +687,7 @@ def get_resume(resume_id):
     if not resume:
         return jsonify({"error": "Currículo não encontrado."}), 404
     if resume["kind"] == "generated":
-        resume["content"] = json.loads(resume["content_json"])
+        resume["content"] = resume_response(json.loads(resume["content_json"]))
     return jsonify(resume)
 
 

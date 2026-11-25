@@ -22,13 +22,8 @@ const vm = require('node:vm');
   const source = fs.readFileSync(path.join(__dirname, '../static/interface_site.js'), 'utf8');
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../static/editor_perfil.js'), 'utf8'), context);
   vm.runInContext(source.replace(/boot\(\);\s*$/, ''), context);
-  const resumeMarkup = context.resumeSectionHtml({title:'Cursos e certificações',content:'<Curso> · Escola\nDescrição\n\nOutro curso · Outra escola'});
-  assert.ok(resumeMarkup.includes('<strong>&lt;Curso&gt;</strong> · Escola'));
-  assert.equal((resumeMarkup.match(/class="resume-record"/g) || []).length, 2);
-  assert.ok(!resumeMarkup.includes('<Curso>'));
-  const skillMarkup = context.resumeSectionHtml({title:'Habilidades',content:'Organização; Comunicação\n● Excel'});
-  assert.equal((skillMarkup.match(/class="resume-bullet"/g) || []).length, 3);
-  assert.ok(context.resumeContactHtml('41996201002').includes('(41) 99620-1002'));
+  // A apresentação compartilhada é validada na suíte Flask.
+  context.queueBuilderProof = () => {};
   const originalNavigate = context.navigate;
   const originalReadEditorData = context.readEditorData;
   for (const [raw, formatted] of [['41996201002','(41) 99620-1002'],['1132345678','(11) 3234-5678'],['',''],['4199','4199']]) {
@@ -64,8 +59,11 @@ const vm = require('node:vm');
   }
   calls.length = 0;
   vm.runInContext("api = async () => { throw new Error('invalid'); };", context);
+  const loginError = {};
+  context.document.querySelector = () => loginError;
   await context.handleAuth({preventDefault() {}, currentTarget: {id: 'login-form'}});
-  assert.deepEqual(JSON.parse(JSON.stringify(calls)), [['toast', 'invalid', 'error']]);
+  assert.equal(loginError.textContent, 'invalid');
+  context.document.querySelector = initialQuery;
 
   vm.runInContext(`state.me = {user: {name: 'Pessoa', email: 'teste@example.com'},
     profile: {city: 'Curitiba', state: 'PR', desired_area: 'Tecnologia', skills: 'Python', phone: '41999999999'}};`, context);
@@ -73,7 +71,7 @@ const vm = require('node:vm');
   const values = Object.fromEntries(fields.map(x => [x.name, x.value]));
   assert.equal(values.full_name, 'Pessoa');
   assert.equal(values.location, 'Curitiba / PR');
-  assert.equal(values.headline, 'Tecnologia');
+  assert.equal(values.headline, '');
   assert.equal(values.skills, 'Python');
   assert.equal(values.professional_experience, '');
   assert.equal(values.additional_information, '');
