@@ -24,7 +24,7 @@
     <main id="auth-view" class="auth-view" data-section-group="login">
       <section class="auth-intro" data-section-key="login.intro">
         <a class="brand brand--light" href="#" aria-label="Página inicial PrimeiroEmprego IA">
-          <span class="steps-mark" aria-hidden="true"></span><span>PrimeiroEmprego <b>IA</b></span>
+          {% include 'parciais/marca.html' %}
         </a>
         <div class="login-composition">
           <div data-canvas="glass" aria-hidden="true"></div>
@@ -84,7 +84,7 @@
     <div id="app-view" class="app-shell hidden">
       <a class="skip-link" href="#main-content">Pular para o conteúdo</a><aside class="sidebar" id="main-sidebar">
         <a class="brand" id="app-brand" href="#dashboard" aria-label="PrimeiroEmprego IA — ir para Visão geral">
-          <span class="steps-mark" aria-hidden="true"></span><span>PrimeiroEmprego <b>IA</b></span>
+          {% include 'parciais/marca.html' %}
         </a>
         <nav class="nav" aria-label="Menu principal">
           <button class="nav-link active" data-route="dashboard"><span>⌂</span> Visão geral</button>

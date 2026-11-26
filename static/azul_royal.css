@@ -23,8 +23,8 @@ body:has(.auth-view:not(.hidden)) {
 .auth-intro { display: flex; flex-direction: column; align-items: flex-start; color: white; }
 .auth-intro::before, .auth-intro::after { display: none; }
 .auth-intro .brand { gap: .42em; font-size: clamp(1.25rem, 1.65vw, 1.55rem); letter-spacing: -.035em; }
-.auth-intro .steps-mark { flex: 0 0 1.48em; height: 1.12em; }
-.auth-intro .brand b { margin: 0; font-size: .78em; vertical-align: .06em; }
+:is(.auth-intro, .legal-header) .steps-mark { flex: 0 0 1.48em; height: 1.12em; }
+:is(.auth-intro, .legal-header) .brand b { margin: 0; font-size: .78em; vertical-align: .06em; }
 .intro-copy { margin: clamp(18px, 3vh, 28px) 0 12px; }
 .intro-copy h1 {
   margin: 0;
@@ -131,7 +131,7 @@ summary {cursor:pointer;color:var(--blue);padding-block:8px;}
 .sidebar .brand {margin:0 auto 0 0;font-size:clamp(1rem,1.5vw,1.25rem);}
 .sidebar .nav {display:flex;flex-direction:row;align-items:center;gap:clamp(2px,1vw,16px);}
 .sidebar .nav-link {width:auto;white-space:nowrap;color:white;background:transparent;border-radius:0;}
-.sidebar .nav-link.active {box-shadow:inset 0 -3px white;}
+.sidebar .nav-link.active {border-radius:16px;box-shadow:inset 0 -3px white;}
 .sidebar .nav-link span {display:none;}
 .app-shell:not(.hidden) {display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;align-content:start;}
 .sidebar,.topbar {grid-area:1 / 1;}
