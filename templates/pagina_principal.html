@@ -54,10 +54,6 @@
             <button class="button button--primary button--wide" type="submit">Entrar</button>
           </form>
           <p class="switch-copy">Ainda não tem uma conta? <button class="text-button" type="button" data-show-auth="register">Criar perfil</button></p>
-          <nav class="login-legal" aria-label="Informações legais">
-            <a href="{{ url_for('privacy_policy') }}">Privacidade</a>
-            <a href="{{ url_for('terms_of_use') }}">Termos de uso</a>
-          </nav>
           {% include "parciais/acesso_admin.html" %}
         </div>
 

@@ -102,6 +102,8 @@ def css(value):
     rules = [variables[k]+':'+theme[k] for k in COLORS if theme[k].lower()!=original[k]]
     result = ':root {'+';'.join(rules)+'}' if rules else ''
     if theme['background'].lower()!=original['background']:
+        footer_color = '#000000' if contrast(dict(theme, text='#000000')) >= 4.5 else '#ffffff'
+        result += f'.site-footer{{--footer-color:{footer_color}}}'
         result += 'body,body:has(.auth-view:not(.hidden)){background:var(--cream)}.page-wrap,.auth-card{background:var(--cream)}.intro-copy h1{color:var(--ink)}.sidebar{background:var(--blue-deep)}'
     if theme['text'].lower()!=original['text']:
         result += '.auth-card,.page-wrap{color:var(--ink)}'

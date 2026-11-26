@@ -9,6 +9,7 @@ body:has(.auth-view:not(.hidden)) {
 
 .auth-view {
   display: grid;
+  min-height: calc(100svh - 68px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   max-width: 72rem;
   margin: auto;
@@ -84,8 +85,6 @@ body:has(.auth-view:not(.hidden)) {
   color: #202f62;
 }
 #login-card .text-button { color: #163ebb; min-height: 44px; }
-.login-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 20px; }
-.login-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #163ebb; text-decoration: underline; text-underline-offset: 3px; }
 #login-card .restricted-access { margin-top: 0; min-height: 44px; }
 .auth-intro .brand:focus-visible { outline-color: #eff5ff; }
 .button.button--primary,.button.button--dark {background:#1741cf;color:white;}
@@ -122,7 +121,6 @@ summary {cursor:pointer;color:var(--blue);padding-block:8px;}
 .course-hero {min-height:0;background:none;padding:0;color:var(--ink);border:0;box-shadow:none;}
 .catalog-filters,.profile-criteria {background:#ffffff75;}
 .account-chip {display:grid;place-items:center;border:0;color:white;background:transparent;padding:8px;}
-.site-footer,.app-shell:not(.hidden)~.site-footer {margin:24px auto 0;width:min(95%,var(--largura-site));border-radius:16px;background:var(--glass);}
 .admin-content {
   padding: clamp(18px, 3vw, 40px);
   background: linear-gradient(120deg, #ecf0fc, #dae7fe);
@@ -153,6 +151,9 @@ summary {cursor:pointer;color:var(--blue);padding-block:8px;}
 .login-art {width:min(44vw,200px);max-height:none;margin-inline:auto;}
 .auth-panel {padding:0;min-height:0;}
 .auth-card {margin:auto;}
+}
+@media (max-width: 640px) {
+  .auth-view { min-height: calc(100svh - 90px); }
 }
 @media(max-width:700px){
 .profile-summary,.overview-links {grid-template-columns:1fr;}
